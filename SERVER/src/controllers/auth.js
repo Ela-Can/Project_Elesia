@@ -14,13 +14,39 @@ const validEmail = (email) => {
 // Caractères spéciaux pouvant être utilisés @$!%*?&
 
 const validPassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[^\s]{8,}$/;
     return passwordRegex.test(password);
 };
 
+const validPseudo = (pseudo) => {
+    const pseudoRegex = /^(?=.*[a-zA-Z]{3,})[a-zA-Z0-9_-]+$/;
+    return pseudoRegex.test(pseudo);
+};
+
+// [a-zA-Z0-9_-]+$ : Permet uniquement les lettres, les chiffres, les tirets (-) et les underscores (_). Les espaces ou autres caractères sont interdits.
+
 const register = async (req, res) => {
     try {
-        const { pseudo, birthdate, email, password } = req.body;
+        const pseudo = req.body.pseudo.trim();
+        const email = req.body.email.trim();
+        const password = req.body.password.trim();
+        const { birthdate } = req.body;
+
+        if (!email || !pseudo || !password || !birthdate) {
+            return res.status(400).json({ msg: "All fields are required" });
+        }
+
+        if (pseudo.length < 3 || pseudo.length > 50) {
+            return res.status(400).json({ msg: "Pseudo must be between 3 and 50 characters" });
+        }
+
+        if (email.length > 100) {
+            return res.status(400).json({ msg: "Email must be 100 characters or less" });
+        }
+
+        if (password.length < 8 || password.length > 60) {
+            return res.status(400).json({ msg: "Password must be between 8 and 60 characters" });
+        }
 
         if (!validEmail(email)) {
             return res.status(400).json({ msg: "Invalid email format" });
@@ -32,15 +58,31 @@ const register = async (req, res) => {
             });
         }
 
+        if (!validPseudo(pseudo)) {
+            return res.status(400).json({ msg: "Invalid pseudo format" });
+        }
+
+        const today = new Date();
+        const userBirthdate = new Date(birthdate);
+        const hundredYearsAgo = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+
+        if (userBirthdate > today) {
+            return res.status(400).json({ msg: "Birthdate cannot be in the future" });
+        }
+
+        if (userBirthdate < hundredYearsAgo) {
+            return res.status(400).json({ msg: "Birthdate cannot be more than 100 years ago" });
+        }
+
         const [[userByEmail]] = await Auth.findOneByEmail(email);
         const [[userByPseudo]] = await Auth.findOneByPseudo(pseudo);
 
         if (userByEmail) {
-            res.status(400).json({ msg: "Email already exists" });
+            return res.status(400).json({ msg: "Email already exists" });
         }
 
         if (userByPseudo) {
-            res.status(400).json({ msg: "Pseudo already exists" });
+            return res.status(400).json({ msg: "Pseudo already exists" });
         }
 
         if (!userByEmail && !userByPseudo) {
@@ -55,13 +97,27 @@ const register = async (req, res) => {
         }
 
     } catch (err) {
-        res.status(500).json({ msg: err.message });
+        return res.status(500).json({ msg: err.message });
     }
 };
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const email = req.body.email.trim();
+        const password = req.body.password.trim();
+
+        if (!email || !password) {
+            return res.status(400).json({ msg: "All fields are required" });
+        }
+
+        if (email.length > 100) {
+            return res.status(400).json({ msg: "Email must be 100 characters or less" });
+        }
+
+        if (password.length < 8 || password.length > 60) {
+            return res.status(400).json({ msg: "Password must be between 8 and 60 characters" });
+        }
+
         const [[user]] = await Auth.findOneByEmail(email);
 
         if (!user) {
@@ -91,6 +147,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
     try {
         req.session.destroy();
+        // req.session = null;
         res.clearCookie("connect.sid");
         req.status(200).json({
             msg: "User logged out",

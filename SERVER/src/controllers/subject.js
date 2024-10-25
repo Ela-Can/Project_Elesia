@@ -12,6 +12,15 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
     try {
+        const label = req.body.label.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Le champ label est requis et ne peut pas être vide." });
+        }
+
+        if (label.length > 100) {
+            return res.status(400).json({ msg: "Le champ label ne peut pas dépasser 50 caractères." });
+        }
 
         const [existingSubject] = await Subject.findAll();
 
@@ -21,7 +30,7 @@ const create = async (req, res) => {
             }
         }
 
-        const [response] = await Subject.create(req.body.label);
+        const [response] = await Subject.create(label);
         res.json({ msg: "Subject Created", id: response.insertId });
         
     } catch (err) {
@@ -31,7 +40,25 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const [response] = await Subject.update(req.body.label, req.params.id);
+        const label = req.body.label.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Le champ label est requis et ne peut pas être vide." });
+        }
+
+        if (label.length > 100) {
+            return res.status(400).json({ msg: "Le champ label ne peut pas dépasser 50 caractères." });
+        }
+
+        const [existingSubject] = await Subject.findAll();
+
+        for (let subject of existingSubject) {
+            if (req.body.label.trim() === subject.label) {
+                return res.status(400).json({ msg: "Un sujet avec ce même nom existe déjà." });
+            }
+        }
+
+        const [response] = await Subject.update(label, req.params.id);
         if (!response.affectedRows) {
 			res.status(404).json({ msg: "Subject not found" });
 			return;

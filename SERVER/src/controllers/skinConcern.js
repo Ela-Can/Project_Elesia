@@ -12,6 +12,16 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
     try {
 
+        const label = req.body.label.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Le champ label est requis et ne peut pas être vide." });
+        }
+
+        if (label.length > 50) {
+            return res.status(400).json({ msg: "Le champ label ne peut pas dépasser 50 caractères." });
+        }
+
         const [existingSkinconcern] = await SkinConcern.findAll();
 
         for (let SkinConcern of existingSkinconcern) {
@@ -20,7 +30,7 @@ const create = async (req, res) => {
             }
         }
 
-        const [response] = await SkinConcern.create(req.body.label);
+        const [response] = await SkinConcern.create(label);
         res.json({ msg: "SkinConcern Created", id: response.insertId });
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -29,7 +39,26 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const [response] = await SkinConcern.update(req.body.label, req.params.id);
+
+        const label = req.body.label.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Le champ label est requis et ne peut pas être vide." });
+        }
+
+        if (label.length > 50) {
+            return res.status(400).json({ msg: "Le champ label ne peut pas dépasser 50 caractères." });
+        }
+
+        const [existingSkinconcern] = await SkinConcern.findAll();
+
+        for (let SkinConcern of existingSkinconcern) {
+            if (req.body.label.trim() === SkinConcern.label) {
+                return res.status(400).json({ msg: "Une préoccupation avec ce même nom existe déjà." });
+            }
+        }
+
+        const [response] = await SkinConcern.update(label, req.params.id);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "SkinConcern not found" });
             return;

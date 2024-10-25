@@ -27,7 +27,23 @@ const updateUserStatus = async (req, res) => {
 
 const updateUserInfo = async (req, res) => {
     try {
-        const [response] = await User.updateUserInfo(req.body.pseudo, req.body.email, req.params.id);
+
+        const pseudo = req.body.pseudo.trim();
+        const email = req.body.email.trim();
+
+        if (!email || !pseudo) {
+            return res.status(400).json({ msg: "All fields are required" });
+        }
+
+        if (pseudo.length < 3 || pseudo.length > 50) {
+            return res.status(400).json({ msg: "Pseudo must be between 3 and 50 characters" });
+        }
+
+        if (email.length > 100) {
+            return res.status(400).json({ msg: "Email must be 100 characters or less" });
+        }
+
+        const [response] = await User.updateUserInfo(pseudo, email, req.params.id);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Info not updated" });
             return;
@@ -55,7 +71,7 @@ const removeUser = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try {
-        const [comment] = await User.findAllCommentsFromUserId(req.params.id_user);
+        const [comment] = await User.findAllPublishedCommentsFromUserId(req.params.id_user);
         res.status(200).json(comment);
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -64,7 +80,27 @@ const getAllComments = async (req, res) => {
 
 const updateComment = async (req, res) => {
     try {
-        const [response] = await User.updateComment(req.body.title, req.body.content, req.params.id_user, req.params.id_product);
+
+        const title = req.body.title.trim();
+        const content = req.body.content.trim();
+
+        if (!title) {
+            return res.status(400).json({ msg: "Le champ title est requis et ne peut pas être vide." });
+        }
+
+        if (!content) {
+            return res.status(400).json({ msg: "Le champ content est requis et ne peut pas être vide." });
+        }
+
+        if (title.length < 100) {
+            return res.status(400).json({ msg: "Le champ 'title' ne peut pas dépasser 100 caractères." });
+        }
+
+        if (content.length < 255) {
+            return res.status(400).json({ msg: "Le champ 'content' ne peut pas dépasser 500 caractères." });
+        }
+
+        const [response] = await User.updateComment(title, content, req.params.id_user, req.params.id_product);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Comment not updated" });
             return;
@@ -75,9 +111,9 @@ const updateComment = async (req, res) => {
     }
 };
 
-const removeComment = async (req, res) => {
+const hideComment = async (req, res) => {
     try {
-        const [response] = await User.removeComment(req.params.id, req.params.id_user);
+        const [response] = await User.hideComment(req.params.id, req.params.id_user);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Comment not deleted" });
             return;
@@ -119,4 +155,4 @@ const removeDiagnostic = async (req, res) => {
     }
 };
 
-export { getAllUsers, getOneUserById, updateUserStatus, updateUserInfo, removeUser, getAllComments, updateComment, removeComment, getAllDiagnosticByUserId, removeDiagnostic };
+export { getAllUsers, getOneUserById, updateUserStatus, updateUserInfo, removeUser, getAllComments, updateComment, hideComment, getAllDiagnosticByUserId, removeDiagnostic };

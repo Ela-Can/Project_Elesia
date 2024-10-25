@@ -9,8 +9,6 @@ const getAll = async (req, res) => {
     }
 };
 
-// rajouter une condition pour vérifier que la category n'existe pas déjà
-
 const create = async (req, res) => {
     try {
         const [existingCategories] = await Category.findAll();
@@ -21,7 +19,21 @@ const create = async (req, res) => {
             }
         }
 
-        const [response] = await Category.create(req.body.label, req.body.ref);
+        const label = req.body.label.trim();
+        const ref = req.body.ref.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Label is required and cannot be empty" });
+        }
+        if (!ref) {
+            return res.status(400).json({ msg: "Reference is required and cannot be empty" });
+        }
+
+        if (label.length > 50) {
+            return res.status(400).json({ msg: "Label must be 50 characters or less" });
+        }
+
+        const [response] = await Category.create(label, ref);
 
         res.json({ msg: "Category Created", id: response.insertId });
     } catch (err) {
@@ -31,7 +43,29 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const [response] = await Category.update(req.body.label, req.body.ref, req.params.id);
+        const [existingCategories] = await Category.findAll();
+
+        for (let category of existingCategories) {
+            if (req.body.label.trim() === category.label) {
+                return res.status(400).json({ msg: "Une catégorie avec ce même nom existe déjà." });
+            }
+        }
+
+        const label = req.body.label.trim();
+        const ref = req.body.ref.trim();
+
+        if (!label) {
+            return res.status(400).json({ msg: "Label is required and cannot be empty" });
+        }
+        if (!ref) {
+            return res.status(400).json({ msg: "Reference is required and cannot be empty" });
+        }
+
+        if (label.length > 50) {
+            return res.status(400).json({ msg: "Label must be 50 characters or less" });
+        }
+        
+        const [response] = await Category.update(label, ref, req.params.id);
         if (!response.affectedRows) {
 			res.status(404).json({ msg: "Category not found" });
 			return;

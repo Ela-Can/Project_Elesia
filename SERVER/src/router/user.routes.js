@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getAllUsers, getAllComments, getOneUserById, removeComment, updateComment, updateUserInfo, updateUserStatus, removeUser, getAllDiagnosticByUserId, removeDiagnostic } from "../controllers/user.js";
+import { getAllUsers, getAllComments, getOneUserById, hideComment, updateComment, updateUserInfo, updateUserStatus, removeUser, getAllDiagnosticByUserId, removeDiagnostic } from "../controllers/user.js";
 import withAdminAuth from "../middlewares/withAdminAuth.js";
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router.delete("/delete/:id", removeUser);
 
 router.get("/:id_user/comments/list", getAllComments); 
 router.patch("/:id_user/comments/update/:id_product", updateComment); 
-router.delete("/:id_user/comments/delete/:id", removeComment);
+router.delete("/:id_user/comments/delete/:id", hideComment);
 
 // Gestion des diagnostics 
 

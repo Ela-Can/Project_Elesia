@@ -2,7 +2,6 @@ import express from "express";
 
 import uploadImg from "../middlewares/uploadImg.js";
 import withAdminAuth from "../middlewares/withAdminAuth.js";
-import withUserAuth from "../middlewares/withUserAuth.js";
 import { addCommentToProduct, createProduct, getAllProducts, getOneProductById, removeProduct, updateProduct } from "../controllers/product.js";
 
 

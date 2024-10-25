@@ -9,9 +9,34 @@ const getAllByStatus = async (req, res) => {
     }
 };
 
+const validEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
 const create = async (req, res) => {
     try {
-        const [response] = await Contact.create(req.body.email, req.body.content, req.body.id_subject);
+
+        const email = req.body.email.trim();
+        const content = req.body.content.trim();
+
+        if (!email || !content) {
+            return res.status(400).json({ msg: "Fields are required" });
+        }
+
+        if (email.length > 100) {
+            return res.status(400).json({ msg: "Email must be 100 characters or less" });
+        }
+
+        if (content.length > 500) {
+            return res.status(400).json({ msg: "Content must be 500 characters or less" });
+        }
+
+        if (!validEmail(email)) {
+            return res.status(400).json({ msg: "Invalid email format" });
+        }
+
+        const [response] = await Contact.create(email, content, req.body.id_subject);
         res.json({ msg: "Contact Form created", id: response.insertId });
     } catch (err) {
         res.status(500).json({ msg: err.message });

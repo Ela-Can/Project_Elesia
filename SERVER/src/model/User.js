@@ -54,7 +54,7 @@ class User {
 
     // Gestion des commentaires
 
-    static async findAllCommentsFromUserId(id) {
+    static async findAllPublishedCommentsFromUserId(id) {
         const SELECT_ONE = `
             SELECT
                 comment.id,
@@ -70,7 +70,8 @@ class User {
             FROM comment
             JOIN user ON comment.id_user = user.id
             JOIN product ON comment.id_product = product.id
-            WHERE comment.id_user = ?`;
+            WHERE comment.id_user = ?
+            AND isPublished = 1`;
         return await pool.execute(SELECT_ONE, [id]);
     }
 
@@ -79,9 +80,9 @@ class User {
         return await pool.execute(UPDATE_COMMENT, [title, content, id_user, id_product]);
     }
 
-    static async removeComment(id, id_user) {
-        const DELETE = `DELETE FROM comment WHERE comment.id = ? AND id_user = ?`;
-        return await pool.execute(DELETE, [id, id_user]);
+    static async hideComment(id, id_user) {
+        const UPDATE_COMMENT_STATUS = `UPDATE comment SET WHERE comment.id = ? AND id_user = ?`;
+        return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
     }
 
     // Gestion des diagnostics de peau
