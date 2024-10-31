@@ -6,8 +6,10 @@ import Product from "../model/Product.js";
 const getAllProducts = async (req, res) => {
     try {
         const [response] = await Product.findAllProducts();
+        console.log("Données envoyées :", response);
         res.status(200).json(response);
     } catch (err) {
+        console.error("Erreur lors de la récupération des produits :", err);
         res.status(500).json({ msg: err.message });
     }
 };
