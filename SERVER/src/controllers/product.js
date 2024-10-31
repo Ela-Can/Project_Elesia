@@ -17,11 +17,11 @@ const getAllProducts = async (req, res) => {
 const getOneProductById = async (req, res) => {
     try {
         const [response] = await Product.findOneProductById(req.params.id);
-        if (!response.length) {
-            res.status(404).json({ msg: "Product not found" });
-            return;
-        }
-        res.json(response[0]);
+        //if (!response.length) {
+        //    res.status(404).json({ msg: "Product not found" });
+        //    return;
+        //}
+        res.status(200).json(response);
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }

@@ -1,15 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
-import Home from "../Components/global/Home.jsx";
-import Contact from "../Components/global/Contact.jsx";
-import Product from "../Components/global/Product.jsx";
+import Home from "../Components/user/Home.jsx";
+import Contact from "../Components/user/Contact.jsx";
+import Product from "../Components/user/Product.jsx";
 
 import Login from "../Components/auth/Login.jsx";
 import Register from "../Components/auth/Register.jsx";
 
-import ProductDetails from "../Components/global/ProductDetails.jsx";
-import Header from "../Components/partials/Header.jsx";
-import Footer from "../Components/partials/Footer.jsx";
+import ProductDetails from "../Components/user/ProductDetails.jsx";
+import Header from "../Components/user/partials/Header.jsx";
+import Footer from "../Components/user/partials/Footer.jsx";
+import Dashboard from "../Components/user/Dashboard.jsx";
 
 function UserRouter() {
   return (
@@ -23,6 +24,7 @@ function UserRouter() {
 
         <Route path="authentification/login" element={<Login />}></Route>
         <Route path="register" element={<Register />}></Route>
+        <Route path="dashboard" element={<Dashboard />}></Route>
       </Routes>
       <Footer />
     </>

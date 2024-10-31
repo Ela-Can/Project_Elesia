@@ -1,7 +1,13 @@
 import UserRouter from "./Router/UserRouter";
 
 function App() {
-  return <UserRouter />;
+  return (
+    <>
+      <section>
+        <UserRouter />
+      </section>
+    </>
+  );
 }
 
 export default App;

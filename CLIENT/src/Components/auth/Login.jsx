@@ -22,7 +22,7 @@ function Login() {
 
       if (response.ok) {
         const datas = await response.json();
-        //dispatch(login(datas));
+        dispatch(login(datas));
         navigate("/");
       } else {
         const errorDatas = await response.json();
@@ -59,7 +59,7 @@ function Login() {
         <button type="submit">Se connecter</button>
       </form>
       <p>Pas de compte ?</p>
-      <button onClick={() => navigate("/register")}>S&apos;inscrire</button>
+      <button onClick={() => navigate("register")}>S&apos;inscrire</button>
     </>
   );
 }

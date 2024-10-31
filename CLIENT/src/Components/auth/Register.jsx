@@ -14,18 +14,23 @@ function Register() {
     e.preventDefault();
 
     try {
+      const requestBody = { pseudo, birthdate, email, password };
+      console.log("Request Body:", requestBody);
+
       const response = await fetch(`/api/v1/authentification/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(requestBody),
         credentials: "include",
       });
+
+      console.log("Response Status:", response.status);
 
       if (response.ok) {
         const data = await response.json();
         console.log(data);
         // inclure un dispatch ?
-        navigate("/login");
+        navigate("login");
       } else {
         const errorData = await response.json();
         //dispatch(loginFailed({ error: errorData.message }));
@@ -50,7 +55,7 @@ function Register() {
         />
         <label htmlFor="birthdate">Votre date de naissance</label>
         <input
-          type="datetime"
+          type="date"
           name="birthdate"
           id="birthdate"
           value={birthdate}

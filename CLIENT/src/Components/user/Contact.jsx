@@ -35,9 +35,20 @@ function Contact() {
     <>
       <form onSubmit={submitHandler}>
         <label htmlFor="email">Entrez votre adresse mail</label>
-        <input type="email" name="email" id="email" value={email} />
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <label htmlFor="content">Entrez votre message</label>
-        <textarea name="content" id="content" value={content}></textarea>
+        <textarea
+          name="content"
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        ></textarea>
         <button type="submit">Envoyer</button>
       </form>
     </>
