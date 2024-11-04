@@ -103,8 +103,10 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const email = req.body.email.trim();
-        const password = req.body.password.trim();
+
+        console.log("Contenu de req.body :", req.body);
+        const email = req.body.email //.trim();
+        const password = req.body.password //.trim();
 
         if (!email || !password) {
             return res.status(400).json({ msg: "All fields are required" });
@@ -121,22 +123,26 @@ const login = async (req, res) => {
         const [[user]] = await Auth.findOneByEmail(email);
 
         if (!user) {
-            res.status(400).json({ msg: "Email not found" });
+            return res.status(400).json({ msg: "Email not found" });
         }
 
         if (user) {
             const match = await bcrypt.compare(password, user.password);
             if (match) {
                 const [[userById]] = await Auth.findOneById(user.id);
+                console.log("Informations utilisateur récupérées :", userById);
                 req.session.user = { id: user.id, ...userById };
 
-                res.status(200).json({
+                return res.status(200).json({
                     msg: "User logged in",
                     isLogged: true,
-                    user: userById,
+                    user: {
+                        id : user.id,
+                        ...userById
+                    },
                 });
             } else {
-                res.status(400).json({ msg: "Email or Password Incorrect" });
+                return res.status(400).json({ msg: "Email or Password Incorrect" });
             }
         }
     } catch (err) {
@@ -160,7 +166,7 @@ const logout = async (req, res) => {
 
 const check_auth = async (req, res) => {
     const { user } = req.session;
-    req.status(200).json({
+    res.status(200).json({
         isLogged: true,
         user,
     });

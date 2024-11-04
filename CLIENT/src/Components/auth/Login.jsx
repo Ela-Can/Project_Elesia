@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginFailed } from "../../Store/slices/user";
+import { login, loginFailed } from "../../Store/slices/user";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,25 +12,34 @@ function Login() {
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
 
+    console.log("Email:", email);
+    console.log("Password:", password);
+
     try {
+      const requestBody = { email, password };
+      console.log("Request Body:", requestBody);
+
       const response = await fetch(`/api/v1/authentification/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(requestBody),
         credentials: "include",
       });
 
+      console.log("Server response status:", response.status);
+
       if (response.ok) {
         const datas = await response.json();
+        console.log("Données utilisateur reçues :", datas);
         dispatch(login(datas));
         navigate("/");
       } else {
         const errorDatas = await response.json();
-        //dispatch(loginFailed({ error: errorDatas.message }));
+        dispatch(loginFailed({ error: errorDatas.message }));
       }
     } catch (error) {
       console.log(error);
-      //dispatch(setMessage("Erreur lors de la connexion. Veuillez réessayer.")); // Gestion d'une erreur de connexion
+      dispatch(setMessage("Erreur lors de la connexion. Veuillez réessayer.")); // Gestion d'une erreur de connexion
     }
   }
 
@@ -59,7 +68,9 @@ function Login() {
         <button type="submit">Se connecter</button>
       </form>
       <p>Pas de compte ?</p>
-      <button onClick={() => navigate("register")}>S&apos;inscrire</button>
+      <button onClick={() => navigate("/authentification/register")}>
+        S&apos;inscrire
+      </button>
     </>
   );
 }

@@ -30,7 +30,7 @@ function Register() {
         const data = await response.json();
         console.log(data);
         // inclure un dispatch ?
-        navigate("login");
+        navigate("/authentification/login");
       } else {
         const errorData = await response.json();
         //dispatch(loginFailed({ error: errorData.message }));

@@ -91,13 +91,25 @@ class User {
         const SELECT_ALL = `
             SELECT
                 diagnosticForm.id,
-                createdDate,
+                DATE_FORMAT(createdDate, '%d/%m/%Y') AS createdDate,
                 diagnosticForm.id_skinType, 
                 diagnosticForm.id_skinConcern, 
-                isSkinSensitive, 
-                isExposedToPollution, 
-                isExposedToSun, 
-                isPregnantOrBreastfeeding,
+                CASE 
+                    WHEN isSkinSensitive = 1 THEN 'Oui'
+                    ELSE 'Non'
+                END AS isSkinSensitive,
+                CASE 
+                    WHEN isExposedToPollution = 1 THEN 'Fréquemment'
+                    ELSE 'Occasionnellement'
+                END AS isExposedToPollution,
+                CASE 
+                    WHEN isExposedToSun = 1 THEN 'Fréquemment'
+                    ELSE 'Occasionnellement'
+                END AS isExposedToSun,
+                CASE 
+                    WHEN isPregnantOrBreastfeeding = 1 THEN 'Oui'
+                    ELSE 'Non'
+                END AS isPregnantOrBreastfeeding,
                 product.id AS product_id,
                 product.name AS product_name, 
                 product.description AS product_description, 

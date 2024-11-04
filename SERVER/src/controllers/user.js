@@ -140,8 +140,10 @@ const getAllDiagnosticByUserId = async (req, res) => {
 };
 
 const removeDiagnostic = async (req, res) => {
+    console.log("Paramètres reçus :", req.params);
     try {
         const [response] = await User.removeDiagnostic(req.params.id, req.params.id_user);
+        console.log("Réponse SQL :", response);
         
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Diagnostic not deleted" });
@@ -151,6 +153,7 @@ const removeDiagnostic = async (req, res) => {
 
         
     } catch (err) {
+        console.error("Erreur de suppression :", err);
         res.status(500).json({ msg: err.message });
     }
 };

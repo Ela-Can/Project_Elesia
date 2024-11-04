@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Accordion from "../partials/Accordion";
-import ProductComments from "./ProductComments.jsx";
+import ProductComments from "./partials/ProductComments.jsx";
 
 function ProductDetails() {
   const [product, setProduct] = useState([]);

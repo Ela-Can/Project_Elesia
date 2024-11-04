@@ -11,6 +11,7 @@ import ProductDetails from "../Components/user/ProductDetails.jsx";
 import Header from "../Components/user/partials/Header.jsx";
 import Footer from "../Components/user/partials/Footer.jsx";
 import Dashboard from "../Components/user/Dashboard.jsx";
+import Diagnostic from "../Components/user/Diagnostic.jsx";
 
 function UserRouter() {
   return (
@@ -18,13 +19,14 @@ function UserRouter() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="product" element={<Product />}></Route>
-        <Route path="product/:id" element={<ProductDetails />}></Route>
-        <Route path="contact" element={<Contact />}></Route>
+        <Route path="/product" element={<Product />}></Route>
+        <Route path="/diagnostic/create" element={<Diagnostic />}></Route>
+        <Route path="/product/:id" element={<ProductDetails />}></Route>
+        <Route path="/contact" element={<Contact />}></Route>
 
-        <Route path="authentification/login" element={<Login />}></Route>
-        <Route path="register" element={<Register />}></Route>
-        <Route path="dashboard" element={<Dashboard />}></Route>
+        <Route path="/authentification/login" element={<Login />}></Route>
+        <Route path="/authentification/register" element={<Register />}></Route>
+        <Route path="/user" element={<Dashboard />}></Route>
       </Routes>
       <Footer />
     </>

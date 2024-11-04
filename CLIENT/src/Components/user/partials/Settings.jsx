@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updatePseudo } from "../../Store/slices/user.js";
+import { updatePseudo } from "../../../Store/slices/user.js";
 
 function Settings() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
+  console.log("User ID dans le composant Settings :", user);
+  //Récupérer l'email
   const [userInfo, setUserInfo] = useState(null);
   const [pseudo, setPseudo] = useState(user.pseudo);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,8 +70,8 @@ function Settings() {
         </form>
       ) : (
         <div>
-          <p>Pseudo : {userInfo.pseudo}</p>
-          <p>Email : {userInfo.email} </p>
+          <p>Pseudo : {user.pseudo}</p>
+          <p>Email : {user.email} </p>
           <button onClick={() => setIsEditing(true)}>Modifier le pseudo</button>
         </div>
       )}

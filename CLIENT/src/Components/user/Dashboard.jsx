@@ -1,8 +1,11 @@
 import { useSelector } from "react-redux";
-import Settings from "./Settings";
+import Settings from "./partials/Settings.jsx";
+import CommentsHistory from "./partials/CommentsHistory.jsx";
+import DiagnosticsHistory from "./partials/DiagnosticsHistory.jsx";
 
 function Dashboard() {
   const user = useSelector((state) => state.user);
+  console.log("User dans Dashboard :", user);
   return (
     <main>
       <h2>Hello {user.pseudo}</h2>
@@ -10,6 +13,14 @@ function Dashboard() {
       <section>
         <p>Vos informations personnelles</p>
         <Settings />
+      </section>
+      <section>
+        <p>Historique des commentaires</p>
+        <CommentsHistory />
+      </section>
+      <section>
+        <p>Historique de mes diagnostics</p>
+        <DiagnosticsHistory />
       </section>
       <aside>
         <ul>

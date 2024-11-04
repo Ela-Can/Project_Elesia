@@ -5,8 +5,10 @@ function Nav() {
     <>
       <NavLink to={"/"}>Accueil</NavLink>
       <NavLink to={"product"}>Produits</NavLink>
+      <NavLink to={"diagnostic/create"}>Diagnostic</NavLink>
       <NavLink to={"contact"}>Contact</NavLink>
       <NavLink to={"authentification/login"}>Se connecter</NavLink>
+      <NavLink to={"user"}>Dashboard</NavLink>
     </>
   );
 }

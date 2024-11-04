@@ -17,9 +17,17 @@ function calculateAge(birthdate) {
 
 const create = async (req, res) => {
     try {
+        //if (!req.session || !req.session.user) { 
+        //    return res.status(400).json({ msg: "Impossible de récupérer l'utilisateur. Assurez-vous d'être connecté." }); // À MODIFIER
+        //}
 
         const id_user = req.session.user.id;
+        console.log("ID utilisateur extrait de la session:", id_user);
         
+        if (!id_user) {
+            return res.status(400).json({ msg: "Impossible de récupérer l'utilisateur. Assurez-vous d'être connecté." });
+        }
+
         const [user] = await Diagnostic.getUserBirthdate(id_user);
 
         const birthdate = user[0].birthdate;
@@ -44,9 +52,19 @@ const create = async (req, res) => {
             isExposedToPollution,
             isExposedToSun,
             isPregnantOrBreastfeeding,
-        }
+        };
+
+        console.log("Données du diagnostic à insérer :", datas);
 
         const [response] = await Diagnostic.createDiagnostic(datas);
+
+        console.log("Résultat de l'insertion du diagnostic :", response);
+
+        if (!response || response.affectedRows === 0) { 
+            throw new Error("Impossible de soumettre le diagnostic"); 
+        }
+
+
         const diagnosticId = response.insertId;
 
         if (response.affectedRows === 0) {
@@ -55,6 +73,8 @@ const create = async (req, res) => {
 
         const [productRecommandation] = await Diagnostic.findProduct(id_user);
         
+        console.log("Produits recommandés trouvés :", productRecommandation);
+
         if (productRecommandation.length === 0) {
             throw new Error("Aucun produit adapté n'a été trouvé pour ce diagnostic");
         }

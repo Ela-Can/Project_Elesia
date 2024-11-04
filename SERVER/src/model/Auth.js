@@ -13,7 +13,7 @@ class Auth {
     }
 
     static async findOneById(id) {
-        const SELECT = `SELECT email, role FROM user WHERE id = ?`;
+        const SELECT = `SELECT * FROM user WHERE id = ?`;
         return await pool.execute(SELECT, [id]);
     }
 
