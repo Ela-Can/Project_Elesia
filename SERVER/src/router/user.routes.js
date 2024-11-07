@@ -19,7 +19,7 @@ router.delete("/delete/:id", removeUser);
 
 router.get("/:id_user/comments/list", getAllComments); 
 router.patch("/:id_user/comments/update/:id_product", updateComment); 
-router.delete("/:id_user/comments/delete/:id", hideComment);
+router.patch("/:id_user/comments/delete/:id", hideComment);
 
 // Gestion des diagnostics 
 

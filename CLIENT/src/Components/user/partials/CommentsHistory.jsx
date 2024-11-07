@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setComment } from "../../../Store/slices/comment.js";
+import {
+  deleteComment,
+  setComment,
+  updateComment,
+} from "../../../StoreRedux/slices/comment.js";
 
 function CommentsHistory() {
   const commentList = useSelector((state) => state.comment.commentList);
@@ -20,6 +24,46 @@ function CommentsHistory() {
     fetchCommentsByUserId();
   }, [user.id]);
 
+  async function onClickUpdateComment(id, id_user) {
+    try {
+      const response = await fetch(
+        `/api/v1/user/${id_user}/comments/update/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
+      dispatch(updateComment(id, commentTitle, commentContent));
+      console.log("Commentaire mis à jour, ID:", id);
+    } catch (error) {
+      console.error("Erreur lors de la MAJ du commentaire:", error);
+    }
+  }
+
+  async function onClickDeleteComment(id, id_user) {
+    try {
+      const response = await fetch(
+        `/api/v1/user/${id_user}/comments/delete/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch(deleteComment(id));
+      console.log("Commentaire supprimé, ID:", id);
+      console.log("Liste de commentaires après suppression:", commentList);
+    } catch (error) {
+      console.error("Erreur lors de la suppression du commentaire:", error);
+    }
+  }
+
+  // Inclure le formulaire de modification du commentaire + le bouton
+
   return (
     <>
       {commentList.length > 0 ? (
@@ -28,7 +72,11 @@ function CommentsHistory() {
             <li key={comment.id}>
               <h4>{comment.title}</h4>
               <p>{comment.content}</p>
+              <p>{comment.isPublished}</p>
               <p>Produit : {comment.product_name}</p>
+              <button onClick={() => onClickDeleteComment(comment.id, user.id)}>
+                Supprimer
+              </button>
             </li>
           ))}
         </ul>

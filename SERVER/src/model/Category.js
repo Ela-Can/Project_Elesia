@@ -3,7 +3,7 @@ import pool from "../config/db.js";
 class Category {
 
     static async findAll() {
-        const SELECT_ALL = `SELECT label, ref FROM category ORDER BY label ASC`;
+        const SELECT_ALL = `SELECT id, label, ref FROM category ORDER BY label ASC`;
         return await pool.query(SELECT_ALL);
     }
 

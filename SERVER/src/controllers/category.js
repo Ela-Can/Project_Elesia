@@ -19,8 +19,8 @@ const create = async (req, res) => {
             }
         }
 
-        const label = req.body.label.trim();
-        const ref = req.body.ref.trim();
+        const label = req.body.label //.trim();
+        const ref = req.body.ref //.trim();
 
         if (!label) {
             return res.status(400).json({ msg: "Label is required and cannot be empty" });

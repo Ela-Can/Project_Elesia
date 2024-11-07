@@ -9,6 +9,7 @@ function Nav() {
       <NavLink to={"contact"}>Contact</NavLink>
       <NavLink to={"authentification/login"}>Se connecter</NavLink>
       <NavLink to={"user"}>Dashboard</NavLink>
+      <NavLink to={"admin"}>Admin</NavLink>
     </>
   );
 }

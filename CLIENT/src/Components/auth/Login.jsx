@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login, loginFailed } from "../../Store/slices/user";
+import { login, loginFailed } from "../../StoreRedux/slices/user";
 
 function Login() {
   const [email, setEmail] = useState("");

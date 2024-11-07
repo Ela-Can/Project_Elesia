@@ -81,7 +81,7 @@ class User {
     }
 
     static async hideComment(id, id_user) {
-        const UPDATE_COMMENT_STATUS = `UPDATE comment SET WHERE comment.id = ? AND id_user = ?`;
+        const UPDATE_COMMENT_STATUS = `UPDATE comment SET isPublished = 0 WHERE comment.id = ? AND id_user = ?`;
         return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
     }
 

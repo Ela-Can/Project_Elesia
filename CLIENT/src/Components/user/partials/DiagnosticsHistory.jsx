@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setDiagnostic,
   deleteDiagnosticById,
-} from "../../../Store/slices/diagnostic.js";
+} from "../../../StoreRedux/slices/diagnostic.js";
 //import useCheckAuth from "../../../Hook/useCheckAuth.jsx";
 
 function DiagnosticHistory() {

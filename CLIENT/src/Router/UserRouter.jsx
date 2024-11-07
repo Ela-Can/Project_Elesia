@@ -13,6 +13,8 @@ import Footer from "../Components/user/partials/Footer.jsx";
 import Dashboard from "../Components/user/Dashboard.jsx";
 import Diagnostic from "../Components/user/Diagnostic.jsx";
 
+import DashboardAdmin from "../Components/admin/Dashboard.jsx";
+
 function UserRouter() {
   return (
     <>
@@ -27,6 +29,7 @@ function UserRouter() {
         <Route path="/authentification/login" element={<Login />}></Route>
         <Route path="/authentification/register" element={<Register />}></Route>
         <Route path="/user" element={<Dashboard />}></Route>
+        <Route path="/admin" element={<DashboardAdmin />}></Route>
       </Routes>
       <Footer />
     </>

@@ -82,6 +82,7 @@ const create = async (req, res) => {
         const product = productRecommandation[0];
 
         const [insertRecommandation] = await Diagnostic.createProductReco(diagnosticId, product.id);
+        //console.log("Résultat de l'insertion de la recommandation de produit :", insertRecommandation);
 
         if (insertRecommandation.affectedRows === 0) {
             throw new Error("Impossible de soumettre la recommandation de produit");

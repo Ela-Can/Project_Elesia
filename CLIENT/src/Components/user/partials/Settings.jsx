@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updatePseudo } from "../../../Store/slices/user.js";
+import { updatePseudo } from "../../../StoreRedux/slices/user.js";
 
 function Settings() {
   const dispatch = useDispatch();

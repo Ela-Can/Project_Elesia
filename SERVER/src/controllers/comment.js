@@ -19,4 +19,18 @@ const getAllFromProduct = async (req, res) => {
     }
 };
 
-export { getAll, getAllFromProduct}
+const hideComment = async (req, res) => {
+    try {
+        const [response] = await Comment.hideComment(req.params.id, req.user.id);
+        if (!response.affectedRows) {
+            res.status(404).json({ msg: "Failed to hide the comment" });
+            return;
+        }
+        res.json({ msg: "Comment successfully hidden" });
+    } catch (err) {
+        console.error("Erreur dans hideComment:", err);
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+export { getAll, getAllFromProduct, hideComment };

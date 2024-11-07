@@ -18,11 +18,27 @@ const commentSlice = createSlice({
             state.userComments = action.payload;
         },
         updateComment: (state, action) => {
+            state.id = action.payload.id;
             state.commentTitle = action.payload.commentTitle;
             state.commentContent = action.payload.commentContent;
+
+            for (let i = 0; i < state.commentList.length; i++) {
+                if (state.commentList[i].id === id) {
+                    state.commentList[i].title = commentTitle;
+                    state.commentList[i].content = commentContent;
+                break; 
+                }
+            }  
         },
+
         deleteComment: (state, action) => {
-            state.isPublished = action.payload;
+            const commentId = action.payload;
+            for (let i = 0; i < state.commentList.length; i++) {
+                if (state.commentList[i].id === commentId) {
+                    state.commentList[i].isPublished = 0; 
+                    break; 
+                }
+            }
         }
     },
 });

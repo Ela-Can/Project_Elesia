@@ -13,6 +13,7 @@ class Comment {
                     WHEN isPublished = 1 THEN 'commentaire visible'
                     ELSE 'commentaire non visible'
                 END AS isPublished,
+                user.id AS id_user,
                 user.pseudo AS pseudo,
                 product.name AS product_name
             FROM comment
@@ -39,6 +40,11 @@ class Comment {
             JOIN product ON comment.id_product = product.id
             WHERE comment.id_product = ?`;
         return await pool.execute(SELECT_ONE, [id]);
+    }
+
+    static async hideComment(id, id_user) {
+        const UPDATE_COMMENT_STATUS = `UPDATE comment SET isPublished = 0 WHERE comment.id = ? AND id_user = ?`;
+        return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
     }
 
 }

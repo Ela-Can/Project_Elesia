@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { setSkinType } from "../../Store/slices/skinType.js";
-import { setSkinConcern } from "../../Store/slices/skinConcern.js";
+import { setSkinType } from "../../StoreRedux/slices/skinType.js";
+import { setSkinConcern } from "../../StoreRedux/slices/skinConcern.js";
 import useCheckAuth from "../../Hook/useCheckAuth.jsx";
 
 function Diagnostic() {
