@@ -1,17 +1,14 @@
-// A INTÉGRER DANS CATEGORYLIST
-
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setCategories,
   updateCategory,
 } from "../../../StoreRedux/slices/category.js";
 
-function UpdateCategory() {
-  const [label, setLabel] = useState("");
-  const [ref, setRef] = useState("");
+function UpdateCategory({ category, setIsEditing }) {
+  const [label, setLabel] = useState(category.label);
+  const [ref, setRef] = useState(category.ref);
 
-  const categoryList = useSelector((state) => state.category.categoryList);
   const dispatch = useDispatch();
 
   async function fetchCategories() {
@@ -27,12 +24,12 @@ function UpdateCategory() {
 
   async function onSubmitUpdateCategory(e) {
     e.preventDefault();
-
+    console.log("Id:", category.id);
     console.log("Label:", label);
     console.log("Reference:", ref);
 
     try {
-      const response = await fetch(`/api/v1/category/update/${id}`, {
+      const response = await fetch(`/api/v1/category/update/${category.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -40,17 +37,29 @@ function UpdateCategory() {
         body: JSON.stringify({ label, ref }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Catégorie modifiée :", data);
+      console.log("Réponse reçue après la mise à jour :", response);
+      console.log("Envoi de la requête de mise à jour avec : ", {
+        label: label,
+        ref: ref,
+        id: category.id,
+      });
 
-        dispatch(updateCategory(data));
-        console.log("Liste des catégories après modif :", categoryList);
+      if (response.ok) {
+        const updatedCategory = await response.json();
+        console.log("Catégorie modifiée avec succès :", updatedCategory);
+
+        console.log("Catégorie modifiée avec succès");
+
+        dispatch(
+          updateCategory({
+            id: category.id,
+            categoryLabel: label,
+            categoryRef: ref,
+          })
+        );
 
         fetchCategories();
-
-        setLabel("");
-        setRef("");
+        setIsEditing(false);
       } else {
         console.error(
           "Erreur lors de la modif de la catégorie :",
@@ -88,7 +97,7 @@ function UpdateCategory() {
           value={label}
           onChange={(e) => setLabel(e.target.value)}
         />
-        <button type="submit">Modifier</button>
+        <button type="submit">Enregistrer</button>
       </form>
     </>
   );

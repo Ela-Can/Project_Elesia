@@ -9,6 +9,7 @@ const commentSlice = createSlice({
         commentTitle: "",
         commentContent: "",
         isPublished: 1,
+        
     },
     reducers: {
         setComment: (state, action) => {

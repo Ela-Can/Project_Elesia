@@ -7,6 +7,11 @@ class Category {
         return await pool.query(SELECT_ALL);
     }
 
+    static async findOne(id) {
+        const SELECT_ONE = `SELECT id, label, ref FROM category WHERE id = ?`;
+        return await pool.query(SELECT_ONE, [id]);
+    }
+
     static async create(label, ref) {
         const INSERT = `INSERT INTO category (label, ref) VALUES (?, ?)`;
         return await pool.execute(INSERT, [label, ref]);

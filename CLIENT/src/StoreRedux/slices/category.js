@@ -4,6 +4,7 @@ const categorySlice = createSlice({
     name: "category",
     initialState: {
         categoryList: [],
+        
     },
     reducers: {
         setCategories: (state, action) => {
@@ -15,11 +16,15 @@ const categorySlice = createSlice({
         },
 
         updateCategory: (state, action) => {
+            
+            const { id, categoryRef, categoryLabel } = action.payload;
+
             for (let i = 0; i < state.categoryList.length; i++) {
-                if (state.categoryList[i].id === action.payload.id) {
-                    state.categoryList[i] = { ...state.categoryList[i], ...action.payload.newData };
-                break;
-                }   
+                if (state.categoryList[i].id === id) {
+                    state.categoryList[i].ref = categoryRef;
+                    state.categoryList[i].label = categoryLabel;
+                break; 
+                }
             }
         },
 

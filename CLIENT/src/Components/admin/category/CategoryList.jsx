@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setCategories,
@@ -8,6 +8,9 @@ import AddCategory from "./AddCategory.jsx";
 import UpdateCategory from "./UpdateCategory.jsx";
 
 function CategoryList() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [categoryId, setCategoryId] = useState(null);
+
   const categoryList = useSelector((state) => state.category.categoryList);
   const dispatch = useDispatch();
 
@@ -31,6 +34,11 @@ function CategoryList() {
     }
   }
 
+  function onClickCancelBtn() {
+    setIsEditing(false);
+    setCategoryId(null);
+  }
+
   useEffect(() => {
     async function fetchCategories() {
       const response = await fetch("/api/v1/category/list");
@@ -47,14 +55,34 @@ function CategoryList() {
       {categoryList.length > 0 ? (
         <ul>
           {categoryList.map((category) => (
-            <>
-              <li key={category.id}>
-                {category.label} : {category.ref}
-              </li>
-              <button onClick={() => onClickDeleteCategory(category.id)}>
-                Supprimer
-              </button>
-            </>
+            <li key={category.id}>
+              {isEditing === true && categoryId === category.id ? (
+                <>
+                  <UpdateCategory
+                    category={category}
+                    setIsEditing={setIsEditing}
+                  />
+                  <button onClick={() => onClickCancelBtn(category.id)}>
+                    Annuler
+                  </button>
+                </>
+              ) : (
+                <>
+                  {category.label} : {category.ref}
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                      setCategoryId(category.id);
+                    }}
+                  >
+                    Modifier
+                  </button>
+                  <button onClick={() => onClickDeleteCategory(category.id)}>
+                    Supprimer
+                  </button>
+                </>
+              )}
+            </li>
           ))}
         </ul>
       ) : (
@@ -62,7 +90,6 @@ function CategoryList() {
       )}
 
       <AddCategory />
-      <UpdateCategory />
     </>
   );
 }
