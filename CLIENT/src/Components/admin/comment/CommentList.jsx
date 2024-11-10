@@ -7,7 +7,7 @@ function CommentList() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  async function onClickDeleteComment(id) {
+  async function onClickDeleteComment(id, id_user) {
     try {
       const response = await fetch(`/api/v1/comment/delete/${id}`, {
         method: "PATCH",
@@ -15,16 +15,17 @@ function CommentList() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ isPublished: 0 }),
+        body: JSON.stringify({ id, isPublished: 0 }),
       });
       if (response.ok) {
         alert("Commentaire marqué comme non publié avec succès.");
-        dispatch(deleteComment({ isPublished }));
+        dispatch(deleteComment(id));
       } else {
-        //console.error("Erreur lors de la suppression :", err);
+        const errorMessage = await response.text();
+        console.error("Erreur lors de la suppression :", errorMessage);
       }
     } catch (error) {
-      //console.error("Erreur de connexion à l'API", error);
+      console.error("Erreur de connexion à l'API", error);
     }
   }
 

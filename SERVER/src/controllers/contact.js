@@ -1,8 +1,17 @@
 import Contact from "../model/Contact.js";
 
-const getAllByStatus = async (req, res) => {
+const getAllPendingRequests = async (req, res) => {
     try {
-        const [response] = await Contact.findAllByStatus(req.params.status);
+        const [response] = await Contact.findAllPendingRequests(req.params.status);
+        res.json(response);
+    } catch {
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+const getAllFinishedRequests = async (req, res) => {
+    try {
+        const [response] = await Contact.findAllFinishedRequests(req.params.status);
         res.json(response);
     } catch {
         res.status(500).json({ msg: err.message });
@@ -56,4 +65,4 @@ const updateStatus = async (req, res) => {
     }
 };
 
-export { getAllByStatus, create, updateStatus };
+export { getAllPendingRequests, getAllFinishedRequests, create, updateStatus };
