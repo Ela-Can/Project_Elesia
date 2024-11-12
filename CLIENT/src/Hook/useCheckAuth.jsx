@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../StoreRedux/slices/user.js";
+import { login } from "../store/slices/user.js";
 import { useNavigate } from "react-router-dom";
 
 function useCheckAuth() {

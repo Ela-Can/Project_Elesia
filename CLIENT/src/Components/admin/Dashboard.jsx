@@ -1,6 +1,8 @@
 import CategoryList from "./category/CategoryList";
 import CommentList from "./comment/CommentList";
 import ContactList from "./contact/ContactList";
+import SkinConcernList from "./skinConcern/SkinConcernList";
+import SkinTypeList from "./skinType/SkinTypeList";
 import SubjectList from "./subject/SubjectList";
 
 function Dashboard() {
@@ -22,6 +24,12 @@ function Dashboard() {
         </section>
         <section>
           <ContactList />
+        </section>
+        <section>
+          <SkinConcernList />
+        </section>
+        <section>
+          <SkinTypeList />
         </section>
       </main>
     </>

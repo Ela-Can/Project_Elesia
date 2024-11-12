@@ -12,6 +12,7 @@ import Header from "../Components/user/partials/Header.jsx";
 import Footer from "../Components/user/partials/Footer.jsx";
 import Dashboard from "../Components/user/Dashboard.jsx";
 import Diagnostic from "../Components/user/Diagnostic.jsx";
+import ProtectedRoute from "../HOC/ProtectedRoute";
 
 import DashboardAdmin from "../Components/admin/Dashboard.jsx";
 
@@ -21,15 +22,22 @@ function UserRouter() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/product" element={<Product />}></Route>
-        <Route path="/diagnostic/create" element={<Diagnostic />}></Route>
-        <Route path="/product/:id" element={<ProductDetails />}></Route>
-        <Route path="/contact" element={<Contact />}></Route>
+        <Route path="product" element={<Product />}></Route>
+        <Route path="diagnostic/create" element={<Diagnostic />}></Route>
+        <Route path="contact" element={<Contact />}></Route>
 
-        <Route path="/authentification/login" element={<Login />}></Route>
-        <Route path="/authentification/register" element={<Register />}></Route>
-        <Route path="/user" element={<Dashboard />}></Route>
+        <Route path="authentification/login" element={<Login />}></Route>
+        <Route path="authentification/register" element={<Register />}></Route>
+
+        <Route path="product/:id" element={<ProductDetails />}></Route>
+
+        <Route
+          path="user"
+          element={<ProtectedRoute element={Dashboard} />}
+        ></Route>
+
         <Route path="/admin" element={<DashboardAdmin />}></Route>
+        <Route path="*" element={<h1>404 NOT FOUND USER</h1>} />
       </Routes>
       <Footer />
     </>

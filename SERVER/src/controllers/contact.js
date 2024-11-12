@@ -4,7 +4,7 @@ const getAllPendingRequests = async (req, res) => {
     try {
         const [response] = await Contact.findAllPendingRequests(req.params.status);
         res.json(response);
-    } catch {
+    } catch (err) {
         res.status(500).json({ msg: err.message });
     }
 };

@@ -1,11 +1,14 @@
-import { useSelector, useDispatch } from "react-redux";
+//import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { setSkinType } from "../../StoreRedux/slices/skinType.js";
-import { setSkinConcern } from "../../StoreRedux/slices/skinConcern.js";
+//import { setSkinType } from "../../store/slices/skinType.js"; // ces slices ont été supprimés donc à MODIFIER
+//import { setSkinConcern } from "../../store/slices/skinConcern.js";
 import useCheckAuth from "../../Hook/useCheckAuth.jsx";
 
 function Diagnostic() {
   const [user, isLoading] = useCheckAuth();
+
+  const [skinTypes, setSkinTypes] = useState([]);
+  const [skinConcerns, setSkinConcerns] = useState([]);
 
   const [selectedSkinType, setSelectedSkinType] = useState(null);
   const [selectedSkinConcern, setSelectedSkinConcern] = useState(null);
@@ -21,21 +24,21 @@ function Diagnostic() {
   //const user = useSelector((state) => state.user);
   //console.log("User ID dans le composant :", user);
 
-  const skinTypeList = useSelector((state) => state.skinType.skinTypeList);
-  console.log("Les skinTypes dans le composant :", skinTypeList);
+  //const skinTypeList = useSelector((state) => state.skinType.skinTypeList);
+  //console.log("Les skinTypes dans le composant :", skinTypeList);
 
-  const skinConcernList = useSelector(
-    (state) => state.skinConcern.skinConcernList
-  );
-  console.log("Les skinTypes dans le composant :", skinConcernList);
+  //const skinConcernList = useSelector(
+  //  (state) => state.skinConcern.skinConcernList
+  //);
+  //console.log("Les skinTypes dans le composant :", skinConcernList);
 
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchSkinTypes() {
       const response = await fetch("/api/v1/skintype/list");
       const data = await response.json();
-      dispatch(setSkinType(data));
+      setSkinTypes(data);
     }
     fetchSkinTypes();
   }, []);
@@ -44,7 +47,7 @@ function Diagnostic() {
     async function fetchSkinConcerns() {
       const response = await fetch("/api/v1/skinconcern/list");
       const data = await response.json();
-      dispatch(setSkinConcern(data));
+      setSkinConcerns(data);
     }
     fetchSkinConcerns();
   }, []);
@@ -79,6 +82,8 @@ function Diagnostic() {
       console.log("Statut de la réponse du backend :", response.status);
       console.log("Réponse complète du backend :", response);
       if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error("Détails de l'erreur :", errorDetails);
         throw new Error("Erreur lors de la création du diagnostic");
       }
       const result = await response.json();
@@ -116,8 +121,8 @@ function Diagnostic() {
       <form onSubmit={onSubmitBtnHandler}>
         <div>
           <p>Quel est votre type de peau</p>
-          {skinTypeList.length > 0 ? (
-            skinTypeList.map((skinType) => (
+          {skinTypes.length > 0 ? (
+            skinTypes.map((skinType) => (
               <div key={skinType.id}>
                 <input
                   type="radio"
@@ -141,8 +146,8 @@ function Diagnostic() {
         </div>
         <div>
           <p>Quelle est votre principale préoccupation</p>
-          {skinConcernList.length > 0 ? (
-            skinConcernList.map((skinConcern) => (
+          {skinConcerns.length > 0 ? (
+            skinConcerns.map((skinConcern) => (
               <div key={skinConcern.id}>
                 <input
                   type="radio"

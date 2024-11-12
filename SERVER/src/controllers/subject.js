@@ -8,6 +8,16 @@ const getAll = async (req, res) => {
         res.status(500).json({ msg: err.message });
     }
 };
+
+const getAllByStatus = async (req, res) => {
+    try {
+        const [response] = await Subject.findAllActiveSubjects();
+        res.json(response);
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+    }
+}
+
 // ajouter une condition pour éviter de créer un même sujet
 
 const create = async (req, res) => {
@@ -69,9 +79,10 @@ const update = async (req, res) => {
     }
 };
 
-const remove = async (req, res) => {
+const hideSubject = async (req, res) => {
     try {
-        const [response] = await Subject.remove(req.params.id);
+        const { subjectStatus } = req.body;
+        const [response] = await Subject.hideSubject(req.params.id, subjectStatus);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Subject not found" });
             return;
@@ -82,4 +93,4 @@ const remove = async (req, res) => {
     }
 };
 
-export { getAll, create, update, remove };
+export { getAll, getAllByStatus, create, update, hideSubject };

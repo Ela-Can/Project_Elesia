@@ -1,32 +1,11 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  addCategory,
-  setCategories,
-} from "../../../StoreRedux/slices/category.js";
+import { useState } from "react";
 
-function AddCategory() {
-  const [label, setLabel] = useState("");
-  const [ref, setRef] = useState("");
-  const categoryList = useSelector((state) => state.category.categoryList);
-  const dispatch = useDispatch();
-
-  async function fetchCategories() {
-    const response = await fetch("api/v1/category/list");
-    const data = await response.json();
-    console.log("Références récupérées :", data);
-    dispatch(setCategories(data));
-  }
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+function AddCategory({ addCategory }) {
+  const [newLabel, setNewLabel] = useState("");
+  const [newRef, setNewRef] = useState("");
 
   async function onSubmitAddCategory(e) {
     e.preventDefault();
-
-    console.log("Label:", label);
-    console.log("Reference:", ref);
 
     try {
       const response = await fetch("/api/v1/category/create", {
@@ -34,20 +13,21 @@ function AddCategory() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ label, ref }),
+        body: JSON.stringify({ label: newLabel, ref: newRef }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log("Nouvelle catégorie ajoutée :", data);
 
-        dispatch(addCategory(data));
-        console.log("Liste des catégories après ajout :", categoryList);
+        setNewLabel("");
+        setNewRef("");
 
-        fetchCategories();
-
-        setLabel("");
-        setRef("");
+        addCategory({
+          id: data.id,
+          label: newLabel,
+          ref: newRef,
+        });
       } else {
         console.error(
           "Erreur lors de l'ajout de la catégorie :",
@@ -67,8 +47,8 @@ function AddCategory() {
         <select
           name="reference"
           id="reference"
-          value={ref}
-          onChange={(e) => setRef(e.target.value)}
+          value={newRef}
+          onChange={(e) => setNewRef(e.target.value)}
           required
         >
           <option value="" disabled>
@@ -82,8 +62,8 @@ function AddCategory() {
           type="text"
           name="label"
           id="label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
+          value={newLabel}
+          onChange={(e) => setNewLabel(e.target.value)}
         />
         <button type="submit">Ajouter</button>
       </form>

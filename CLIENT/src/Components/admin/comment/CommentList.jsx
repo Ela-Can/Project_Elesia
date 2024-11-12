@@ -1,13 +1,19 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { deleteComment, setComment } from "../../../StoreRedux/slices/comment";
+import { useEffect, useState } from "react";
 
 function CommentList() {
-  const commentList = useSelector((state) => state.comment.commentList);
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const [comments, setComments] = useState([]);
 
-  async function onClickDeleteComment(id, id_user) {
+  useEffect(() => {
+    async function fetchComments() {
+      const response = await fetch("/api/v1/comment/list");
+      const data = await response.json();
+      console.log("Commentaires récupérées :", data);
+      setComments(data);
+    }
+    fetchComments();
+  }, []);
+
+  async function onClickDeleteComment(id) {
     try {
       const response = await fetch(`/api/v1/comment/delete/${id}`, {
         method: "PATCH",
@@ -19,7 +25,19 @@ function CommentList() {
       });
       if (response.ok) {
         alert("Commentaire marqué comme non publié avec succès.");
-        dispatch(deleteComment(id));
+
+        setComments((prevCommentList) => {
+          const updatedList = [...prevCommentList];
+
+          for (let i = 0; i < updatedList.length; i++) {
+            if (updatedList[i].id === id) {
+              updatedList[i].isPublished = 0;
+              break;
+            }
+          }
+
+          return updatedList;
+        });
       } else {
         const errorMessage = await response.text();
         console.error("Erreur lors de la suppression :", errorMessage);
@@ -29,22 +47,12 @@ function CommentList() {
     }
   }
 
-  useEffect(() => {
-    async function fetchComments() {
-      const response = await fetch("/api/v1/comment/list");
-      const data = await response.json();
-      console.log("Commentaires récupérées :", data);
-      dispatch(setComment(data));
-    }
-    fetchComments();
-  }, []);
-
   return (
     <>
       <h3>Liste des commentaires</h3>
-      {commentList.length > 0 ? (
+      {comments.length > 0 ? (
         <ul>
-          {commentList.map((comment) => (
+          {comments.map((comment) => (
             <>
               <li key={comment.id}>
                 {comment.pseudo} {comment.publishDate}: {comment.title}{" "}

@@ -1,18 +1,48 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setCategories,
-  deleteCategory,
-} from "../../../StoreRedux/slices/category.js";
+
 import AddCategory from "./AddCategory.jsx";
 import UpdateCategory from "./UpdateCategory.jsx";
 
 function CategoryList() {
+  const [categories, setCategories] = useState([]);
+
   const [isEditing, setIsEditing] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
 
-  const categoryList = useSelector((state) => state.category.categoryList);
-  const dispatch = useDispatch();
+  useEffect(() => {
+    async function fetchCategories() {
+      const response = await fetch("/api/v1/category/list");
+      const data = await response.json();
+      console.log("Catégories récupérées :", data);
+      setCategories(data);
+    }
+    fetchCategories();
+  }, []);
+
+  function addCategory(newCategory) {
+    setCategories((prevCategory) => [...prevCategory, newCategory]);
+  }
+
+  function updateCategory(updatedCategory) {
+    const { id, label, ref } = updatedCategory;
+
+    setCategories((prevCategories) => {
+      const updatedList = [...prevCategories];
+      for (let i = 0; i < updatedList.length; i++) {
+        if (updatedList[i].id === id) {
+          updatedList[i].label = label;
+          updatedList[i].ref = ref;
+          break;
+        }
+      }
+      return updatedList;
+    });
+  }
+
+  function onClickCancelBtn() {
+    setIsEditing(false);
+    setCategoryId(null);
+  }
 
   async function onClickDeleteCategory(id) {
     try {
@@ -25,7 +55,18 @@ function CategoryList() {
       });
       if (response.ok) {
         alert("Category supprimé avec succès.");
-        dispatch(deleteCategory(id));
+        setCategories((prevCategories) => {
+          const idToDelete = id;
+
+          const updatedList = [];
+
+          for (let i = 0; i < prevCategories.length; i++) {
+            if (prevCategories[i].id !== idToDelete) {
+              updatedList[updatedList.length] = prevCategories[i];
+            }
+          }
+          return updatedList;
+        });
       } else {
         //console.error("Erreur lors de la suppression :", err);
       }
@@ -34,32 +75,19 @@ function CategoryList() {
     }
   }
 
-  function onClickCancelBtn() {
-    setIsEditing(false);
-    setCategoryId(null);
-  }
-
-  useEffect(() => {
-    async function fetchCategories() {
-      const response = await fetch("/api/v1/category/list");
-      const data = await response.json();
-      console.log("Catégories récupérées :", data);
-      dispatch(setCategories(data));
-    }
-    fetchCategories();
-  }, []);
-
   return (
     <>
       <h3>Liste des categories</h3>
-      {categoryList.length > 0 ? (
+      {categories.length > 0 ? (
         <ul>
-          {categoryList.map((category) => (
+          {categories.map((category) => (
             <li key={category.id}>
               {isEditing === true && categoryId === category.id ? (
                 <>
                   <UpdateCategory
                     category={category}
+                    categoryId={category.id}
+                    updateCategory={updateCategory}
                     setIsEditing={setIsEditing}
                   />
                   <button onClick={() => onClickCancelBtn(category.id)}>
@@ -89,7 +117,7 @@ function CategoryList() {
         <p> Aucune catégorie trouvée</p>
       )}
 
-      <AddCategory />
+      <AddCategory addCategory={addCategory} />
     </>
   );
 }

@@ -1,16 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  deleteComment,
-  setComment,
-  updateComment,
-} from "../../../StoreRedux/slices/comment.js";
 
 function CommentsHistory() {
-  const commentList = useSelector((state) => state.comment.commentList);
+  const [comments, setComments] = useState([]);
+  const [commentTitle, setCommentTitle] = useState("");
+  const [commentContent, setCommentContent] = useState("");
+
   const user = useSelector((state) => state.user);
-  //onsole.log("User ID dans le composant :", user);
-  //console.log("Liste des commentaires dans Redux :", commentList);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,7 +15,7 @@ function CommentsHistory() {
       const response = await fetch(`api/v1/user/${user.id}/comments/list`);
       const data = await response.json();
       //console.log("Commentaires récupérés :", data);
-      dispatch(setComment(data));
+      setComments(data);
     }
     fetchCommentsByUserId();
   }, [user.id]);
@@ -33,10 +29,21 @@ function CommentsHistory() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ title, content }),
+          body: JSON.stringify({
+            title: commentTitle,
+            content: commentContent,
+          }),
         }
       );
-      dispatch(updateComment(id, commentTitle, commentContent));
+
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === id
+            ? { ...comment, title: commentTitle, content: commentContent }
+            : comment
+        )
+      );
+
       console.log("Commentaire mis à jour, ID:", id);
     } catch (error) {
       console.error("Erreur lors de la MAJ du commentaire:", error);
@@ -54,9 +61,21 @@ function CommentsHistory() {
           },
         }
       );
-      dispatch(deleteComment(id));
+
+      setComments((prevComments) => {
+        const idToDelete = id;
+
+        const updatedList = [];
+
+        for (let i = 0; i < prevComments.length; i++) {
+          if (prevComments[i].id !== idToDelete) {
+            updatedList[updatedList.length] = prevComments[i];
+          }
+        }
+        return updatedList;
+      });
+
       console.log("Commentaire supprimé, ID:", id);
-      console.log("Liste de commentaires après suppression:", commentList);
     } catch (error) {
       console.error("Erreur lors de la suppression du commentaire:", error);
     }
@@ -66,9 +85,9 @@ function CommentsHistory() {
 
   return (
     <>
-      {commentList.length > 0 ? (
+      {comments.length > 0 ? (
         <ul>
-          {commentList.map((comment) => (
+          {comments.map((comment) => (
             <li key={comment.id}>
               <h4>{comment.title}</h4>
               <p>{comment.content}</p>

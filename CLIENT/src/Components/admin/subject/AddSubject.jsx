@@ -1,34 +1,36 @@
-import { useEffect, useState, useContext } from "react";
-import { SubjectContext } from "../../../StoreContext/subject/Context";
+import { useState } from "react";
 
-function AddSubject() {
-  const { addSubject } = useContext(SubjectContext);
-  const [newSubjectLabel, setNewSubjectLabel] = useState("");
+function AddSubject({ addSubject }) {
+  const [newSubject, setNewSubject] = useState("");
 
-  function onSubmitAddSubject(e) {
+  async function onSubmitAddSubject(e) {
     e.preventDefault();
+    console.log("Form submitted");
 
-    useEffect(() => {
-      async function fetchAddSubjects() {
-        try {
-          const response = await fetch(`api/v1/subject/create`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newSubjectLabel),
-          });
-          const data = await response.json();
-          console.log(data);
-          addSubject(data);
+    try {
+      console.log("Avant appel à fetch");
+      const response = await fetch(`api/v1/subject/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          label: newSubject,
+        }),
+      });
+      console.log(response);
 
-          setNewSubjectLabel("");
-        } catch (error) {
-          console.error("Erreur lors de la récupération des sujets :", error);
-        }
-      }
-      fetchAddSubjects();
-    }, []);
+      const data = await response.json();
+      console.log(data);
+      setNewSubject("");
+      addSubject({
+        id: data.id,
+        label: newSubject,
+        subjectStatus: data.subjectStatus,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la récupération des sujets :", error);
+    }
   }
 
   return (
@@ -39,8 +41,8 @@ function AddSubject() {
           type="text"
           name="newSubject"
           id="newSubject"
-          value={newSubjectLabel}
-          onChange={(e) => setNewSubjectLabel(e.target.value)}
+          value={newSubject}
+          onChange={(e) => setNewSubject(e.target.value)}
         />
         <button type="submit">Ajouter</button>
       </form>

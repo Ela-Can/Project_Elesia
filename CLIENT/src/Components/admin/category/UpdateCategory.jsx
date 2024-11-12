@@ -1,48 +1,33 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  setCategories,
+import { useState } from "react";
+
+function UpdateCategory({
+  category,
+  categoryId,
   updateCategory,
-} from "../../../StoreRedux/slices/category.js";
-
-function UpdateCategory({ category, setIsEditing }) {
-  const [label, setLabel] = useState(category.label);
-  const [ref, setRef] = useState(category.ref);
-
-  const dispatch = useDispatch();
-
-  async function fetchCategories() {
-    const response = await fetch("/api/v1/category/list");
-    const data = await response.json();
-    console.log("Références récupérées :", data);
-    dispatch(setCategories(data));
-  }
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  setIsEditing,
+}) {
+  const [updatedLabel, setUpdatedLabel] = useState(category.label);
+  const [updatedRef, setUpdatedRef] = useState(category.ref);
 
   async function onSubmitUpdateCategory(e) {
     e.preventDefault();
-    console.log("Id:", category.id);
-    console.log("Label:", label);
-    console.log("Reference:", ref);
+
+    updateCategory({
+      id: categoryId,
+      label: updatedLabel,
+      ref: updatedRef,
+    });
 
     try {
-      const response = await fetch(`/api/v1/category/update/${category.id}`, {
+      const response = await fetch(`/api/v1/category/update/${categoryId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ label, ref }),
+        body: JSON.stringify({ label: updatedLabel, ref: updatedRef }),
       });
 
       console.log("Réponse reçue après la mise à jour :", response);
-      console.log("Envoi de la requête de mise à jour avec : ", {
-        label: label,
-        ref: ref,
-        id: category.id,
-      });
 
       if (response.ok) {
         const updatedCategory = await response.json();
@@ -50,15 +35,9 @@ function UpdateCategory({ category, setIsEditing }) {
 
         console.log("Catégorie modifiée avec succès");
 
-        dispatch(
-          updateCategory({
-            id: category.id,
-            categoryLabel: label,
-            categoryRef: ref,
-          })
-        );
+        setUpdatedLabel("");
+        setUpdatedRef("");
 
-        fetchCategories();
         setIsEditing(false);
       } else {
         console.error(
@@ -79,8 +58,8 @@ function UpdateCategory({ category, setIsEditing }) {
         <select
           name="reference"
           id="reference"
-          value={ref}
-          onChange={(e) => setRef(e.target.value)}
+          value={updatedRef}
+          onChange={(e) => setUpdatedRef(e.target.value)}
           required
         >
           <option value="" disabled>
@@ -94,8 +73,8 @@ function UpdateCategory({ category, setIsEditing }) {
           type="text"
           name="label"
           id="label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
+          value={updatedLabel}
+          onChange={(e) => setUpdatedLabel(e.target.value)}
         />
         <button type="submit">Enregistrer</button>
       </form>

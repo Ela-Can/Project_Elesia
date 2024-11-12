@@ -3,48 +3,54 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 function Register() {
+  const message = useSelector((state) => state.user.message);
+
   const [pseudo, setPseudo] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  //const [isPseudoTaken, setIsPseudoTaken] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
 
-    try {
-      const requestBody = { pseudo, birthdate, email, password };
-      console.log("Request Body:", requestBody);
+    if (password !== confirmPassword) {
+      dispatch(setMessage("Les mots de passe ne correspondent pas."));
+      return;
+    }
 
+    try {
       const response = await fetch(`/api/v1/authentification/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({ pseudo, birthdate, email, password }),
         credentials: "include",
       });
 
-      console.log("Response Status:", response.status);
-
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        // inclure un dispatch ?
         navigate("/authentification/login");
       } else {
         const errorData = await response.json();
-        //dispatch(loginFailed({ error: errorData.message }));
+        dispatch(loginFailed({ error: errorData.message }));
       }
     } catch (error) {
-      console.log(error);
-      //dispatch(setMessage("Erreur lors de l'inscription. Veuillez réessayer."));
+      dispatch(setMessage("Erreur lors de l'inscription. Veuillez réessayer."));
     }
   }
 
   return (
     <>
+      <p>*Champs obligatoires</p>
       <form onSubmit={onSubmitBtnHandler}>
-        <label htmlFor="pseudo">Nom d&apos;utilisateur</label>
+        <label htmlFor="pseudo">
+          Nom d&apos;utilisateur<span>*</span>
+        </label>
         <input
           type="text"
           name="pseudo"
@@ -53,7 +59,9 @@ function Register() {
           onChange={(e) => setPseudo(e.target.value)}
           required
         />
-        <label htmlFor="birthdate">Votre date de naissance</label>
+        <label htmlFor="birthdate">
+          Votre date de naissance<span>*</span>
+        </label>
         <input
           type="date"
           name="birthdate"
@@ -62,7 +70,9 @@ function Register() {
           onChange={(e) => setBirthdate(e.target.value)}
           required
         />
-        <label htmlFor="email">Entrez votre adresse mail</label>
+        <label htmlFor="email">
+          Entrez votre adresse mail<span>*</span>
+        </label>
         <input
           type="email"
           name="email"
@@ -71,7 +81,9 @@ function Register() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <label htmlFor="password">Entrez votre mot de passe</label>
+        <label htmlFor="password">
+          Entrez votre mot de passe<span>*</span>
+        </label>
         <input
           type="password"
           name="password"
@@ -80,7 +92,18 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        {/*msg && <p>{msg}</p>*/}
+        <label htmlFor="passwordConfirmation">
+          Confirmer votre mot de passe<span>*</span>
+        </label>
+        <input
+          type="passwordConfirmation"
+          name="passwordConfirmation"
+          id="passwordConfirmation"
+          value={passwordConfirmation}
+          onChange={(e) => setPasswordConfirmation(e.target.value)}
+          required
+        />
+        {message && <p>{message}</p>}
         <button type="submit">S&apos;inscrire</button>
       </form>
     </>
