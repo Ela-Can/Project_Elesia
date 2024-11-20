@@ -22,13 +22,24 @@ const userSlice = createSlice({
             state.pseudo = action.payload.user.pseudo;
             state.role = action.payload.user.role || "user";
             state.isActive = action.payload.user.isActive || 1;
-            state.isLogged = action.payload.isLogged;
+            state.isLogged = true;
             state.birthdate = null;
             state.authError = null;
         },
         loginFailed: (state, action) => {
             state.authError = action.payload.error;
+            state.isLogged = false;
         },
+        logout(state, action) {
+			state.id = null;
+            state.pseudo = "";
+            state.role = "user";
+            state.isActive = 1;
+            state.message = "";
+            state.isLogged = false;
+            state.birthdate = null;
+            state.authError = null;
+		},
         setLoading(state, action) {
         	state.isLoading = action.payload;
         },
@@ -38,6 +49,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser, updatePseudo, login, loginFailed, setLoading, setMessage } = userSlice.actions;
+export const { setUser, updatePseudo, login, logout, loginFailed, setLoading, setMessage } = userSlice.actions;
 
 export default userSlice.reducer;

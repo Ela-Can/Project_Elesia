@@ -36,6 +36,9 @@ function ProductDetails() {
           <Accordion title="Durée d'utilisation après ouverture">
             <p>{product.useDuration}</p>
           </Accordion>
+          <Accordion title="Packaging">
+            <p>{product.packaging}</p>
+          </Accordion>
           <ProductComments productId={id} />
         </article>
       )}

@@ -33,7 +33,16 @@ function Product() {
         ) : (
           products.map((product) => (
             <article key={product.id}>
-              <img src={product.image} alt={product.alt} />
+              <img
+                src={product.image}
+                alt={product.alt}
+                style={{
+                  width: "300px",
+                  height: "auto",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                }}
+              />
               <h4>{product.name}</h4>
               <p>{product.description}</p>
               <button onClick={() => seeMoreBtnHandler(product.id)}>

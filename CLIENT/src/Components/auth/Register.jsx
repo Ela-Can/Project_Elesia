@@ -19,7 +19,7 @@ function Register() {
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (password !== passwordConfirmation) {
       dispatch(setMessage("Les mots de passe ne correspondent pas."));
       return;
     }
@@ -96,7 +96,7 @@ function Register() {
           Confirmer votre mot de passe<span>*</span>
         </label>
         <input
-          type="passwordConfirmation"
+          type="password"
           name="passwordConfirmation"
           id="passwordConfirmation"
           value={passwordConfirmation}

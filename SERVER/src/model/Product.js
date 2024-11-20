@@ -12,35 +12,42 @@ class Product {
                 howToUse,
                 precautions,
                 useDuration,
+                packaging,
                 image,
                 alt,
-                skinType.label AS skinType,
-                skinConcern.label AS skinConcern,
+                id_skinType AS skinType,
+                id_skinConcern AS skinConcern,
+                adaptedToSensitiveSkin AS adaptedToSensitiveSkin_value,
                 CASE
                     WHEN adaptedToSensitiveSkin = 1 THEN 'Produit adapté aux peaux sensibles'
                     ELSE 'Produit non adapté aux peaux sensibles'
-                END AS adaptedToSensitiveSkin,
+                END AS adaptedToSensitiveSkin_label,
+                protectsFromPollution AS protectsFromPollution_value,
                 CASE
                     WHEN protectsFromPollution = 1 THEN 'Produit protégeant de la pollution'
                     ELSE 'Produit ne protégeant pas de la pollution'
-                END AS protectsFromPollution,
+                END AS protectsFromPollution_label,
+                protectsFromSun AS protectsFromSun_value,
                 CASE
                     WHEN protectsFromSun = 1 THEN 'Produit protégeant du soleil'
                     ELSE 'Produit ne protégeant pas du soleil'
-                END AS protectsFromSun,
+                END AS protectsFromSun_label,
+                compatibleWithPregOrBreastfeed AS compatibleWithPregOrBreastfeed_value,
                 CASE
                     WHEN compatibleWithPregOrBreastfeed = 1 THEN "Produit compatible avec la grossesse et l'allaitement"
                     ELSE "Produit pas compatible avec la grossesse et l'allaitement"
-                END AS compatibleWithPregOrBreastfeed,
+                END AS compatibleWithPregOrBreastfeed_label,
+                isOnline AS isOnline_value,
                 CASE
                     WHEN isOnline = 1 THEN 'Produit visible sur le site'
                     ELSE 'Produit invisible sur le site'
-                END AS isOnline,
-                category.label AS category
+                END AS isOnline_label,
+                id_category AS category
             FROM product
             JOIN category ON product.id_category = category.id
             LEFT JOIN skinType ON product.id_skinType = skinType.id
             LEFT JOIN skinConcern ON product.id_skinConcern = skinConcern.id`;
+        
         return await pool.query(SELECT_ALL);
     }
 
@@ -54,10 +61,11 @@ class Product {
                 howToUse,
                 precautions,
                 useDuration,
+                packaging,
                 image,
                 alt,
-                skinType.label AS skinType,
-                skinConcern.label AS skinConcern,
+                id_skinType AS skinType,
+                id_skinConcern AS skinConcern,
                 CASE
                     WHEN adaptedToSensitiveSkin = 1 THEN 'Produit adapté aux peaux sensibles'
                     ELSE 'Produit non adapté aux peaux sensibles'
@@ -78,7 +86,7 @@ class Product {
                     WHEN isOnline = 1 THEN 'Produit visible sur le site'
                     ELSE 'Produit invisible sur le site'
                 END AS isOnline,
-                category.label AS category
+                id_category AS category
             FROM product
             JOIN category ON product.id_category = category.id
             LEFT JOIN skinType ON product.id_skinType = skinType.id
@@ -97,10 +105,11 @@ class Product {
                 howToUse,
                 precautions,
                 useDuration,
+                packaging,
                 image,
                 alt,
-                skinType.label AS skinType,
-                skinConcern.label AS skinConcern,
+                id_skinType AS skinType,
+                id_skinConcern AS skinConcern,
                 CASE
                     WHEN adaptedToSensitiveSkin = 1 THEN 'Produit adapté aux peaux sensibles'
                     ELSE 'Produit non adapté aux peaux sensibles'
@@ -121,7 +130,7 @@ class Product {
                     WHEN isOnline = 1 THEN 'Produit visible sur le site'
                     ELSE 'Produit invisible sur le site'
                 END AS isOnline,
-                category.label AS category
+                id_category AS category
             FROM product
             JOIN category ON product.id_category = category.id
             LEFT JOIN skinType ON product.id_skinType = skinType.id
@@ -137,10 +146,12 @@ class Product {
                 description,
                 ingredients,
                 howToUse,
-                precautions,
                 useDuration,
+                precautions,
+                packaging,
                 image,
                 alt,
+                isOnline,
                 id_skinType,
                 id_skinConcern,
                 adaptedToSensitiveSkin,
@@ -148,7 +159,7 @@ class Product {
                 protectsFromSun,
                 compatibleWithPregOrBreastfeed,
                 id_category)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         return await pool.execute(INSERT, [...Object.values(datas)]);
     }
 
@@ -162,6 +173,7 @@ class Product {
                 howToUse = ?,
                 precautions = ?,
                 useDuration = ?,
+                packaging = ?,
                 image = ?,
                 alt = ?,
                 id_skinType = ?,
@@ -173,7 +185,7 @@ class Product {
                 id_category = ?,
                 isOnline = ?
             WHERE id = ?`;
-        console.log(datas);
+        console.log("Données envoyées pour la mise à jour :", datas);
         return await pool.execute(UPDATE, datas);
     }
 

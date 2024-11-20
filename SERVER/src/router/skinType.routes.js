@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get("/list", getAll); 
 
-router.post("/create", create);
-router.patch("/update/:id", update);
-router.delete("/delete/:id", remove);
+router.post("/create", withAdminAuth, create);
+router.patch("/update/:id", withAdminAuth, update);
+router.delete("/delete/:id", withAdminAuth, remove);
 
 export default router;

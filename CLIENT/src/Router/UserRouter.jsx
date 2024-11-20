@@ -8,13 +8,11 @@ import Login from "../Components/auth/Login.jsx";
 import Register from "../Components/auth/Register.jsx";
 
 import ProductDetails from "../Components/user/ProductDetails.jsx";
-import Header from "../Components/user/partials/Header.jsx";
+import Header from "../Components/partials/Header.jsx";
 import Footer from "../Components/user/partials/Footer.jsx";
 import Dashboard from "../Components/user/Dashboard.jsx";
 import Diagnostic from "../Components/user/Diagnostic.jsx";
 import ProtectedRoute from "../HOC/ProtectedRoute";
-
-import DashboardAdmin from "../Components/admin/Dashboard.jsx";
 
 function UserRouter() {
   return (
@@ -35,9 +33,7 @@ function UserRouter() {
           path="user"
           element={<ProtectedRoute element={Dashboard} />}
         ></Route>
-
-        <Route path="/admin" element={<DashboardAdmin />}></Route>
-        <Route path="*" element={<h1>404 NOT FOUND USER</h1>} />
+        <Route path="*" element={<h1>404 NOT FOUND</h1>} />
       </Routes>
       <Footer />
     </>

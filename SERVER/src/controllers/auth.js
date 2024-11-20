@@ -153,13 +153,13 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
     try {
         req.session.destroy();
-        // req.session = null;
         res.clearCookie("connect.sid");
-        req.status(200).json({
+        res.status(200).json({
             msg: "User logged out",
-            isLogged: "false",
+            isLogged: false,
         });
     } catch (err) {
+        console.error("Logout error:", err);
         res.status(500).json({ msg: err });
     }
 };

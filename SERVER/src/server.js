@@ -48,12 +48,12 @@ app.use("/img", express.static(path.join(process.cwd(), "public/img")));
 
 app.use(fileUpload({
     useTempFiles: false,
-    debug: true, // Activez le mode debug pour plus de logs
+	debug: true,
 }));
 
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req, res, next) => {
 	console.log("user session", req.session.user);

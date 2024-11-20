@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import Product from "../model/Product.js";
+import uploadImg from '../utils/uploadImg.js';
 
 const getAllProducts = async (req, res) => {
     try {
@@ -41,29 +42,43 @@ const getOneProductByName = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
+
     try {
-        
-        const name = req.body.name.trim();
-        const description = req.body.description.trim();
-        const ingredients = req.body.ingredients.trim();
-        const howToUse = req.body.howToUse.trim();
-        const precautions = req.body.precautions.trim();
-        const useDuration = req.body.useDuration.trim();
-        const alt = req.body.alt.trim();
 
-        const image = req.body.image;
-        const id_skinType = req.body.id_skinType;
-        const id_skinConcern = req.body.id_skinConcern;
-        const adaptedToSensitiveSkin = req.body.adaptedToSensitiveSkin;
-        const protectsFromPollution = req.body.protectsFromPollution;
-        const protectsFromSun = req.body.protectsFromSun;
-        const compatibleWithPregOrBreastfeed = req.body.compatibleWithPregOrBreastfeed;
-        const id_category = req.body.id_category;
+        console.log("req.body reçu par le contrôleur :", req.body);
+        const folder = req.params.folder || "defaultFolder";
         
 
-        if (
+        const imageUrl = await uploadImg(req, folder);
+        if (!imageUrl) {
+            console.log("Erreur : Aucun chemin d'image généré.");
+            return res.status(400).json({ msg: "Image manquante ou invalide." });
+        }
+        
+        const name = req.body.name;
+        const description = req.body.description;
+        const ingredients = req.body.ingredients;
+        const howToUse = req.body.howToUse;
+        const precautions = req.body.precautions;
+        const useDuration = req.body.useDuration;
+        const packaging = req.body.packaging;
+        const alt = req.body.alt;
+
+        //const image = req.body.image;
+
+        const id_skinType = parseInt(req.body.id_skinType, 10);
+        const id_skinConcern = parseInt(req.body.id_skinConcern, 10);
+        const id_category = parseInt(req.body.id_category, 10);
+        const adaptedToSensitiveSkin = parseInt(req.body.adaptedToSensitiveSkin, 10);
+        const protectsFromPollution = parseInt(req.body.protectsFromPollution, 10);
+        const protectsFromSun = parseInt(req.body.protectsFromSun, 10);
+        const compatibleWithPregOrBreastfeed = parseInt(req.body.compatibleWithPregOrBreastfeed, 10);
+        const isOnline = parseInt(req.body.isOnline, 10);
+        
+
+        /*if (
             !name || !description || !ingredients || !howToUse || 
-            !precautions || !useDuration || !alt || !image
+            !precautions || !useDuration || !alt || !imageUrl
         ) {
             return res.status(400).json({ msg: "Tous les champs requis doivent être remplis." });
         }
@@ -86,29 +101,35 @@ const createProduct = async (req, res) => {
         if (useDuration.length > 100) {
             return res.status(400).json({ msg: "La durée d'utilisation ne peut pas dépasser 100 caractères." });
         }
+        if (packaging.length > 500) {
+            return res.status(400).json({ msg: "Le packaging ne peut pas dépasser 100 caractères." });
+        }
         if (alt.length > 255) {
             return res.status(400).json({ msg: "Le texte alternatif de l'image ne peut pas dépasser 150 caractères." });
-        }
+        }*/
 
         // faire le reste ...
 
-        const [existingProduct] = await Product.findAllProducts();
+        //const [existingProduct] = await Product.findAllProducts();
 
-        for (let product of existingProduct) {
-            if (req.body.name.trim() === product.name) {
-                return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
-            }
-        }
-        
+        //for (let product of existingProduct) {
+        //    if (req.body.name === product.name) {
+        //        return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
+        //    }
+        //}
+
+
         const datas = {
             name,
             description,
             ingredients,
             howToUse,
-            precautions,
             useDuration,
-            image,
+            precautions,
+            packaging,
+            image : imageUrl,
             alt,
+            isOnline,
             id_skinType,
             id_skinConcern,
             adaptedToSensitiveSkin,
@@ -118,47 +139,65 @@ const createProduct = async (req, res) => {
             id_category,
         };
 
-        console.log(req.body);
+        console.log("Données préparées pour l'insertion :", datas);
+
         const [response] = await Product.createProduct(datas);
         res.json({ msg: "Product Created", id: response.insertId });
+
     } catch (err) {
-        console.error('Erreur SQL:', err.message);
-        res.status(500).json({ msg: err.message });
+        console.error("Erreur complète :", err);
+        res.status(500).json({ msg: "Erreur serveur", details: err.message });
     }
 };
 
 const updateProduct = async (req, res) => {
     try {
 
+        const folder = req.params.folder || "defaultFolder";
+        
+
+        const imageUrl = await uploadImg(req, folder);
+        if (!imageUrl) {
+            console.log("Erreur : Aucun chemin d'image généré.");
+            return res.status(400).json({ msg: "Image manquante ou invalide." });
+        }
+        const image = imageUrl;
+
         const [existingProduct] = await Product.findAllProducts();
 
         for (let product of existingProduct) {
-            if (req.body.name.trim() === product.name) {
+            if (req.body.name === product.name) {
                 return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
             }
         }
 
         const [product] = await Product.findOneProductById(req.params.id);
 
+       
         const datas = [
-            req.body.name.trim(),
-            req.body.description.trim(),
-            req.body.ingredients.trim(),
-            req.body.howToUse.trim(),
-            req.body.precautions.trim(),
-            req.body.useDuration.trim(),
-            req.body.image,
-            req.body.alt.trim(),
-            req.body.id_skinType,
-            req.body.id_skinConcern,
-            req.body.adaptedToSensitiveSkin,
-            req.body.protectsFromPollution,
-            req.body.protectsFromSun,
-            req.body.compatibleWithPregOrBreastfeed,
-            req.body.id_category,
+            req.body.name,
+            req.body.description,
+            req.body.ingredients,
+            req.body.howToUse,
+            req.body.precautions,
+            req.body.useDuration,
+            req.body.packaging,
+            image,
+            req.body.alt,
+            id_skinType,
+            id_skinConcern,
+            adaptedToSensitiveSkin,
+            protectsFromPollution,
+            protectsFromSun,
+            compatibleWithPregOrBreastfeed,
+            id_category,
             req.body.isOnline,
             req.params.id
         ];
+
+        if (!datas) {
+            return res.status(400).json({ msg: "Les champs obligatoires sont manquants." });
+        }
 
         const [response] = await Product.updateProduct(datas);
 

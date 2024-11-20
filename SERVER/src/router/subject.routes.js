@@ -8,8 +8,8 @@ const router = express.Router();
 router.get("/list", getAll); 
 router.get("/list/:subjectStatus", getAllByStatus); 
 
-router.post("/create", create);
-router.patch("/update/:id", update);
-router.patch("/delete/:id", hideSubject);
+router.post("/create", withAdminAuth, create);
+router.patch("/update/:id", withAdminAuth, update);
+router.patch("/delete/:id", withAdminAuth, hideSubject);
 
 export default router;
