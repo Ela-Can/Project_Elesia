@@ -5,6 +5,7 @@ const userSlice = createSlice({
     initialState: {
         id: null,
         pseudo: "",
+        email: "",
         role: "user",
         isActive: 1,
         message: "",
@@ -14,12 +15,13 @@ const userSlice = createSlice({
     },
     reducers: {
         updatePseudo: (state, action) => {
-            state.pseudo = action.payload.user.pseudo;
+            state.pseudo = action.payload;
         },
         login: (state, action) => {
             console.log("Payload reçu dans login:", action.payload);
             state.id = action.payload.user.id;
             state.pseudo = action.payload.user.pseudo;
+            state.email = action.payload.user.email;
             state.role = action.payload.user.role || "user";
             state.isActive = action.payload.user.isActive || 1;
             state.isLogged = true;

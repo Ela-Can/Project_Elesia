@@ -28,12 +28,12 @@ const updateUserStatus = async (req, res) => {
 const updateUserInfo = async (req, res) => {
     try {
 
-        const pseudo = req.body.pseudo.trim();
-        const email = req.body.email.trim();
+        const pseudo = req.body.pseudo;
+        const email = req.body.email;
 
-        if (!email || !pseudo) {
-            return res.status(400).json({ msg: "All fields are required" });
-        }
+        //if (!email || !pseudo) {
+        //    return res.status(400).json({ msg: "All fields are required" });
+        //}
 
         if (pseudo.length < 3 || pseudo.length > 50) {
             return res.status(400).json({ msg: "Pseudo must be between 3 and 50 characters" });
@@ -48,7 +48,7 @@ const updateUserInfo = async (req, res) => {
             res.status(404).json({ msg: "Info not updated" });
             return;
         }
-        res.json({ msg: "Info updated" });
+        res.json({ pseudo });
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }

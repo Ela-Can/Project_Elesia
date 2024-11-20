@@ -5,10 +5,10 @@ import { updatePseudo } from "../../../store/slices/user.js";
 function Settings() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  console.log("User ID dans le composant Settings :", user);
-  //Récupérer l'email
+
   const [userInfo, setUserInfo] = useState(null);
   const [pseudo, setPseudo] = useState(user.pseudo);
+  const [email, setEmail] = useState(user.email);
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -31,11 +31,12 @@ function Settings() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ pseudo }),
+          body: JSON.stringify({ pseudo, email }),
         }
       );
       if (response.ok) {
         const data = await response.json();
+
         dispatch(updatePseudo(data.pseudo));
         setIsEditing(false);
       } else {
@@ -52,7 +53,7 @@ function Settings() {
 
   return (
     <main>
-      <h3>Vos informations personnelles</h3>
+      <h4>Vos informations personnelles</h4>
       {isEditing ? (
         <form onSubmit={onSubmitUpdate}>
           <label htmlFor="pseudo">Pseudo :</label>
@@ -63,6 +64,8 @@ function Settings() {
             value={pseudo}
             onChange={(e) => setPseudo(e.target.value)}
           />
+          <label htmlFor="email">Email :</label>
+          <input type="email" name="email" id="email" value={email} readOnly />
           <button type="submit">Enregistrer les modifications</button>
           <button type="button" onClick={() => setIsEditing(false)}>
             Annuler
@@ -72,7 +75,9 @@ function Settings() {
         <div>
           <p>Pseudo : {user.pseudo}</p>
           <p>Email : {user.email} </p>
-          <button onClick={() => setIsEditing(true)}>Modifier le pseudo</button>
+          <button onClick={() => setIsEditing(true)}>
+            Modifier vos informations
+          </button>
         </div>
       )}
     </main>

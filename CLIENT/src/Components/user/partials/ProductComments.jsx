@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import AddComment from "./AddComment";
 
 function ProductComments({ productId }) {
   const [comments, setComments] = useState([]);
@@ -15,8 +16,9 @@ function ProductComments({ productId }) {
 
   return (
     <>
+      <h4>Commentaires</h4>
       {comments.length === 0 ? (
-        <p>Aucun commentaire</p>
+        <p>Soyez le premier à laisser un avis sur le produit !</p>
       ) : (
         comments.map((comment) => (
           <article key={comment.id}>
@@ -26,6 +28,7 @@ function ProductComments({ productId }) {
           </article>
         ))
       )}
+      <AddComment productId={productId} />
     </>
   );
 }

@@ -92,8 +92,10 @@ class User {
             SELECT
                 diagnosticForm.id,
                 DATE_FORMAT(createdDate, '%d/%m/%Y') AS createdDate,
-                diagnosticForm.id_skinType, 
-                diagnosticForm.id_skinConcern, 
+                diagnosticForm.id_skinType,
+                skinType.label AS skinTypeLabel,
+                diagnosticForm.id_skinConcern,
+                skinConcern.label AS skinConcernLabel,
                 CASE 
                     WHEN isSkinSensitive = 1 THEN 'Oui'
                     ELSE 'Non'
@@ -116,6 +118,8 @@ class User {
                 product.image AS product_image, 
                 product.alt AS product_alt
             FROM diagnosticForm
+            LEFT JOIN skinType ON diagnosticForm.id_skinType = skinType.id
+            LEFT JOIN skinConcern ON diagnosticForm.id_skinConcern = skinConcern.id
             LEFT JOIN productRecommandation ON diagnosticForm.id = productRecommandation.id_diagnosticForm
             LEFT JOIN product ON productRecommandation.id_product = product.id
             WHERE id_user = ?`;

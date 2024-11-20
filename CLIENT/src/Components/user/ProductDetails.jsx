@@ -19,29 +19,33 @@ function ProductDetails() {
 
   return (
     <>
-      {product.length === 0 ? (
-        <p>Product not found</p>
-      ) : (
-        <article key={product.id}>
-          <h3>{product.name}</h3>
-          <img src={product.image} alt={product.alt} />
-          <p>{product.description}</p>
-          <p>{product.precautions}</p>
-          <Accordion title="Ingrédients">
-            <p>{product.ingredients}</p>
-          </Accordion>
-          <Accordion title="Conseils d'utilisation">
-            <p>{product.howToUse}</p>
-          </Accordion>
-          <Accordion title="Durée d'utilisation après ouverture">
-            <p>{product.useDuration}</p>
-          </Accordion>
-          <Accordion title="Packaging">
-            <p>{product.packaging}</p>
-          </Accordion>
-          <ProductComments productId={id} />
-        </article>
-      )}
+      <section>
+        {product.length === 0 ? (
+          <p>Product not found</p>
+        ) : (
+          <article key={product.id}>
+            <h3>{product.name}</h3>
+            <img src={product.image} alt={product.alt} />
+            <p>{product.description}</p>
+            <p>{product.precautions}</p>
+            <Accordion title="Ingrédients">
+              <p>{product.ingredients}</p>
+            </Accordion>
+            <Accordion title="Conseils d'utilisation">
+              <p>{product.howToUse}</p>
+            </Accordion>
+            <Accordion title="Durée d'utilisation après ouverture">
+              <p>{product.useDuration}</p>
+            </Accordion>
+            <Accordion title="Packaging">
+              <p>{product.packaging}</p>
+            </Accordion>
+          </article>
+        )}
+      </section>
+      <section>
+        <ProductComments productId={id} />
+      </section>
     </>
   );
 }

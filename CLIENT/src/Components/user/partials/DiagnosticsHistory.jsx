@@ -1,23 +1,17 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setDiagnostic,
   deleteDiagnosticById,
 } from "../../../store/slices/diagnostic.js";
-//import useCheckAuth from "../../../Hook/useCheckAuth.jsx";
 
 function DiagnosticHistory() {
-  //const [user, isLoading] = useCheckAuth();
-
   const diagnosticList = useSelector(
     (state) => state.diagnostic.diagnosticList
   );
   const user = useSelector((state) => state.user);
-  //console.log("User ID dans le composant :", user);
-  //console.log("Liste des commentaires dans Redux :", diagnosticList);
   const dispatch = useDispatch();
-
-  //console.log("Component re-rendered");
 
   if (!user.id) {
     return <p>Chargement des données utilisateur...</p>;
@@ -49,37 +43,46 @@ function DiagnosticHistory() {
     async function fetchDiagnosticsByUserId() {
       const response = await fetch(`api/v1/user/${user.id}/diagnostic/list`);
       const data = await response.json();
-      //console.log("Diag récupérés :", data);
       dispatch(setDiagnostic(data));
-      //console.log("DiagnosticList après dispatch :", diagnosticList);
     }
     fetchDiagnosticsByUserId();
   }, [user.id]);
 
   return (
     <>
+      <h4>Vos diagnostics de peau</h4>
       {diagnosticList.length > 0 ? (
         <ul>
           {diagnosticList.map((diagnostic) => (
             <li key={diagnostic.id}>
               <h4>{diagnostic.createdDate}</h4>
-              <p>Type de peau : {diagnostic.id_skinType}</p>
-              <p>Principale préoccupation : {diagnostic.id_skinConcern}</p>
-              <p>Peau sensible : {diagnostic.isSkinSensitive}</p>
+              <p>Comment décririez-vous votre type de peau ?</p>
+              <p>Votre réponse : {diagnostic.skinTypeLabel}</p>
               <p>
-                Fréquence d'exposition à la pollution :
-                {diagnostic.isExposedToPollution}
+                Quelle est votre principale préoccupation concernant votre peau
+                ?
               </p>
+              <p>Votre réponse : {diagnostic.skinConcernLabel}</p>
               <p>
-                Fréquence d'exposition au soleil : {diagnostic.isExposedToSun}
+                Votre peau est-elle sensible (rougeurs, tiraillements,
+                picotements fréquents) ?
               </p>
+              <p>Votre réponse : {diagnostic.isSkinSensitive}</p>
+              <p>À quelle fréquence êtes-vous exposé(e) à la pollution ?</p>
+              <p>Votre réponse : {diagnostic.isExposedToPollution}</p>
+              <p>À quelle fréquence vous exposez-vous au soleil ?</p>
+              <p>Votre réponse : {diagnostic.isExposedToSun}</p>
               <p>
-                Enceinte ou allaitante : {diagnostic.isPregnantOrBreastfeeding}
+                Êtes-vous actuellement enceinte ou en période d’allaitement ?
               </p>
-              <p>Produit : {diagnostic.product_name}</p>
-              <img src={diagnostic.product_img} alt={diagnostic.product_alt} />
+              <p>Votre réponse : {diagnostic.isPregnantOrBreastfeeding}</p>
+              <p>Le produit recommandé : </p>
+              <p>{diagnostic.product_name}</p>
+              <Link to={`/product/${diagnostic.product_id}`}>
+                <button>Voir plus</button>
+              </Link>
               <button onClick={() => onClickDeleteDiagnostic(diagnostic.id)}>
-                Supprimer
+                Supprimer le diagnostic
               </button>
             </li>
           ))}

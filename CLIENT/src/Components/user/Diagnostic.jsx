@@ -109,7 +109,7 @@ function Diagnostic() {
       {user && (
         <form onSubmit={onSubmitBtnHandler}>
           <div>
-            <p>Quel est votre type de peau</p>
+            <p>Comment décririez-vous votre type de peau ?</p>
             {skinTypes.length > 0 ? (
               skinTypes.map((skinType) => (
                 <div key={skinType.id}>
@@ -134,7 +134,9 @@ function Diagnostic() {
             )}
           </div>
           <div>
-            <p>Quelle est votre principale préoccupation</p>
+            <p>
+              Quelle est votre principale préoccupation concernant votre peau ?
+            </p>
             {skinConcerns.length > 0 ? (
               skinConcerns.map((skinConcern) => (
                 <div key={skinConcern.id}>
@@ -153,7 +155,10 @@ function Diagnostic() {
             )}
           </div>
           <div>
-            <p>Votre peau est-elle sensible ?</p>
+            <p>
+              Votre peau est-elle sensible (rougeurs, tiraillements, picotements
+              fréquents) ?
+            </p>
             <input
               type="radio"
               name="isSkinSensitive"
@@ -174,7 +179,7 @@ function Diagnostic() {
             <label htmlFor="isSkinSensitiveNo">Non</label>
           </div>
           <div>
-            <p>A quelle fréquence êtes-vous exposé à la pollution ?</p>
+            <p>À quelle fréquence êtes-vous exposé(e) à la pollution ?</p>
             <input
               type="radio"
               name="isExposedToPollution"
@@ -195,7 +200,7 @@ function Diagnostic() {
             <label htmlFor="isExposedToPollutionNo">Occasionnellement</label>
           </div>
           <div>
-            <p>A quelle fréquence vous exposez-vous au soleil ?</p>
+            <p>À quelle fréquence vous exposez-vous au soleil ?</p>
             <input
               type="radio"
               name="isExposedToSun"
@@ -218,7 +223,7 @@ function Diagnostic() {
             </label>
           </div>
           <div>
-            <p>Etes-vous enceinte ou allaitez-vous ?</p>
+            <p>Êtes-vous actuellement enceinte ou en période d’allaitement ?</p>
             <input
               type="radio"
               name="isPregnantOrBreastfeeding"

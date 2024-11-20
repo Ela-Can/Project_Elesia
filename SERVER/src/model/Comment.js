@@ -38,7 +38,8 @@ class Comment {
             FROM comment
             JOIN user ON comment.id_user = user.id
             JOIN product ON comment.id_product = product.id
-            WHERE comment.id_product = ?`;
+            WHERE comment.id_product = ?
+            AND comment.isPublished = 1`;
         return await pool.execute(SELECT_ONE, [id]);
     }
 

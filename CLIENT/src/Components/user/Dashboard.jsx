@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Settings from "./partials/Settings.jsx";
 import CommentsHistory from "./partials/CommentsHistory.jsx";
@@ -5,32 +6,33 @@ import DiagnosticsHistory from "./partials/DiagnosticsHistory.jsx";
 
 function Dashboard() {
   const user = useSelector((state) => state.user);
-  console.log("User dans Dashboard :", user);
+  const [activeSection, setActiveSection] = useState(null);
+
   return (
-    <main>
-      <h2>Hello {user.pseudo}</h2>
-      <h3>Mon espace personnel</h3>
-      <section>
-        <p>Vos informations personnelles</p>
-        <Settings />
-      </section>
-      <section>
-        <p>Historique des commentaires</p>
-        <CommentsHistory />
-      </section>
-      <section>
-        <p>Historique de mes diagnostics</p>
-        <DiagnosticsHistory />
-      </section>
+    <>
       <aside>
-        <ul>
-          <li>Mon compte</li>
-          <li>Mes diagnostics de peau</li>
-          <li>Mes commentaires</li>
-          <li>Mes paramètres de compte</li>
-        </ul>
+        <button onClick={() => setActiveSection("settings")}>
+          Vos informations personnelles
+        </button>
+        <button onClick={() => setActiveSection("comments")}>
+          Vos commentaires
+        </button>
+        <button onClick={() => setActiveSection("diagnostics")}>
+          Vos diagnostics de peau
+        </button>
       </aside>
-    </main>
+
+      <main>
+        <h2>Hello {user.pseudo}</h2>
+        <h3>Bienvenue sur votre espace personnel</h3>
+
+        <div>
+          {activeSection === "settings" && <Settings />}
+          {activeSection === "comments" && <CommentsHistory />}
+          {activeSection === "diagnostics" && <DiagnosticsHistory />}
+        </div>
+      </main>
+    </>
   );
 }
 

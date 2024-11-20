@@ -9,7 +9,7 @@ const router = express.Router();
 // Gestion des utilisateurs 
 
 router.get("/list", withAdminAuth, getAllUsers); // ajouter le middleware qui vérifie le rôle de la personne qui accède à ces données
-router.get("/:id", withAdminAuth, getOneUserById);
+router.get("/:id", withAuth, getOneUserById);
 
 router.patch("/update_status/:id", withAdminAuth, updateUserStatus);
 router.patch("/update_information/:id", withAuth, updateUserInfo);

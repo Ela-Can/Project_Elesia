@@ -48,38 +48,16 @@ function Dashboard() {
           </>
         )}
 
-        <button
-          onClick={() => setActiveSection("comments")}
-          style={{
-            width: "100%",
-            textAlign: "left",
-            background: "none",
-            border: "none",
-            padding: "10px",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={() => setActiveSection("comments")}>
           Modérations des commentaires
         </button>
 
-        <button
-          onClick={() => setActiveSection("contacts")}
-          style={{
-            width: "100%",
-            textAlign: "left",
-            background: "none",
-            border: "none",
-            padding: "10px",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <button onClick={() => setActiveSection("contacts")}>
           Demandes de contact
         </button>
       </aside>
 
-      <main style={{ flex: 1, padding: "20px" }}>
+      <main>
         <h2>Dashboard</h2>
         <div>
           {activeSection === "products" && <ProductList />}

@@ -1,7 +1,7 @@
 function Footer() {
   return (
     <footer>
-      <p>2024 - Elésia</p>
+      <p></p>
     </footer>
   );
 }

@@ -85,6 +85,7 @@ function CommentsHistory() {
 
   return (
     <>
+      <h4>Vos commentaires</h4>
       {comments.length > 0 ? (
         <ul>
           {comments.map((comment) => (
@@ -100,7 +101,7 @@ function CommentsHistory() {
           ))}
         </ul>
       ) : (
-        <p>Vous n'avez pas encore de commentaires.</p>
+        <p>Aucun commentaire</p>
       )}
     </>
   );
