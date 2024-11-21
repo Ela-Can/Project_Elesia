@@ -23,6 +23,7 @@ function ContactHistory() {
             <li key={contact.id}>
               <>
                 <p>{contact.email}</p>
+                <p>{contact.subject}</p>
                 <p>{contact.content}</p>
                 <p>{contact.date}</p>
               </>

@@ -1,5 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 
+import Home from "../Components/user/Home.jsx";
+import Contact from "../Components/user/Contact.jsx";
+import Product from "../Components/user/Product.jsx";
+
+import Login from "../Components/auth/Login.jsx";
+import Register from "../Components/auth/Register.jsx";
+import Diagnostic from "../Components/user/Diagnostic.jsx";
+
+import ProductDetails from "../Components/user/ProductDetails.jsx";
+
 import Header from "../Components/admin/partials/HeaderAdmin.jsx";
 import Dashboard from "../Components/admin/Dashboard.jsx";
 
@@ -14,6 +24,15 @@ function AdminRouter() {
           path="/admin"
           element={<ProtectedRoute element={Dashboard} />}
         ></Route>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="product" element={<Product />}></Route>
+        <Route path="diagnostic/create" element={<Diagnostic />}></Route>
+        <Route path="contact" element={<Contact />}></Route>
+
+        <Route path="authentification/login" element={<Login />}></Route>
+        <Route path="authentification/register" element={<Register />}></Route>
+
+        <Route path="product/:id" element={<ProductDetails />}></Route>
         <Route path="*" element={<p>NOT FOUND</p>} />
       </Routes>
     </>

@@ -12,6 +12,8 @@ function Dashboard() {
   const [activeSection, setActiveSection] = useState(null);
   const [isContentMenuOpen, setIsContentMenuOpen] = useState(false);
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
   return (
     <>
       <aside
@@ -53,7 +55,7 @@ function Dashboard() {
         </button>
 
         <button onClick={() => setActiveSection("contacts")}>
-          Demandes de contact
+          Demandes de contact {unreadCount}
         </button>
       </aside>
 
@@ -64,7 +66,9 @@ function Dashboard() {
           {activeSection === "categories" && <CategoryList />}
           {activeSection === "subjects" && <SubjectList />}
           {activeSection === "comments" && <CommentList />}
-          {activeSection === "contacts" && <ContactList />}
+          {activeSection === "contacts" && (
+            <ContactList setUnreadCount={setUnreadCount} />
+          )}
           {activeSection === "skinTypes" && <SkinTypeList />}
           {activeSection === "skinConcerns" && <SkinConcernList />}
         </div>
