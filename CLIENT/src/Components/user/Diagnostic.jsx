@@ -91,183 +91,190 @@ function Diagnostic() {
     return <p>Vérification de l'authentification en cours...</p>;
   }
 
-  if (!user.isLogged) {
-    return (
-      <div>
-        <p>Vous devez être connecté pour accéder à cette page.</p>
-        <Link to="/authentification/login">Se connecter</Link>
-      </div>
-    );
-  }
-
   function seeMoreBtnHandler(productId) {
     navigate(`/product/${productId}`);
   }
 
   return (
-    <>
-      {user && (
-        <form onSubmit={onSubmitBtnHandler}>
-          <div>
-            <p>Comment décririez-vous votre type de peau ?</p>
-            {skinTypes.length > 0 ? (
-              skinTypes.map((skinType) => (
-                <div key={skinType.id}>
-                  <input
-                    type="radio"
-                    name="skinType"
-                    id={skinType.label}
-                    value={skinType.id}
-                    onChange={(e) => {
-                      console.log(
-                        "Nouveau type de peau sélectionné :",
-                        e.target.value
-                      );
-                      setSelectedSkinType(e.target.value);
-                    }}
-                  />
-                  <label for="skinType">{skinType.label}</label>
-                </div>
-              ))
-            ) : (
-              <p>Une erreur est survenue</p>
-            )}
-          </div>
-          <div>
-            <p>
-              Quelle est votre principale préoccupation concernant votre peau ?
-            </p>
-            {skinConcerns.length > 0 ? (
-              skinConcerns.map((skinConcern) => (
-                <div key={skinConcern.id}>
-                  <input
-                    type="radio"
-                    name="skinConcern"
-                    id={skinConcern.label}
-                    value={skinConcern.id}
-                    onChange={(e) => setSelectedSkinConcern(e.target.value)}
-                  />
-                  <label for="skinConcern">{skinConcern.label}</label>
-                </div>
-              ))
-            ) : (
-              <p>Une erreur est survenue</p>
-            )}
-          </div>
-          <div>
-            <p>
-              Votre peau est-elle sensible (rougeurs, tiraillements, picotements
-              fréquents) ?
-            </p>
-            <input
-              type="radio"
-              name="isSkinSensitive"
-              id="isSkinSensitiveYes"
-              value="true"
-              checked={isSkinSensitive === true}
-              onChange={() => setIsSkinSensitive(true)}
-            />
-            <label htmlFor="isSkinSensitiveYes">Oui</label>
-            <input
-              type="radio"
-              name="isSkinSensitive"
-              id="isSkinSensitiveNo"
-              value="false"
-              checked={isSkinSensitive === false}
-              onChange={() => setIsSkinSensitive(false)}
-            />
-            <label htmlFor="isSkinSensitiveNo">Non</label>
-          </div>
-          <div>
-            <p>À quelle fréquence êtes-vous exposé(e) à la pollution ?</p>
-            <input
-              type="radio"
-              name="isExposedToPollution"
-              id="isExposedToPollutionYes"
-              value="true"
-              checked={isExposedToPollution === true}
-              onChange={() => setIsExposedToPollution(true)}
-            />
-            <label htmlFor="isExposedToPollutionYes">Fréquemment</label>
-            <input
-              type="radio"
-              name="isExposedToPollution"
-              id="isExposedToPollutionNo"
-              value="false"
-              checked={isExposedToPollution === false}
-              onChange={() => setIsExposedToPollution(false)}
-            />
-            <label htmlFor="isExposedToPollutionNo">Occasionnellement</label>
-          </div>
-          <div>
-            <p>À quelle fréquence vous exposez-vous au soleil ?</p>
-            <input
-              type="radio"
-              name="isExposedToSun"
-              id="isExposedToSunYes"
-              value="true"
-              checked={isExposedToSun === true}
-              onChange={() => setIsExposedToSun(true)}
-            />
-            <label htmlFor="isExposedToSunYes">Fréquemment</label>
-            <input
-              type="radio"
-              name="isExposedToSun"
-              id="isExposedToSunNo"
-              value="false"
-              checked={isExposedToSun === false}
-              onChange={() => setIsExposedToSun(false)}
-            />
-            <label htmlFor="isExposedToSunNo">
-              Occasionnellement, voire jamais
-            </label>
-          </div>
-          <div>
-            <p>Êtes-vous actuellement enceinte ou en période d’allaitement ?</p>
-            <input
-              type="radio"
-              name="isPregnantOrBreastfeeding"
-              id="isPregnantOrBreastfeedingYes"
-              value="true"
-              checked={isPregnantOrBreastfeeding === true}
-              onChange={() => setIsPregnantOrBreastfeeding(true)}
-            />
-            <label htmlFor="isPregnantOrBreastfeedingYes">Oui</label>
-            <input
-              type="radio"
-              name="isPregnantOrBreastfeeding"
-              id="isPregnantOrBreastfeedingNo"
-              value="false"
-              checked={isPregnantOrBreastfeeding === false}
-              onChange={() => setIsPregnantOrBreastfeeding(false)}
-            />
-            <label htmlFor="isPregnantOrBreastfeedingNo">Non</label>
-          </div>
-          <button type="submit">Envoyer</button>
-        </form>
-      )}
-
-      {isSubmitted && (
-        <>
-          {recommendedProduct ? (
+    <main>
+      <h2>Diagnostic de peau</h2>
+      <section>
+        {user.isLogged ? (
+          <form onSubmit={onSubmitBtnHandler}>
             <div>
-              <h2>Produit Recommandé :</h2>
-              <img
-                src={recommendedProduct.image}
-                alt={recommendedProduct.alt}
-              />
-              <h3>{recommendedProduct.name}</h3>
-              <p>{recommendedProduct.description}</p>
-              <button onClick={() => seeMoreBtnHandler(recommendedProduct.id)}>
-                Voir plus
-              </button>
+              <p>Comment décririez-vous votre type de peau ?</p>
+              {skinTypes.length > 0 ? (
+                skinTypes
+                  .filter((skinType) => skinType.label !== "Tous types de peau")
+                  .map((skinType) => (
+                    <div key={skinType.id}>
+                      <input
+                        type="radio"
+                        name="skinType"
+                        id={skinType.label}
+                        value={skinType.id}
+                        onChange={(e) => {
+                          console.log(
+                            "Nouveau type de peau sélectionné :",
+                            e.target.value
+                          );
+                          setSelectedSkinType(e.target.value);
+                        }}
+                      />
+                      <label for="skinType">{skinType.label}</label>
+                    </div>
+                  ))
+              ) : (
+                <p>Une erreur est survenue</p>
+              )}
             </div>
-          ) : (
-            <p>Aucun produit ne correspond à vos attentes</p>
-          )}
-        </>
-      )}
-    </>
+            <div>
+              <p>
+                Quelle est votre principale préoccupation concernant votre peau
+                ?
+              </p>
+              {skinConcerns.length > 0 ? (
+                skinConcerns.map((skinConcern) => (
+                  <div key={skinConcern.id}>
+                    <input
+                      type="radio"
+                      name="skinConcern"
+                      id={skinConcern.label}
+                      value={skinConcern.id}
+                      onChange={(e) => setSelectedSkinConcern(e.target.value)}
+                    />
+                    <label for="skinConcern">{skinConcern.label}</label>
+                  </div>
+                ))
+              ) : (
+                <p>Une erreur est survenue</p>
+              )}
+            </div>
+            <div>
+              <p>
+                Votre peau est-elle sensible (rougeurs, tiraillements,
+                picotements fréquents) ?
+              </p>
+              <input
+                type="radio"
+                name="isSkinSensitive"
+                id="isSkinSensitiveYes"
+                value="true"
+                checked={isSkinSensitive === true}
+                onChange={() => setIsSkinSensitive(true)}
+              />
+              <label htmlFor="isSkinSensitiveYes">Oui</label>
+              <input
+                type="radio"
+                name="isSkinSensitive"
+                id="isSkinSensitiveNo"
+                value="false"
+                checked={isSkinSensitive === false}
+                onChange={() => setIsSkinSensitive(false)}
+              />
+              <label htmlFor="isSkinSensitiveNo">Non</label>
+            </div>
+            <div>
+              <p>À quelle fréquence êtes-vous exposé(e) à la pollution ?</p>
+              <input
+                type="radio"
+                name="isExposedToPollution"
+                id="isExposedToPollutionYes"
+                value="true"
+                checked={isExposedToPollution === true}
+                onChange={() => setIsExposedToPollution(true)}
+              />
+              <label htmlFor="isExposedToPollutionYes">Fréquemment</label>
+              <input
+                type="radio"
+                name="isExposedToPollution"
+                id="isExposedToPollutionNo"
+                value="false"
+                checked={isExposedToPollution === false}
+                onChange={() => setIsExposedToPollution(false)}
+              />
+              <label htmlFor="isExposedToPollutionNo">Occasionnellement</label>
+            </div>
+            <div>
+              <p>À quelle fréquence vous exposez-vous au soleil ?</p>
+              <input
+                type="radio"
+                name="isExposedToSun"
+                id="isExposedToSunYes"
+                value="true"
+                checked={isExposedToSun === true}
+                onChange={() => setIsExposedToSun(true)}
+              />
+              <label htmlFor="isExposedToSunYes">Fréquemment</label>
+              <input
+                type="radio"
+                name="isExposedToSun"
+                id="isExposedToSunNo"
+                value="false"
+                checked={isExposedToSun === false}
+                onChange={() => setIsExposedToSun(false)}
+              />
+              <label htmlFor="isExposedToSunNo">
+                Occasionnellement, voire jamais
+              </label>
+            </div>
+            <div>
+              <p>
+                Êtes-vous actuellement enceinte ou en période d’allaitement ?
+              </p>
+              <input
+                type="radio"
+                name="isPregnantOrBreastfeeding"
+                id="isPregnantOrBreastfeedingYes"
+                value="true"
+                checked={isPregnantOrBreastfeeding === true}
+                onChange={() => setIsPregnantOrBreastfeeding(true)}
+              />
+              <label htmlFor="isPregnantOrBreastfeedingYes">Oui</label>
+              <input
+                type="radio"
+                name="isPregnantOrBreastfeeding"
+                id="isPregnantOrBreastfeedingNo"
+                value="false"
+                checked={isPregnantOrBreastfeeding === false}
+                onChange={() => setIsPregnantOrBreastfeeding(false)}
+              />
+              <label htmlFor="isPregnantOrBreastfeedingNo">Non</label>
+            </div>
+            <button type="submit">Envoyer</button>
+          </form>
+        ) : (
+          <div>
+            <p>Vous devez être connecté pour accéder à cette page.</p>
+            <Link to="/authentification/login">Se connecter</Link>
+          </div>
+        )}
+      </section>
+      <section>
+        {isSubmitted && (
+          <>
+            {recommendedProduct ? (
+              <div>
+                <h2>Produit Recommandé :</h2>
+                <img
+                  src={recommendedProduct.image}
+                  alt={recommendedProduct.alt}
+                />
+                <h3>{recommendedProduct.name}</h3>
+                <p>{recommendedProduct.description}</p>
+                <button
+                  onClick={() => seeMoreBtnHandler(recommendedProduct.id)}
+                >
+                  Voir plus
+                </button>
+              </div>
+            ) : (
+              <p>Aucun produit ne correspond à vos attentes</p>
+            )}
+          </>
+        )}
+      </section>
+    </main>
   );
 }
 
