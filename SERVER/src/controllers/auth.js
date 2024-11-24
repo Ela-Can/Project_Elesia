@@ -165,6 +165,13 @@ const logout = async (req, res) => {
 };
 
 const check_auth = async (req, res) => {
+    
+    if (!req.session.user) {
+        return res.status(401).json({
+            isLogged: false,
+            message: "Non autorisé. Vous devez être connecté.",
+        });
+    }
     const { user } = req.session;
     res.status(200).json({
         isLogged: true,

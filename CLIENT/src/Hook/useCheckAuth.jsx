@@ -20,11 +20,15 @@ function useCheckAuth() {
           setErrorMessage(
             "Vous devez être connecté pour accéder à cette page."
           );
+          dispatch(loginFailed());
+          setIsLoading(false);
           return;
         }
 
         if (response.ok) {
           const data = await response.json();
+          console.log("Données reçues de l'API :", data);
+
           dispatch(login(data));
         } else {
           dispatch(loginFailed());

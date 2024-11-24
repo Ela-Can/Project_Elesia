@@ -19,6 +19,7 @@ const userSlice = createSlice({
         },
         login: (state, action) => {
             console.log("Payload reçu dans login:", action.payload);
+            console.log("Données utilisateur dans user:", action.payload.user);
             state.id = action.payload.user.id;
             state.pseudo = action.payload.user.pseudo;
             state.email = action.payload.user.email;
@@ -31,6 +32,13 @@ const userSlice = createSlice({
         loginFailed: (state, action) => {
             state.authError = action.payload.error;
             state.isLogged = false;
+            state.id = null;
+            state.pseudo = "";
+            state.email = "";
+            state.role = "user";
+            state.isActive = null;
+            state.isLogged = false;
+            state.birthdate = null;
         },
         logout(state, action) {
 			state.id = null;

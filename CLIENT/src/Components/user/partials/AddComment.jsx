@@ -1,11 +1,14 @@
 import { useState } from "react";
-import useCheckAuth from "../../../Hook/useCheckAuth.jsx";
+import useCheckAuth from "../../../Hook/useCheckAuth";
 
 function AddComment({ productId }) {
   const [user, isLoading] = useCheckAuth();
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  console.log("Utilisateur actuel dans AddComment :", user);
 
   async function onSumbitAddComment(e) {
     e.preventDefault();
@@ -17,6 +20,7 @@ function AddComment({ productId }) {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           title: newTitle,
           content: newContent,
@@ -31,6 +35,7 @@ function AddComment({ productId }) {
         );
         setNewTitle("");
         setNewContent("");
+        setIsFormVisible(false);
       } else {
         console.error("Erreur lors de l'envoi du commentaire.");
       }
@@ -39,9 +44,19 @@ function AddComment({ productId }) {
     }
   }
 
+  function onClickFormHandler() {
+    if (user.isLogged) {
+      setIsFormVisible(true);
+    } else {
+      alert("Vous devez vous connecter");
+    }
+  }
+
   return (
     <>
-      {user && (
+      {!isFormVisible ? (
+        <button onClick={onClickFormHandler}>Rédiger un commentaire</button>
+      ) : (
         <form onSubmit={onSumbitAddComment}>
           <h5>Rédigez un commentaire</h5>
           <label htmlFor="title">
@@ -65,7 +80,6 @@ function AddComment({ productId }) {
           <button type="submit">Envoyer</button>
         </form>
       )}
-      {!user && <p>Veuillez vous connecter pour laisser un commentaire.</p>}
     </>
   );
 }

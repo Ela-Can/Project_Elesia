@@ -1,0 +1,17 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    background-color: grey; // Modifier la couleur
+
+    nav {
+        display: flex;
+        gap: 20px;
+
+        .active {
+            text-decoration: underline;
+        }
+        
+    }
+}

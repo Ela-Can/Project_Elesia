@@ -1,0 +1,13 @@
+.container {
+    display:flex;
+    gap: 20px;
+
+    aside {
+        width: 25%;
+    }
+
+    main {
+        width: 75%;
+    }
+
+}

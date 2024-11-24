@@ -44,26 +44,36 @@ function Login() {
   }
 
   return (
-    <>
+    <main>
+      <h2>Connectez-vous</h2>
       <form onSubmit={onSubmitBtnHandler}>
-        <label htmlFor="email">Entrez votre adresse mail</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password">Entrez votre mot de passe</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <p>*Champs obligatoires</p>
+        <div>
+          <label htmlFor="email">
+            Entrez votre adresse mail<span>*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">
+            Entrez votre mot de passe<span>*</span>
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
         {/*authError && <p>{authError}</p>*/}
         <button type="submit">Se connecter</button>
       </form>
@@ -71,7 +81,7 @@ function Login() {
       <button onClick={() => navigate("/authentification/register")}>
         S&apos;inscrire
       </button>
-    </>
+    </main>
   );
 }
 

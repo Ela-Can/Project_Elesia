@@ -45,68 +45,79 @@ function Register() {
   }
 
   return (
-    <>
-      <p>*Champs obligatoires</p>
+    <main>
+      <h2>Créer un compte</h2>
       <form onSubmit={onSubmitBtnHandler}>
-        <label htmlFor="pseudo">
-          Nom d&apos;utilisateur<span>*</span>
-        </label>
-        <input
-          type="text"
-          name="pseudo"
-          id="pseudo"
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-          required
-        />
-        <label htmlFor="birthdate">
-          Votre date de naissance<span>*</span>
-        </label>
-        <input
-          type="date"
-          name="birthdate"
-          id="birthdate"
-          value={birthdate}
-          onChange={(e) => setBirthdate(e.target.value)}
-          required
-        />
-        <label htmlFor="email">
-          Entrez votre adresse mail<span>*</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password">
-          Entrez votre mot de passe<span>*</span>
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <label htmlFor="passwordConfirmation">
-          Confirmer votre mot de passe<span>*</span>
-        </label>
-        <input
-          type="password"
-          name="passwordConfirmation"
-          id="passwordConfirmation"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          required
-        />
+        <p>*Champs obligatoires</p>
+        <div>
+          <label htmlFor="pseudo">
+            Nom d&apos;utilisateur<span>*</span>
+          </label>
+          <input
+            type="text"
+            name="pseudo"
+            id="pseudo"
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="birthdate">
+            Votre date de naissance<span>*</span>
+          </label>
+          <input
+            type="date"
+            name="birthdate"
+            id="birthdate"
+            value={birthdate}
+            onChange={(e) => setBirthdate(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="email">
+            Entrez votre adresse mail<span>*</span>
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">
+            Entrez votre mot de passe<span>*</span>
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="passwordConfirmation">
+            Confirmer votre mot de passe<span>*</span>
+          </label>
+          <input
+            type="password"
+            name="passwordConfirmation"
+            id="passwordConfirmation"
+            value={passwordConfirmation}
+            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            required
+          />
+        </div>
         {message && <p>{message}</p>}
         <button type="submit">S&apos;inscrire</button>
       </form>
-    </>
+    </main>
   );
 }
 

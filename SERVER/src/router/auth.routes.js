@@ -11,6 +11,6 @@ router.post("/login", login);
 
 router.post("/logout", withAuth, logout);
 
-router.get("/check-auth", withAuth, check_auth);
+router.get("/check-auth", check_auth);
 
 export default router;

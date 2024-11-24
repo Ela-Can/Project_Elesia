@@ -1,0 +1,170 @@
+* {
+  border: 1px solid red;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+     -moz-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+}
+
+body {
+  line-height: 1.5;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: "";
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-transform: uppercase;
+  background-color: grey;
+}
+header nav {
+  display: flex;
+  gap: 20px;
+}
+header nav .active {
+  text-decoration: underline;
+}
+
+form {
+  max-width: 700px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+form div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+form div label {
+  text-align: center;
+}
+form button {
+  text-align: center;
+  border: 1px solid black;
+}
+
+.card_section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.card_section .card {
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
+  height: 400px;
+}
+.card_section .card p:first-child {
+  text-align: end;
+}
+.card_section .card img {
+  width: 100%;
+  height: 300px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+main,
+.container {
+  max-width: 1024px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+.banner_section {
+  position: relative;
+  width: 100%;
+  height: 50vh;
+}
+.banner_section video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.banner_section h3 {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+.container aside {
+  width: 25%;
+}
+.container main {
+  width: 75%;
+}/*# sourceMappingURL=style.css.map */

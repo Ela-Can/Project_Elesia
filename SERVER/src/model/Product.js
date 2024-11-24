@@ -7,41 +7,12 @@ class Product {
             `SELECT 
                 product.id,
                 name,
-                description,
-                ingredients,
-                howToUse,
-                precautions,
-                useDuration,
-                packaging,
                 image,
                 alt,
                 id_skinType AS skinType,
+                skinType.label AS skinType_label,
                 id_skinConcern AS skinConcern,
-                adaptedToSensitiveSkin AS adaptedToSensitiveSkin_value,
-                CASE
-                    WHEN adaptedToSensitiveSkin = 1 THEN 'Produit adapté aux peaux sensibles'
-                    ELSE 'Produit non adapté aux peaux sensibles'
-                END AS adaptedToSensitiveSkin_label,
-                protectsFromPollution AS protectsFromPollution_value,
-                CASE
-                    WHEN protectsFromPollution = 1 THEN 'Produit protégeant de la pollution'
-                    ELSE 'Produit ne protégeant pas de la pollution'
-                END AS protectsFromPollution_label,
-                protectsFromSun AS protectsFromSun_value,
-                CASE
-                    WHEN protectsFromSun = 1 THEN 'Produit protégeant du soleil'
-                    ELSE 'Produit ne protégeant pas du soleil'
-                END AS protectsFromSun_label,
-                compatibleWithPregOrBreastfeed AS compatibleWithPregOrBreastfeed_value,
-                CASE
-                    WHEN compatibleWithPregOrBreastfeed = 1 THEN "Produit compatible avec la grossesse et l'allaitement"
-                    ELSE "Produit pas compatible avec la grossesse et l'allaitement"
-                END AS compatibleWithPregOrBreastfeed_label,
-                isOnline AS isOnline_value,
-                CASE
-                    WHEN isOnline = 1 THEN 'Produit visible sur le site'
-                    ELSE 'Produit invisible sur le site'
-                END AS isOnline_label,
+                skinConcern.label AS skinConcern_label,
                 id_category AS category
             FROM product
             JOIN category ON product.id_category = category.id

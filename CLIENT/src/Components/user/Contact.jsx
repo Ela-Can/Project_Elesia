@@ -40,50 +40,59 @@ function Contact() {
     }
   }
   return (
-    <>
-      <p>*Champs obligatoires</p>
-      <form onSubmit={submitHandler}>
-        <label htmlFor="email">
-          Entrez votre adresse mail<span>*</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label htmlFor="subject">
-          Sélectionner un sujet<span>*</span>
-        </label>
-        <select
-          name="subject"
-          id="subject"
-          value={subject}
-          onChange={(e) => setSubject(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Choisissez un sujet
-          </option>
-          {subjects.map((subject) => (
-            <option key={subject.id} value={subject.id}>
-              {subject.label}
-            </option>
-          ))}
-        </select>
-        <label htmlFor="content">
-          Entrez votre message<span>*</span>
-        </label>
-        <textarea
-          name="content"
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
-        <button type="submit">Envoyer</button>
-      </form>
-    </>
+    <main>
+      <h2>Contactez-nous</h2>
+      <section>
+        <form onSubmit={submitHandler}>
+          <p>*Champs obligatoires</p>
+          <div>
+            <label htmlFor="email">
+              Entrez votre adresse mail<span>*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="subject">
+              Sélectionner un sujet<span>*</span>
+            </label>
+            <select
+              name="subject"
+              id="subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
+            >
+              <option value="" disabled>
+                Choisissez un sujet
+              </option>
+              {subjects.map((subject) => (
+                <option key={subject.id} value={subject.id}>
+                  {subject.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="content">
+              Entrez votre message<span>*</span>
+            </label>
+            <textarea
+              name="content"
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            ></textarea>
+          </div>
+          <button type="submit">Envoyer</button>
+        </form>
+      </section>
+    </main>
   );
 }
 
