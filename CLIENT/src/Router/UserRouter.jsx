@@ -19,20 +19,17 @@ function UserRouter() {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="product" element={<Product />}></Route>
-        <Route path="diagnostic/create" element={<Diagnostic />}></Route>
-        <Route path="contact" element={<Contact />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="product" element={<Product />} />
+        <Route path="diagnostic/create" element={<Diagnostic />} />
+        <Route path="contact" element={<Contact />} />
 
-        <Route path="authentification/login" element={<Login />}></Route>
-        <Route path="authentification/register" element={<Register />}></Route>
+        <Route path="authentification/login" element={<Login />} />
+        <Route path="authentification/register" element={<Register />} />
 
-        <Route path="product/:id" element={<ProductDetails />}></Route>
+        <Route path="product/:id" element={<ProductDetails />} />
 
-        <Route
-          path="user"
-          element={<ProtectedRoute element={Dashboard} />}
-        ></Route>
+        <Route path="user" element={<ProtectedRoute element={Dashboard} />} />
         <Route path="*" element={<h1>404 NOT FOUND</h1>} />
       </Routes>
       <Footer />

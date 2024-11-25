@@ -63,42 +63,42 @@ function Product() {
     fetchProducts();
   }, []);
 
-  function categoryChangeBtnHandler(categoryId) {
-    setSelectedCategory(categoryId);
-    if (!categoryId) {
-      setProducts(allProducts);
-    } else {
-      const filteredProducts = allProducts.filter(
-        (product) => product.category === parseInt(categoryId)
-      );
-      setProducts(filteredProducts);
-    }
-  }
+  useEffect(() => {
+    let filteredProducts = allProducts;
 
-  function skinTypeChangeBtnHandler(skinTypeId, skinTypeLabel) {
-    setSelectedSkinType(skinTypeId);
-    if (!skinTypeId || skinTypeLabel === "Tous types de peau") {
-      setProducts(allProducts);
-    } else {
-      const filteredProducts = allProducts.filter(
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.category === parseInt(selectedCategory)
+      );
+    }
+
+    if (selectedSkinType) {
+      filteredProducts = filteredProducts.filter(
         (product) =>
-          product.skinType === parseInt(skinTypeId) ||
+          product.skinType === parseInt(selectedSkinType) ||
           product.skinType_label === "Tous types de peau"
       );
-      setProducts(filteredProducts);
     }
+
+    if (selectedSkinConcern) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.skinConcern === parseInt(selectedSkinConcern)
+      );
+    }
+
+    setProducts(filteredProducts);
+  }, [selectedCategory, selectedSkinType, selectedSkinConcern, allProducts]);
+
+  function categoryChangeBtnHandler(categoryId) {
+    setSelectedCategory(categoryId);
+  }
+
+  function skinTypeChangeBtnHandler(skinTypeId) {
+    setSelectedSkinType(skinTypeId);
   }
 
   function skinConcernChangeBtnHandler(skinConcernId) {
     setSelectedSkinConcern(skinConcernId);
-    if (!skinConcernId) {
-      setProducts(allProducts);
-    } else {
-      const filteredProducts = allProducts.filter(
-        (product) => product.skinConcern === parseInt(skinConcernId)
-      );
-      setProducts(filteredProducts);
-    }
   }
 
   function seeMoreBtnHandler(productId) {

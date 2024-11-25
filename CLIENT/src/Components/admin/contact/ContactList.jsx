@@ -3,6 +3,8 @@ import ContactHistory from "./ContactHistory";
 import ContactDetails from "./ContactDetails";
 
 function ContactList({ status, setUnreadCount }) {
+  const [activeSection, setActiveSection] = useState("contact/pending");
+
   const [pendingRequests, setPendingRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
@@ -42,49 +44,60 @@ function ContactList({ status, setUnreadCount }) {
   }
 
   return (
-    <>
-      {selectedRequest ? (
-        <ContactDetails
-          contact={selectedRequest}
-          statusUpdated={fetchPendingContact}
-          setSelectedRequest={setSelectedRequest}
-        />
-      ) : (
-        <>
-          <h3>Demandes de contact en attente</h3>
-          <ul>
-            {pendingRequests.length === 0 ? (
-              <p>Aucune demande</p>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("contact/pending")}>
+          Demandes en attente
+        </button>
+        <button onClick={() => setActiveSection("contact/history")}>
+          Historique
+        </button>
+      </section>
+      <section>
+        {activeSection === "contact/pending" && (
+          <>
+            <h3>Demandes de contact en attente</h3>
+            {selectedRequest ? (
+              <ContactDetails
+                contact={selectedRequest}
+                statusUpdated={fetchPendingContact}
+                setSelectedRequest={setSelectedRequest}
+              />
             ) : (
-              pendingRequests.map((contact) => (
-                <>
-                  <li>
-                    <div
-                      key={contact.id}
-                      onClick={() => setSelectedRequest(contact)}
-                    >
-                      <p>{contact.email}</p>
-                      <p>{contact.subject}</p>
-                      <p>{contact.content}</p>
-                      <p>{contact.date}</p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        onClickMarkAsUnread(contact.id);
-                      }}
-                    >
-                      Marquer comme non lu
-                    </button>
-                  </li>
-                </>
-              ))
+              <>
+                {pendingRequests.length === 0 ? (
+                  <p>Aucune demande</p>
+                ) : (
+                  pendingRequests.map((contact) => (
+                    <article>
+                      <div
+                        key={contact.id}
+                        onClick={() => setSelectedRequest(contact)}
+                      >
+                        <p>{contact.email}</p>
+                        <p>{contact.subject}</p>
+                        <p>{contact.content}</p>
+                        <p>{contact.date}</p>
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          onClickMarkAsUnread(contact.id);
+                        }}
+                      >
+                        Marquer comme non lu
+                      </button>
+                    </article>
+                  ))
+                )}
+              </>
             )}
-          </ul>
-          <h3>Historique des demandes cloturées</h3>
-          <ContactHistory />
-        </>
-      )}
-    </>
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "contact/history" && <ContactHistory />}
+      </section>
+    </main>
   );
 }
 

@@ -14,25 +14,23 @@ import Header from "../Components/admin/partials/HeaderAdmin.jsx";
 import Dashboard from "../Components/admin/Dashboard.jsx";
 
 import ProtectedRoute from "../HOC/ProtectedRoute.jsx";
+import ContactList from "../Components/admin/contact/ContactList.jsx";
+import ContactHistory from "../Components/admin/contact/ContactHistory.jsx";
 
 function AdminRouter() {
   return (
     <>
       <Header />
       <Routes>
-        <Route
-          path="/admin"
-          element={<ProtectedRoute element={Dashboard} />}
-        ></Route>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="product" element={<Product />}></Route>
-        <Route path="diagnostic/create" element={<Diagnostic />}></Route>
-        <Route path="contact" element={<Contact />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="product" element={<Product />} />
+        <Route path="diagnostic/create" element={<Diagnostic />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="/admin" element={<ProtectedRoute element={Dashboard} />} />
 
-        <Route path="authentification/login" element={<Login />}></Route>
-        <Route path="authentification/register" element={<Register />}></Route>
+        <Route path="/admin/contact/pending" element={<ContactList />} />
+        <Route path="/admin/contact/finished" element={<ContactHistory />} />
 
-        <Route path="product/:id" element={<ProductDetails />}></Route>
         <Route path="*" element={<p>NOT FOUND</p>} />
       </Routes>
     </>

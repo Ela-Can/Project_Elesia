@@ -1,0 +1,21 @@
+.product_details_section {
+    display: flex;
+
+    .product_details_top {
+        display: flex;
+        gap: 30px;
+
+        img {
+            width: 50%;
+            height: 80vh;
+            object-fit: cover;
+        }
+
+        div {
+            width: 50%;
+            
+        }
+
+    }
+
+}

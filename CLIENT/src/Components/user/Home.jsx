@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import bannerVideo from "../../assets/medias/banner.mp4";
+import bannerImg from "../../assets/medias/banner.jpg";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -30,15 +30,13 @@ function Home() {
   return (
     <main>
       <section className="banner_section">
-        <video
-          autoplay
-          muted
-          loop
-          playsInline
-          src={bannerVideo}
-          type="video/mp4"
-        ></video>
-        <h3>Découvrez notre nouveauté</h3>
+        <img src={bannerImg} alt="" />
+        <h3>Des soins marins pensés pour l'efficacité</h3>
+        <p>
+          Chez Elésia, nous croyons que l'efficacité réside dans la simplicité.
+          Chaque ingrédient marin est sélectionné avec soin pour sublimer votre
+          peau, sans superflu.
+        </p>
       </section>
       <section>
         <h3>Découvrez nos produits</h3>

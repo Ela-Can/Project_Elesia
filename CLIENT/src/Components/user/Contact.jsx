@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-// ajouter le nombre de caractères max
+import { validEmail, validSubjet, validContent } from "../utils/validators.js";
 
 function Contact() {
   const [email, setEmail] = useState("");
@@ -8,12 +7,38 @@ function Contact() {
   const [subjects, setSubjects] = useState([]);
   const [content, setContent] = useState("");
 
+  // Handling maximum character limit
+
+  const maxCharacters = 1500;
+
+  function onChangeNbrMax(e) {
+    const value = e.target.value;
+    if (value.length <= maxCharacters) {
+      setContent(value);
+    }
+  }
+
+  // Validation of the required fields
+
+  const [errors, setErrors] = useState({});
+
+  function requiredFields() {
+    const error = {};
+
+    validEmail(email, error);
+    validSubjet(subject, error);
+    validContent(content, error);
+
+    return error;
+  }
+
+  // Fetching active subjects
+
   useEffect(() => {
     async function fetchSujects() {
       try {
         const response = await fetch(`/api/v1/subject/list/1`);
         const data = await response.json();
-        console.log(data);
         setSubjects(data);
       } catch (error) {
         console.error("Erreur de récupération des sujets :", error);
@@ -24,6 +49,13 @@ function Contact() {
 
   async function submitHandler(e) {
     e.preventDefault();
+
+    const error = requiredFields();
+    setErrors(error);
+
+    if (error.email || error.subject || error.content) {
+      return;
+    }
 
     const response = await fetch(`/api/v1/contact/create`, {
       method: "POST",
@@ -37,6 +69,7 @@ function Contact() {
       setEmail("");
       setSubject("");
       setContent("");
+      setErrors({});
     }
   }
   return (
@@ -54,8 +87,15 @@ function Contact() {
               name="email"
               id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  email: "",
+                }));
+              }}
             />
+            {errors.email && <span>{errors.email}</span>}
           </div>
           <div>
             <label htmlFor="subject">
@@ -65,8 +105,13 @@ function Contact() {
               name="subject"
               id="subject"
               value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              required
+              onChange={(e) => {
+                setSubject(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  subject: "",
+                }));
+              }}
             >
               <option value="" disabled>
                 Choisissez un sujet
@@ -77,6 +122,7 @@ function Contact() {
                 </option>
               ))}
             </select>
+            {errors.subject && <span>{errors.subject}</span>}
           </div>
           <div>
             <label htmlFor="content">
@@ -85,9 +131,18 @@ function Contact() {
             <textarea
               name="content"
               id="content"
+              rows="15"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                onChangeNbrMax(e);
+                setErrors((prev) => ({
+                  ...prev,
+                  content: "",
+                }));
+              }}
             ></textarea>
+            <p>{maxCharacters - content.length} caractères restants</p>
+            {errors.content && <span>{errors.content}</span>}
           </div>
           <button type="submit">Envoyer</button>
         </form>

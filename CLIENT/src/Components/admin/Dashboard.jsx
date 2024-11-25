@@ -7,6 +7,7 @@ import ProductList from "./product/ProductList";
 import SkinConcernList from "./skinConcern/SkinConcernList";
 import SkinTypeList from "./skinType/SkinTypeList";
 import SubjectList from "./subject/SubjectList";
+import { Link, NavLink } from "react-router-dom";
 
 function Dashboard() {
   const [activeSection, setActiveSection] = useState(null);
@@ -15,15 +16,8 @@ function Dashboard() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   return (
-    <>
-      <aside
-        style={{
-          width: "250px",
-          backgroundColor: "#f4f4f4",
-          padding: "20px",
-          boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
-        }}
-      >
+    <div className="container">
+      <aside>
         <h3>Menu</h3>
 
         <button onClick={() => setIsContentMenuOpen(!isContentMenuOpen)}>
@@ -54,9 +48,9 @@ function Dashboard() {
           Modérations des commentaires
         </button>
 
-        <button onClick={() => setActiveSection("contacts")}>
+        <NavLink onClick={() => setActiveSection("contacts")}>
           Demandes de contact {unreadCount}
-        </button>
+        </NavLink>
       </aside>
 
       <main>
@@ -73,7 +67,7 @@ function Dashboard() {
           {activeSection === "skinConcerns" && <SkinConcernList />}
         </div>
       </main>
-    </>
+    </div>
   );
 }
 

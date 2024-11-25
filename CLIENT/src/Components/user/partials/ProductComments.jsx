@@ -15,8 +15,8 @@ function ProductComments({ productId }) {
   }, [productId]);
 
   return (
-    <>
-      <h4>Commentaires</h4>
+    <section className="comment_section">
+      <h3>Vous en parlez le mieux</h3>
       {comments.length === 0 ? (
         <p>Soyez le premier à laisser un avis sur le produit !</p>
       ) : (
@@ -29,7 +29,7 @@ function ProductComments({ productId }) {
         ))
       )}
       <AddComment productId={productId} />
-    </>
+    </section>
   );
 }
 
