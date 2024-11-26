@@ -9,14 +9,6 @@ class Diagnostic {
         console.log("SQL query result:", SELECT_BIRTHDATE);
 
         return await pool.query(SELECT_BIRTHDATE, [id]);
-
-        
-        
-        //if (rows.length === 0) {
-        //    throw new Error("User not found");
-        //}
-
-        //return rows;
     }
 
     static async findProduct(id_user) {

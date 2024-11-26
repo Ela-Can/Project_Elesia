@@ -5,24 +5,25 @@ import { setProducts, addProducts } from "../../../store/slices/product.js";
 function AddProduct() {
   const dispatch = useDispatch();
 
+  const [file, setFile] = useState(null);
+
   const [createForm, setCreateForm] = useState({
     name: "",
     description: "",
     ingredients: "",
     howToUse: "",
-    useDuration: "",
     precautions: "",
+    useDuration: "",
     packaging: "",
-    image: null,
     alt: "",
-    isOnline: "",
     id_skinType: "",
     id_skinConcern: "",
+    id_category: "",
     adaptedToSensitiveSkin: "",
     protectsFromPollution: "",
     protectsFromSun: "",
     compatibleWithPregOrBreastfeed: "",
-    id_category: "",
+    isOnline: "",
   });
 
   const [categories, setCategories] = useState([]);
@@ -33,7 +34,6 @@ function AddProduct() {
     async function fetchCategories() {
       const response = await fetch("/api/v1/category/list");
       const data = await response.json();
-      console.log("categories récupérées :", data);
       setCategories(data);
     }
     fetchCategories();
@@ -43,7 +43,6 @@ function AddProduct() {
     async function fetchSkinTypes() {
       const response = await fetch("/api/v1/skintype/list");
       const data = await response.json();
-      console.log("skinType récupérées :", data);
       setSkinTypes(data);
     }
     fetchSkinTypes();
@@ -53,117 +52,85 @@ function AddProduct() {
     async function fetchSkinConcerns() {
       const response = await fetch("/api/v1/skinconcern/list");
       const data = await response.json();
-      console.log("skinconcern récupérées :", data);
       setSkinConcerns(data);
     }
     fetchSkinConcerns();
   }, []);
 
-  function onChangeProductInfo(name, value) {
-    console.log(`Changement dans le champ ${name} :`, value);
-    setCreateForm((prevState) => ({
-      ...prevState,
-      [name]: isNaN(value) ? value : Number(value),
-    }));
+  function onChangeProductInfo(e) {
+    const { name, value } = e.target;
+    setCreateForm({
+      ...createForm,
+      [name]: value,
+    });
   }
 
   function onChangeProductImage(e) {
-    const file = e.target.files[0];
-    console.log("Fichier image sélectionné :", file);
-    if (file) {
-      setCreateForm((prevState) => ({
-        ...prevState,
-        image: file,
-      }));
-    }
+    setFile(e.target.files[0]);
   }
 
   async function onSubmitAddProduct(e) {
     e.preventDefault();
 
-    //const payload = {
-    //  ...createForm,
-    //  id_skinType: parseInt(createForm.id_skinType, 10),
-    //  id_skinConcern: parseInt(createForm.id_skinConcern, 10),
-    //  id_category: parseInt(createForm.id_category, 10),
-    //  adaptedToSensitiveSkin: parseInt(createForm.adaptedToSensitiveSkin, 10),
-    //  protectsFromPollution: parseInt(createForm.protectsFromPollution, 10),
-    //  protectsFromSun: parseInt(createForm.protectsFromSun, 10),
-    //  compatibleWithPregOrBreastfeed: parseInt(
-    //    createForm.compatibleWithPregOrBreastfeed,
-    //    10
-    //  ),
-    //};
-
-    //console.log("Données envoyées au backend :", payload);
-
-    const formData = new FormData();
-
-    for (const key in createForm) {
-      if (
-        [
-          "id_skinType",
-          "id_skinConcern",
-          "adaptedToSensitiveSkin",
-          "protectsFromPollution",
-          "protectsFromSun",
-          "compatibleWithPregOrBreastfeed",
-          "id_category",
-          "isOnline",
-        ].includes(key)
-      ) {
-        formData.append(key, Number(createForm[key]));
-      } else {
-        formData.append(key, createForm[key]);
-      }
-    }
-
-    const imageFile = createForm.image;
-    if (imageFile) {
-      formData.append("image", imageFile);
-    } else {
-      console.error("Aucun fichier image sélectionné");
-      return;
-    }
-
-    console.log("FormData avant envoi :");
-
     try {
-      const response = await fetch("api/v1/product/create/productImg", {
-        method: "POST",
-        //headers: {
-        //  "Content-Type": "application/json",
-        //},
-        body: formData,
+      const data = new FormData();
+
+      Object.keys(createForm).forEach((key) => {
+        data.append(key, createForm[key]);
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        dispatch(addProducts(data));
+      if (file) {
+        data.append("image", file);
       }
 
+      const response = await fetch("api/v1/product/create/productImg", {
+        method: "POST",
+        body: data,
+      });
+
       if (!response.ok) {
-        const errorMessage = await response.text();
-        console.error(
-          `Erreur lors de l'ajout de la catégorie (HTTP ${response.status}): ${errorMessage}`
-        );
-        alert(
-          `Erreur: Impossible d'ajouter le produit. Veuillez vérifier les informations saisies.\nDétails: ${errorMessage}`
-        );
+        const errorText = await response.text();
+        console.error("Erreur côté serveur :", errorText);
+        throw new Error("Erreur lors de la création du produit");
       }
+
+      const result = await response.json();
+
+      const newProduct = { id: result.id, ...createForm, image: result.image };
+      dispatch(addProducts(newProduct));
+
+      setCreateForm({
+        name: "",
+        description: "",
+        ingredients: "",
+        howToUse: "",
+        precautions: "",
+        useDuration: "",
+        packaging: "",
+        alt: "",
+        id_skinType: "",
+        id_skinConcern: "",
+        id_category: "",
+        adaptedToSensitiveSkin: "",
+        protectsFromPollution: "",
+        protectsFromSun: "",
+        compatibleWithPregOrBreastfeed: "",
+        isOnline: "",
+      });
+      setFile((e.target.value = ""));
     } catch (error) {
       console.error("Erreur lors de la requête : ", error);
     }
   }
 
   return (
-    <form onSubmit={onSubmitAddProduct} encType="multipart/form-data">
+    <form onSubmit={onSubmitAddProduct}>
       <label htmlFor="name">Nom du produit : </label>
       <input
         type="text"
         name="name"
         value={createForm.name}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -172,7 +139,7 @@ function AddProduct() {
         type="text"
         name="description"
         value={createForm.description}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -181,7 +148,7 @@ function AddProduct() {
         type="text"
         name="ingredients"
         value={createForm.ingredients}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -190,7 +157,7 @@ function AddProduct() {
         type="text"
         name="howToUse"
         value={createForm.howToUse}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -199,7 +166,7 @@ function AddProduct() {
         type="text"
         name="precautions"
         value={createForm.precautions}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -208,7 +175,7 @@ function AddProduct() {
         type="text"
         name="useDuration"
         value={createForm.useDuration}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -217,7 +184,7 @@ function AddProduct() {
         type="text"
         name="packaging"
         value={createForm.packaging}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -225,7 +192,7 @@ function AddProduct() {
       <input
         type="file"
         name="image"
-        accept="image/*"
+        //accept="image/*"
         onChange={onChangeProductImage}
         required
       />
@@ -235,7 +202,7 @@ function AddProduct() {
         type="text"
         name="alt"
         value={createForm.alt}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       />
 
@@ -244,7 +211,7 @@ function AddProduct() {
         name="id_category"
         id="id_category"
         value={createForm.id_category}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une catégorie</option>
         {categories.map((category) => (
@@ -259,7 +226,7 @@ function AddProduct() {
         name="id_skinType"
         id="id_skinType"
         value={createForm.id_skinType}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez un type de peau</option>
         {skinTypes.map((skinType) => (
@@ -274,7 +241,7 @@ function AddProduct() {
         name="id_skinConcern"
         id="id_skinConcern"
         value={createForm.id_skinConcern}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une préoccupation</option>
         {skinConcerns.map((skinConcern) => (
@@ -291,7 +258,7 @@ function AddProduct() {
         name="adaptedToSensitiveSkin"
         id="adaptedToSensitiveSkin"
         value={createForm.adaptedToSensitiveSkin}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       >
         <option value="">Sélectionnez une option</option>
@@ -306,7 +273,7 @@ function AddProduct() {
         name="protectsFromPollution"
         id="protectsFromPollution"
         value={createForm.protectsFromPollution}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       >
         <option value="">Sélectionnez une option</option>
@@ -319,7 +286,7 @@ function AddProduct() {
         name="protectsFromSun"
         id="protectsFromSun"
         value={createForm.protectsFromSun}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       >
         <option value="">Sélectionnez une option</option>
@@ -334,7 +301,7 @@ function AddProduct() {
         name="compatibleWithPregOrBreastfeed"
         id="compatibleWithPregOrBreastfeed"
         value={createForm.compatibleWithPregOrBreastfeed}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       >
         <option value="">Sélectionnez une option</option>
@@ -347,7 +314,7 @@ function AddProduct() {
         name="isOnline"
         id="isOnline"
         value={createForm.isOnline}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
         required
       >
         <option value="">Sélectionnez une option</option>

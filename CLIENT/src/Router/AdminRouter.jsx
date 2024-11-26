@@ -16,6 +16,8 @@ import Dashboard from "../Components/admin/Dashboard.jsx";
 import ProtectedRoute from "../HOC/ProtectedRoute.jsx";
 import ContactList from "../Components/admin/contact/ContactList.jsx";
 import ContactHistory from "../Components/admin/contact/ContactHistory.jsx";
+import CommentList from "../Components/admin/comment/CommentList.jsx";
+import CommentHistory from "../Components/admin/comment/CommentHistory.jsx";
 
 function AdminRouter() {
   return (
@@ -24,12 +26,16 @@ function AdminRouter() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="product" element={<Product />} />
+        <Route path="product/:id" element={<ProductDetails />} />
         <Route path="diagnostic/create" element={<Diagnostic />} />
         <Route path="contact" element={<Contact />} />
         <Route path="/admin" element={<ProtectedRoute element={Dashboard} />} />
 
         <Route path="/admin/contact/pending" element={<ContactList />} />
         <Route path="/admin/contact/finished" element={<ContactHistory />} />
+
+        <Route path="/admin/comment/pending" element={<CommentList />} />
+        <Route path="/admin/comment/moderated" element={<CommentHistory />} />
 
         <Route path="*" element={<p>NOT FOUND</p>} />
       </Routes>

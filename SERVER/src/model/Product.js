@@ -7,18 +7,29 @@ class Product {
             `SELECT 
                 product.id,
                 name,
+                description,
+                ingredients,
+                howToUse,
+                precautions,
+                useDuration,
+                packaging,
                 image,
                 alt,
                 id_skinType AS skinType,
                 skinType.label AS skinType_label,
                 id_skinConcern AS skinConcern,
                 skinConcern.label AS skinConcern_label,
-                id_category AS category
+                adaptedToSensitiveSkin,
+                protectsFromPollution,
+                protectsFromSun,
+                compatibleWithPregOrBreastfeed,
+                isOnline,
+                id_category AS category,
+                category.label AS category_label
             FROM product
             JOIN category ON product.id_category = category.id
             LEFT JOIN skinType ON product.id_skinType = skinType.id
             LEFT JOIN skinConcern ON product.id_skinConcern = skinConcern.id`;
-        
         return await pool.query(SELECT_ALL);
     }
 
@@ -130,8 +141,29 @@ class Product {
                 protectsFromSun,
                 compatibleWithPregOrBreastfeed,
                 id_category)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        return await pool.execute(INSERT, [...Object.values(datas)]);
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        
+        const values = [
+            datas.name,
+            datas.description,
+            datas.ingredients,
+            datas.howToUse,
+            datas.useDuration,
+            datas.precautions,
+            datas.packaging,
+            datas.image,                        
+            datas.alt,
+            parseInt(datas.isOnline, 10),
+            parseInt(datas.id_skinType, 10),
+            parseInt(datas.id_skinConcern, 10),
+            parseInt(datas.adaptedToSensitiveSkin, 10),
+            parseInt(datas.protectsFromPollution, 10),
+            parseInt(datas.protectsFromSun, 10),
+            parseInt(datas.compatibleWithPregOrBreastfeed, 10),
+            parseInt(datas.id_category, 10),   
+        ];
+        return await pool.execute(INSERT, values);
+        //return await pool.execute(INSERT, [...Object.values(datas)]);
     }
 
     static async updateProduct(datas) {
@@ -156,7 +188,6 @@ class Product {
                 id_category = ?,
                 isOnline = ?
             WHERE id = ?`;
-        console.log("Données envoyées pour la mise à jour :", datas);
         return await pool.execute(UPDATE, datas);
     }
 

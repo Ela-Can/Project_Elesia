@@ -6,26 +6,54 @@ function UpdateProduct({ product, productId, setIsEditing }) {
   //const productList = useSelector((state) => state.product.productList);
   const dispatch = useDispatch();
 
+  const [file, setFile] = useState(null);
+
   const [updateForm, setUpdateForm] = useState({
-    name: product.name,
-    description: product.description,
-    ingredients: product.ingredients,
-    howToUse: product.howToUse,
-    precautions: product.precautions,
-    useDuration: product.useDuration,
-    packaging: product.packaging,
-    image: null,
-    alt: product.alt,
-    adaptedToSensitiveSkin: product.adaptedToSensitiveSkin_value,
-    protectsFromPollution: product.protectsFromPollution_value,
-    protectsFromSun: product.protectsFromSun_value,
-    compatibleWithPregOrBreastfeed:
-      product.compatibleWithPregOrBreastfeed_value,
-    category: product.category,
-    skinType: product.skinType,
-    skinConcern: product.skinConcern,
-    isOnline: product.isOnline_value,
+    name: "",
+    description: "",
+    ingredients: "",
+    howToUse: "",
+    precautions: "",
+    useDuration: "",
+    packaging: "",
+    alt: "",
+    adaptedToSensitiveSkin: "",
+    protectsFromPollution: "",
+    protectsFromSun: "",
+    compatibleWithPregOrBreastfeed: "",
+    id_category: "",
+    id_skinType: "",
+    id_skinConcern: "",
+    isOnline: "",
+    image: "",
   });
+
+  console.log("Valeur de category envoyée :", updateForm.id_category);
+
+  useEffect(() => {
+    if (product) {
+      console.log("Produit reçu :", product);
+      setUpdateForm({
+        name: product.name,
+        description: product.description,
+        ingredients: product.ingredients,
+        howToUse: product.howToUse,
+        precautions: product.precautions,
+        useDuration: product.useDuration,
+        packaging: product.packaging,
+        alt: product.alt,
+        adaptedToSensitiveSkin: product.adaptedToSensitiveSkin,
+        protectsFromPollution: product.protectsFromPollution,
+        protectsFromSun: product.protectsFromSun,
+        compatibleWithPregOrBreastfeed: product.compatibleWithPregOrBreastfeed,
+        id_category: product.category,
+        id_skinType: product.skinType,
+        id_skinConcern: product.skinConcern,
+        isOnline: product.isOnline,
+        image: product.image,
+      });
+    }
+  }, [product]);
 
   const [categories, setCategories] = useState([]);
   const [skinTypes, setSkinTypes] = useState([]);
@@ -35,7 +63,6 @@ function UpdateProduct({ product, productId, setIsEditing }) {
     async function fetchProducts() {
       const response = await fetch("/api/v1/product/list");
       const data = await response.json();
-      console.log("produits récupérées :", data);
       dispatch(setProducts(data));
     }
     fetchProducts();
@@ -45,7 +72,6 @@ function UpdateProduct({ product, productId, setIsEditing }) {
     async function fetchCategories() {
       const response = await fetch("/api/v1/category/list");
       const data = await response.json();
-      console.log("categories récupérées :", data);
       setCategories(data);
     }
     fetchCategories();
@@ -55,7 +81,6 @@ function UpdateProduct({ product, productId, setIsEditing }) {
     async function fetchSkinTypes() {
       const response = await fetch("/api/v1/skintype/list");
       const data = await response.json();
-      console.log("skinType récupérées :", data);
       setSkinTypes(data);
     }
     fetchSkinTypes();
@@ -65,92 +90,68 @@ function UpdateProduct({ product, productId, setIsEditing }) {
     async function fetchSkinConcerns() {
       const response = await fetch("/api/v1/skinconcern/list");
       const data = await response.json();
-      console.log("skinconcern récupérées :", data);
       setSkinConcerns(data);
     }
     fetchSkinConcerns();
   }, []);
 
-  function onChangeProductInfo(name, value) {
+  function onChangeProductInfo(e) {
+    const { name, value } = e.target;
     setUpdateForm((prevState) => ({
       ...prevState,
-      [name]: isNaN(value) ? value : Number(value),
+      [name]: value,
     }));
   }
 
   function onChangeProductImage(e) {
-    const file = e.target.files[0];
-    console.log("Fichier image sélectionné :", file);
-    if (file) {
-      setCreateForm((prevState) => ({
-        ...prevState,
-        image: file,
-      }));
-    }
+    setFile(e.target.files[0]);
   }
 
   async function onSubmitUpdateProduct(e) {
     e.preventDefault();
 
-    const formData = new FormData();
-
-    for (const key in createForm) {
-      if (
-        [
-          "id_skinType",
-          "id_skinConcern",
-          "adaptedToSensitiveSkin",
-          "protectsFromPollution",
-          "protectsFromSun",
-          "compatibleWithPregOrBreastfeed",
-          "id_category",
-          "isOnline",
-        ].includes(key)
-      ) {
-        formData.append(key, Number(createForm[key]));
-      } else {
-        formData.append(key, createForm[key]);
-      }
-    }
-
-    const imageFile = createForm.image;
-
-    if (imageFile) {
-      formData.append("image", imageFile);
-    } else {
-      console.error("Aucun fichier image sélectionné");
-      return;
-    }
-
     try {
+      const data = new FormData();
+
+      Object.keys(updateForm).forEach((key) => {
+        if (key === "image" && file) {
+          data.append("image", file);
+        } else if (key === "image") {
+          data.append("image", updateForm.image);
+        } else {
+          data.append(key, updateForm[key]);
+        }
+      });
+
       const response = await fetch(
         `/api/v1/product/update/productImg/${productId}`,
         {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updateForm),
+          body: data,
         }
       );
+      console.log(response);
 
-      if (response.ok) {
-        const updatedProduct = await response.json();
-        console.log("Product modifié avec succès :", updatedProduct);
-        dispatch(
-          updateProducts({ id: productId, updatedData: updatedProduct })
-        );
-
-        setIsEditing(false);
-      } else {
-        const errorDetails = await response.text();
-        console.error(
-          "Erreur lors de la modif de la catégorie :",
-          response.status,
-          response.statusText,
-          errorDetails
-        );
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Erreur côté serveur :", errorText);
+        throw new Error("Erreur lors de la mise à jour du produit");
       }
+
+      const result = await response.json();
+
+      console.log("Produit mis à jour :", result);
+
+      const updatedProduct = {
+        id: productId,
+        ...updateForm,
+        image: result.image || updateForm.image,
+      };
+
+      dispatch(updateProducts({ id: product.id, updatedData: updatedProduct }));
+      console.log("Produit mis à jour localement :", updatedProduct);
+
+      setIsEditing(false);
     } catch (error) {
       console.error("Erreur lors de la requête : ", error);
     }
@@ -163,49 +164,49 @@ function UpdateProduct({ product, productId, setIsEditing }) {
         type="text"
         name="name"
         value={updateForm.name}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
       <label htmlFor="description">Description du produit : </label>
       <textarea
         name="description"
         id="description"
         value={updateForm.description}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       ></textarea>
       <label htmlFor="ingredients">Ingrédients du produit : </label>
       <textarea
         name="ingredients"
         id="ingredients"
         value={updateForm.ingredients}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       ></textarea>
       <label htmlFor="howToUse">Conseils d'utilisation : </label>
       <input
         type="text"
         name="howToUse"
         value={updateForm.howToUse}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
       <label htmlFor="precautions">Précautions d'emploi : </label>
       <input
         type="text"
         name="precautions"
         value={updateForm.precautions}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
       <label htmlFor="useDuration">Date limite d'utilisation : </label>
       <input
         type="text"
         name="useDuration"
         value={updateForm.useDuration}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
       <label htmlFor="packaging">Packaging : </label>
       <input
         type="text"
         name="packaging"
         value={updateForm.packaging}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
 
       <label htmlFor="image">Image du produit</label>
@@ -222,7 +223,7 @@ function UpdateProduct({ product, productId, setIsEditing }) {
         type="text"
         name="alt"
         value={updateForm.alt}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       />
 
       <label htmlFor="adaptedToSensitiveSkin">
@@ -231,7 +232,7 @@ function UpdateProduct({ product, productId, setIsEditing }) {
       <select
         name="adaptedToSensitiveSkin"
         value={updateForm.adaptedToSensitiveSkin}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une réponse</option>
         <option value={1}>Oui</option>
@@ -244,7 +245,7 @@ function UpdateProduct({ product, productId, setIsEditing }) {
       <select
         name="protectsFromPollution"
         value={updateForm.protectsFromPollution}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une réponse</option>
         <option value={1}>Oui</option>
@@ -255,7 +256,7 @@ function UpdateProduct({ product, productId, setIsEditing }) {
       <select
         name="protectsFromSun"
         value={updateForm.protectsFromSun}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une réponse</option>
         <option value={1}>Oui</option>
@@ -268,20 +269,18 @@ function UpdateProduct({ product, productId, setIsEditing }) {
       <select
         name="compatibleWithPregOrBreastfeed"
         value={updateForm.compatibleWithPregOrBreastfeed}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une réponse</option>
         <option value={1}>Oui</option>
         <option value={0}>Non</option>
       </select>
 
-      <label htmlFor="category">Catégorie :</label>
+      <label htmlFor="id_category">Catégorie :</label>
       <select
-        name="category"
-        value={updateForm.category}
-        onChange={(e) =>
-          onChangeProductInfo(e.target.name, parseInt(e.target.value))
-        }
+        name="id_category"
+        value={updateForm.id_category}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une catégorie</option>
         {categories.map((category) => (
@@ -291,11 +290,11 @@ function UpdateProduct({ product, productId, setIsEditing }) {
         ))}
       </select>
 
-      <label htmlFor="skinType">Type de peau :</label>
+      <label htmlFor="id_skinType">Type de peau :</label>
       <select
-        name="skinType"
-        value={updateForm.skinType}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        name="id_skinType"
+        value={updateForm.id_skinType}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez un type de peau</option>
         {skinTypes.map((skinType) => (
@@ -305,11 +304,11 @@ function UpdateProduct({ product, productId, setIsEditing }) {
         ))}
       </select>
 
-      <label htmlFor="skinConcern">Préoccupation :</label>
+      <label htmlFor="id_skinConcern">Préoccupation :</label>
       <select
-        name="skinConcern"
-        value={updateForm.skinConcern}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        name="id_skinConcern"
+        value={updateForm.id_skinConcern}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une préoccupation</option>
         {skinConcerns.map((skinConcern) => (
@@ -323,7 +322,7 @@ function UpdateProduct({ product, productId, setIsEditing }) {
       <select
         name="isOnline"
         value={updateForm.isOnline}
-        onChange={(e) => onChangeProductInfo(e.target.name, e.target.value)}
+        onChange={onChangeProductInfo}
       >
         <option value="">Sélectionnez une réponse</option>
         <option value={1}>Oui</option>

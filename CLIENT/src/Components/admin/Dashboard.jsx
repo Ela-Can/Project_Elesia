@@ -14,6 +14,7 @@ function Dashboard() {
   const [isContentMenuOpen, setIsContentMenuOpen] = useState(false);
 
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unmoderatedCount, setUnmoderatedCount] = useState(0);
 
   return (
     <div className="container">
@@ -26,27 +27,27 @@ function Dashboard() {
 
         {isContentMenuOpen && (
           <>
-            <button onClick={() => setActiveSection("products")}>
+            <NavLink onClick={() => setActiveSection("products")}>
               Gestion des produits
-            </button>
-            <button onClick={() => setActiveSection("categories")}>
+            </NavLink>
+            <NavLink onClick={() => setActiveSection("categories")}>
               Gestion des categories
-            </button>
-            <button onClick={() => setActiveSection("subjects")}>
+            </NavLink>
+            <NavLink onClick={() => setActiveSection("subjects")}>
               Gestion des sujets
-            </button>
-            <button onClick={() => setActiveSection("skinTypes")}>
+            </NavLink>
+            <NavLink onClick={() => setActiveSection("skinTypes")}>
               Gestion des types de peau
-            </button>
-            <button onClick={() => setActiveSection("skinConcerns")}>
+            </NavLink>
+            <NavLink onClick={() => setActiveSection("skinConcerns")}>
               Gestion des préocupations
-            </button>
+            </NavLink>
           </>
         )}
 
-        <button onClick={() => setActiveSection("comments")}>
-          Modérations des commentaires
-        </button>
+        <NavLink onClick={() => setActiveSection("comments")}>
+          Modérations des commentaires {unmoderatedCount}
+        </NavLink>
 
         <NavLink onClick={() => setActiveSection("contacts")}>
           Demandes de contact {unreadCount}
@@ -59,7 +60,9 @@ function Dashboard() {
           {activeSection === "products" && <ProductList />}
           {activeSection === "categories" && <CategoryList />}
           {activeSection === "subjects" && <SubjectList />}
-          {activeSection === "comments" && <CommentList />}
+          {activeSection === "comments" && (
+            <CommentList setUnmoderatedCount={setUnmoderatedCount} />
+          )}
           {activeSection === "contacts" && (
             <ContactList setUnreadCount={setUnreadCount} />
           )}

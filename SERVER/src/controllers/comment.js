@@ -1,9 +1,23 @@
 import Comment from "../model/Comment.js";
 
-const getAll = async (req, res) => {
+const getAllPendingComments = async (req, res) => {
     try {
-        const { id } = req.params;
-        const [comment] = await Comment.findAll(id);
+        const comment = await Comment.findAllPendingComments();
+        if (comment.length === 0) {
+            return res.status(404).json({ msg: "Aucun commentaire en attente" });
+        }
+        res.status(200).json(comment);
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+const getAllModeratedComments = async (req, res) => {
+    try {
+        const comment = await Comment.findAllModeratedComments();
+        if (comment.length === 0) {
+            return res.status(404).json({ msg: "Aucun commentaire historisé" });
+        }
         res.status(200).json(comment);
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -35,19 +49,26 @@ const hideCommentAsUser = async (req, res) => {
     }
 };
 
-const hideCommentAsAdmin = async (req, res) => {
+const updateCommentStatus = async (req, res) => {
     try {
-    
-        const [response] = await Comment.hideCommentAsAdmin(req.params.id);
-        if (!response.affectedRows) {
-            res.status(404).json({ msg: "Failed to hide the comment" });
-            return;
+        const { id } = req.params;
+        const { isPublished } = req.body;
+
+        if (!id || typeof isPublished === "undefined") {
+            return res.status(400).json({ msg: "Missing or invalid parameters" });
         }
+        
+        const [response] = await Comment.updateCommentStatus(id, isPublished);
+        
+        if (!response.affectedRows) {
+            return res.status(404).json({ msg: "Comment not found or status unchanged" });
+        }
+
         res.json({ msg: "Comment successfully hidden" });
     } catch (err) {
-        console.error("Erreur dans hideComment:", err);
-        res.status(500).json({ msg: err.message });
+        console.error(`Error updating comment status (id: ${id}, isPublished: ${isPublished}):`, err);
+        res.status(500).json({ msg: "Internal server error" });
     }
 }
 
-export { getAll, getAllFromProduct, hideCommentAsUser, hideCommentAsAdmin };
+export { getAllPendingComments, getAllModeratedComments, getAllFromProduct, hideCommentAsUser, updateCommentStatus };

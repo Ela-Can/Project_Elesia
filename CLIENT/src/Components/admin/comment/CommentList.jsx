@@ -1,74 +1,116 @@
 import { useEffect, useState } from "react";
+import CommentHistory from "./CommentHistory";
 
-function CommentList() {
-  const [comments, setComments] = useState([]);
+function CommentList({ isPublished, setUnmoderatedCount }) {
+  const [activeSection, setActiveSection] = useState("comment/pending");
 
-  useEffect(() => {
-    async function fetchComments() {
-      const response = await fetch("/api/v1/comment/list");
-      const data = await response.json();
-      console.log("Commentaires récupérées :", data);
-      setComments(data);
+  const [pendingComments, setPendingComments] = useState([]);
+
+  async function fetchPendingComments() {
+    const response = await fetch("/api/v1/comment/list/pending");
+    const [data] = await response.json();
+    console.log("Commentaires récupérées :", data);
+    setPendingComments(data);
+
+    let unmoderatedCount = 0;
+    for (const comment of data) {
+      if (comment.isPublished === "commentaire en attente") {
+        unmoderatedCount++;
+      }
     }
-    fetchComments();
-  }, []);
+    setUnmoderatedCount(unmoderatedCount);
+  }
 
-  async function onClickDeleteComment(id) {
+  async function onClickMarkAsNotValid(commentId) {
     try {
-      const response = await fetch(`/api/v1/comment/delete/${id}`, {
+      const response = await fetch(`/api/v1/comment/update/${commentId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
-        body: JSON.stringify({ id, isPublished: 0 }),
+        body: JSON.stringify({ isPublished: 2 }),
       });
-      if (response.ok) {
-        alert("Commentaire marqué comme non publié avec succès.");
 
-        setComments((prevCommentList) => {
-          const updatedList = [...prevCommentList];
-
-          for (let i = 0; i < updatedList.length; i++) {
-            if (updatedList[i].id === id) {
-              updatedList[i].isPublished = 0;
-              break;
-            }
-          }
-
-          return updatedList;
-        });
-      } else {
-        const errorMessage = await response.text();
-        console.error("Erreur lors de la suppression :", errorMessage);
+      if (!response.ok) {
+        console.error("Failed to update comment status");
+        return;
       }
+      setPendingComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+
+      console.log(`Comment ${commentId} marked as not valid.`);
     } catch (error) {
-      console.error("Erreur de connexion à l'API", error);
+      console.error("Error while updating comment status:", error);
     }
   }
 
+  async function onClickMarkAsValid(commentId) {
+    try {
+      const response = await fetch(`/api/v1/comment/update/${commentId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isPublished: 3 }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to update comment status");
+        return;
+      }
+      setPendingComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+
+      console.log(`Comment ${commentId} marked as not valid.`);
+    } catch (error) {
+      console.error("Error while updating comment status:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchPendingComments();
+  }, [isPublished]);
+
   return (
-    <>
-      <h3>Liste des commentaires</h3>
-      {comments.length > 0 ? (
-        <ul>
-          {comments.map((comment) => (
-            <>
-              <li key={comment.id}>
-                {comment.pseudo} {comment.publishDate}: {comment.title}{" "}
-                {comment.content} {comment.product_name}
-                <p>Statut : {comment.isPublished}</p>
-              </li>
-              <button onClick={() => onClickDeleteComment(comment.id)}>
-                Supprimer
-              </button>
-            </>
-          ))}
-        </ul>
-      ) : (
-        <p> Aucun commentaire trouvé</p>
-      )}
-    </>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("comment/pending")}>
+          Commentaires en attente
+        </button>
+        <button onClick={() => setActiveSection("comment/moderated")}>
+          Historique
+        </button>
+      </section>
+      <section>
+        {activeSection === "comment/pending" && (
+          <>
+            <h3>Commentaires en attente</h3>
+            {pendingComments.length === 0 ? (
+              <p>Aucun commentaire en attente</p>
+            ) : (
+              pendingComments.map((comment) => (
+                <article key={comment.id}>
+                  {comment.pseudo} {comment.publishDate}: {comment.title}{" "}
+                  {comment.content} {comment.product_name}
+                  <p>Statut : {comment.isPublished}</p>
+                  <button onClick={() => onClickMarkAsValid(comment.id)}>
+                    Valider le commentaire
+                  </button>
+                  <button onClick={() => onClickMarkAsNotValid(comment.id)}>
+                    Refuser le commentaire
+                  </button>
+                </article>
+              ))
+            )}
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "comment/moderated" && <CommentHistory />}
+      </section>
+    </main>
   );
 }
 

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import Product from "../model/Product.js";
-import uploadImg from '../utils/uploadImg.js';
+//import uploadImg from '../utils/uploadImg.js';
 
 const getAllProducts = async (req, res) => {
     try {
@@ -42,39 +42,32 @@ const getOneProductByName = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
+    console.log("Middleware et contrôleur atteints !");
 
     try {
 
         console.log("req.body reçu par le contrôleur :", req.body);
-        const folder = req.params.folder || "defaultFolder";
-        
 
-        const imageUrl = await uploadImg(req, folder);
-        if (!imageUrl) {
-            console.log("Erreur : Aucun chemin d'image généré.");
-            return res.status(400).json({ msg: "Image manquante ou invalide." });
-        }
-        
-        const name = req.body.name;
-        const description = req.body.description;
-        const ingredients = req.body.ingredients;
-        const howToUse = req.body.howToUse;
-        const precautions = req.body.precautions;
-        const useDuration = req.body.useDuration;
-        const packaging = req.body.packaging;
-        const alt = req.body.alt;
+        const {
+            name,
+            description,
+            ingredients,
+            howToUse,
+            precautions,
+            useDuration,
+            packaging,
+            alt,
+            id_skinType,
+            id_skinConcern,
+            id_category,
+            adaptedToSensitiveSkin,
+            protectsFromPollution,
+            protectsFromSun,
+            compatibleWithPregOrBreastfeed,
+            isOnline,
+        } = req.body;
 
-        //const image = req.body.image;
-
-        const id_skinType = parseInt(req.body.id_skinType, 10);
-        const id_skinConcern = parseInt(req.body.id_skinConcern, 10);
-        const id_category = parseInt(req.body.id_category, 10);
-        const adaptedToSensitiveSkin = parseInt(req.body.adaptedToSensitiveSkin, 10);
-        const protectsFromPollution = parseInt(req.body.protectsFromPollution, 10);
-        const protectsFromSun = parseInt(req.body.protectsFromSun, 10);
-        const compatibleWithPregOrBreastfeed = parseInt(req.body.compatibleWithPregOrBreastfeed, 10);
-        const isOnline = parseInt(req.body.isOnline, 10);
-        
+        const image = req.body.image || null;
 
         /*if (
             !name || !description || !ingredients || !howToUse || 
@@ -110,15 +103,6 @@ const createProduct = async (req, res) => {
 
         // faire le reste ...
 
-        //const [existingProduct] = await Product.findAllProducts();
-
-        //for (let product of existingProduct) {
-        //    if (req.body.name === product.name) {
-        //        return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
-        //    }
-        //}
-
-
         const datas = {
             name,
             description,
@@ -127,78 +111,108 @@ const createProduct = async (req, res) => {
             useDuration,
             precautions,
             packaging,
-            image : imageUrl,
             alt,
-            isOnline,
-            id_skinType,
-            id_skinConcern,
-            adaptedToSensitiveSkin,
-            protectsFromPollution,
-            protectsFromSun,
-            compatibleWithPregOrBreastfeed,
-            id_category,
+            isOnline: parseInt(isOnline, 10),
+            id_skinType: parseInt(id_skinType, 10),
+            id_skinConcern: parseInt(id_skinConcern, 10),
+            id_category: parseInt(id_category, 10),
+            adaptedToSensitiveSkin: parseInt(adaptedToSensitiveSkin, 10),
+            protectsFromPollution: parseInt(protectsFromPollution, 10),
+            protectsFromSun: parseInt(protectsFromSun, 10),
+            compatibleWithPregOrBreastfeed: parseInt(compatibleWithPregOrBreastfeed, 10),
+            image: req.body.image
         };
-
-        console.log("Données préparées pour l'insertion :", datas);
 
         const [response] = await Product.createProduct(datas);
         res.json({ msg: "Product Created", id: response.insertId });
 
     } catch (err) {
         console.error("Erreur complète :", err);
-        res.status(500).json({ msg: "Erreur serveur", details: err.message });
     }
 };
 
 const updateProduct = async (req, res) => {
     try {
 
-        const folder = req.params.folder || "defaultFolder";
-        
+        const {
+            name,
+            description,
+            ingredients,
+            howToUse,
+            useDuration,
+            precautions,
+            packaging,
+            alt,
+            id_skinType,
+            id_skinConcern,
+            id_category,
+            adaptedToSensitiveSkin,
+            protectsFromPollution,
+            protectsFromSun,
+            compatibleWithPregOrBreastfeed,
+            isOnline,
+            image,
+        } = req.body;
 
-        const imageUrl = await uploadImg(req, folder);
-        if (!imageUrl) {
-            console.log("Erreur : Aucun chemin d'image généré.");
-            return res.status(400).json({ msg: "Image manquante ou invalide." });
-        }
-        const image = imageUrl;
-
-        const [existingProduct] = await Product.findAllProducts();
+        /*const [existingProduct] = await Product.findAllProducts();
 
         for (let product of existingProduct) {
             if (req.body.name === product.name) {
                 return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
             }
-        }
+        }*/
 
         const [product] = await Product.findOneProductById(req.params.id);
 
-       
-        const datas = [
-            req.body.name,
-            req.body.description,
-            req.body.ingredients,
-            req.body.howToUse,
-            req.body.precautions,
-            req.body.useDuration,
-            req.body.packaging,
-            image,
-            req.body.alt,
-            id_skinType,
-            id_skinConcern,
-            adaptedToSensitiveSkin,
-            protectsFromPollution,
-            protectsFromSun,
-            compatibleWithPregOrBreastfeed,
-            id_category,
-            req.body.isOnline,
-            req.params.id
-        ];
-
+        /*
         if (!datas) {
             return res.status(400).json({ msg: "Les champs obligatoires sont manquants." });
+        }*/
+        
+        if (!product || product.length === 0) {
+            return res.status(404).json({ msg: "Produit introuvable." });
         }
 
+        
+        let newImagePath = product[0].image;
+        if (req.body.image) {
+            newImagePath = req.body.image;
+        }
+
+        /*if (req.files.image) {
+            const imageFile = req.files.image;
+            const uploadPath = path.join(process.cwd(), 'public', 'img', 'productImg', imageFile.name);
+
+            try {
+                await imageFile.mv(uploadPath); 
+                newImagePath = `/img/productImg/${imageFile.name}`;
+            } catch (err) {
+                console.error("Erreur lors de l'upload de la nouvelle image :", err);
+                return res.status(500).json({ msg: "Erreur lors de l'upload de la nouvelle image." });
+            }
+        }*/
+
+         const datas = [
+            name,
+            description,
+            ingredients,
+            howToUse,
+            useDuration,
+            precautions,
+            packaging,
+            image || newImagePath,
+            alt,
+            parseInt(id_skinType, 10),
+            parseInt(id_skinConcern, 10),
+            parseInt(adaptedToSensitiveSkin, 10),
+            parseInt(protectsFromPollution, 10),
+            parseInt(protectsFromSun, 10),
+            parseInt(compatibleWithPregOrBreastfeed, 10),
+            parseInt(id_category, 10),
+            parseInt(isOnline, 10),
+            parseInt(req.params.id, 10), 
+         ];
+        
         const [response] = await Product.updateProduct(datas);
 
         if (!response.affectedRows) {
@@ -206,20 +220,17 @@ const updateProduct = async (req, res) => {
             return;
         }
 
-        const productImage = product[0].image;
+        if (req.files && req.files.image && product[0].image) {
 
-        const imagePath = path.join(process.cwd(), 'public', productImage);
+            const oldImagePath = path.join(process.cwd(), 'public', product[0].image);
 
-        fs.unlink(imagePath, (err) => {
-            if (err) {
-                console.error("Erreur lors de la suppression de l'image :", err);
-                return res.status(200).json({ msg: "impossible de supprimer l'ancienne image." });
-            } else {
-                return res.status(200).json({ msg: "ancienne image supprimée et produit mis à jour !" });
-            }
-        });
-
-        //res.json({ msg: "Product Updated", id: req.params.id });
+            fs.unlink(oldImagePath, (err) => {
+                if (err) {
+                    console.error("Erreur lors de la suppression de l'image :", err);
+                }  
+            });
+        }
+        res.status(200).json({ msg: "Produit mis à jour avec succès.", id: req.params.id });
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
