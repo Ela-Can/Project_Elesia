@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useCloseMenu from "../../Hook/useCloseMenu";
 
 function Product() {
+  useCloseMenu();
+
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
 

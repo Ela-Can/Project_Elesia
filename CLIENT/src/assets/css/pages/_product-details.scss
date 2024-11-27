@@ -1,19 +1,19 @@
 .product_details_section {
-    display: flex;
+    max-width: 100%;
 
     .product_details_top {
-        display: flex;
-        gap: 30px;
+        
 
         img {
-            width: 50%;
-            height: 80vh;
+            width: 50vh;
+            height: 50vh;
+            margin: auto;
             object-fit: cover;
         }
 
         div {
-            width: 50%;
-            
+            width: 60vh;
+    
         }
 
     }

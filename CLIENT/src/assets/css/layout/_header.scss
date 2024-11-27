@@ -1,17 +1,44 @@
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    position: relative;
     text-transform: uppercase;
     background-color: grey; // Modifier la couleur
 
-    nav {
-        display: flex;
-        gap: 20px;
+    h1 {
+        text-align: center; // à mettre dans global
+    }
 
-        .active {
-            text-decoration: underline;
-        }
-        
+    button {
+        position: absolute;
+        left: 20px;
+        z-index: 1001;
+    }
+
+    nav {
+        display: none;
+    }
+
+    //nav.screen {
+    //    display: flex; // A mettre dans le media queries
+    //}
+    
+    nav.burger {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background-color: white; // A modifier 
+        gap: 20px;
+        transition: transform 0.3s ease;
+        z-index: 1000;
+
+        //a {
+        //    padding: 1rem;
+        //}
     }
 }

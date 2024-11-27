@@ -2,10 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, loginFailed } from "../../store/slices/user";
+import useCloseMenu from "../../Hook/useCloseMenu";
 
 function Login() {
+  useCloseMenu();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [message, setMessage] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,7 +37,8 @@ function Login() {
         const datas = await response.json();
         console.log("Données utilisateur reçues :", datas);
         dispatch(login(datas));
-        navigate("/");
+        setMessage("Connexion réussie !");
+        setTimeout(() => navigate("/"), 2000);
       } else {
         const errorDatas = await response.json();
         dispatch(loginFailed({ error: errorDatas.message }));

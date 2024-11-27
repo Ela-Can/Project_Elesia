@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Accordion from "../partials/Accordion";
 import ProductComments from "./partials/ProductComments.jsx";
 
@@ -7,7 +7,11 @@ import productImage from "../../../../SERVER/public/img/productImg/pexels-vie-st
 
 function ProductDetails() {
   const [product, setProduct] = useState([]);
+  const [isToggleVisible, setIsToggleVisible] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProductById() {
@@ -19,6 +23,22 @@ function ProductDetails() {
     fetchProductById();
   }, [id]);
 
+  function onClickBuyBtn() {
+    setIsToggleVisible(!isToggleVisible);
+  }
+
+  function onClickBuyOnlineBtn() {
+    setIsPopupOpen(true);
+  }
+
+  function onClickFindStoreBtn() {
+    navigate("/store_locator");
+  }
+
+  function onClickClosePopUp() {
+    setIsPopupOpen(false);
+  }
+
   return (
     <main>
       <section className="product_details_section">
@@ -29,11 +49,12 @@ function ProductDetails() {
             <div className="product_details_top">
               <img src={productImage} alt={product.alt} />
               <div>
-                <h3>{product.name}</h3>
+                <h4>{product.name}</h4>
                 <p>{product.description}</p>
                 <p>{product.precautions}</p>
               </div>
             </div>
+            <button onClick={onClickBuyBtn}>Acheter</button>
             <div className="product_details_bottom">
               <Accordion title="Ingrédients">
                 <p>{product.ingredients}</p>
@@ -51,8 +72,29 @@ function ProductDetails() {
           </article>
         )}
       </section>
+      <section>
+        <h3>Vous pourriez aussi aimer</h3>
+      </section>
+      <section>
+        <ProductComments productId={id} />
+      </section>
 
-      <ProductComments productId={id} />
+      {isToggleVisible && (
+        <div>
+          <button onClick={onClickBuyOnlineBtn}>Acheter en ligne</button>
+          <button onClick={onClickFindStoreBtn}>
+            Trouver un point de vente
+          </button>
+        </div>
+      )}
+
+      {isPopupOpen && (
+        <div>
+          <h5>Nos partenaires en ligne</h5>
+          <a href="#">Pharma...</a>
+          <button onClick={onClickClosePopUp}>Fermer</button>
+        </div>
+      )}
     </main>
   );
 }

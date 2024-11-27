@@ -26,8 +26,9 @@ const validEmail = (email) => {
 const create = async (req, res) => {
     try {
 
-        const email = req.body.email.trim();
-        const content = req.body.content.trim();
+        const email = req.body.email;
+        const content = req.body.content;
+        const subject = req.body.subject;
 
         if (!email || !content) {
             return res.status(400).json({ msg: "Fields are required" });
@@ -45,9 +46,10 @@ const create = async (req, res) => {
             return res.status(400).json({ msg: "Invalid email format" });
         }
 
-        const [response] = await Contact.create(email, content, req.body.id_subject);
+        const [response] = await Contact.create(email, content, subject);
         res.json({ msg: "Contact Form created", id: response.insertId });
     } catch (err) {
+        console.error("Erreur lors de l'appel à Contact.create :", err);
         res.status(500).json({ msg: err.message });
     }
 };

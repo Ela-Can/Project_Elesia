@@ -9,6 +9,8 @@ function SkinConcernList() {
   const [isEditing, setIsEditing] = useState(false);
   const [skinConcernId, setSkinConcernId] = useState([]);
 
+  const [activeSection, setActiveSection] = useState("skinConcern/list");
+
   useEffect(() => {
     async function fetchSkinConcerns() {
       const response = await fetch("/api/v1/skinconcern/list");
@@ -74,51 +76,72 @@ function SkinConcernList() {
   }
 
   return (
-    <>
-      <h3>Liste des préoccupations</h3>
-      {skinConcerns.length > 0 ? (
-        <ul>
-          {skinConcerns.map((skinConcern) => (
-            <li key={skinConcern.id}>
-              {isEditing === true && skinConcernId === skinConcern.id ? (
-                <>
-                  <UpdateSkinConcern
-                    skinConcern={skinConcern}
-                    skinConcernId={skinConcern.id}
-                    updateSkinConcern={updateSkinConcern}
-                    setIsEditing={setIsEditing}
-                  />
-                  <button onClick={() => onClickCancelBtn(skinConcern.id)}>
-                    Annuler
-                  </button>
-                </>
-              ) : (
-                <>
-                  {skinConcern.label}
-                  <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      setSkinConcernId(skinConcern.id);
-                    }}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => onClickDeleteSkinConcern(skinConcern.id)}
-                  >
-                    Supprimer
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p> Aucune préoccupation trouvée</p>
-      )}
-
-      <AddSkinConcern addSkinConcern={addSkinConcern} />
-    </>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("skinConcern/list")}>
+          Liste des produits
+        </button>
+        <button onClick={() => setActiveSection("skinConcern/addSkinConcern")}>
+          Ajouter un produit
+        </button>
+      </section>
+      <section>
+        {activeSection === "skinConcern/list" && (
+          <>
+            <h3>Liste des préoccupations</h3>
+            {skinConcerns.length > 0 ? (
+              <ul>
+                {skinConcerns.map((skinConcern) => (
+                  <li key={skinConcern.id}>
+                    {isEditing === true && skinConcernId === skinConcern.id ? (
+                      <>
+                        <UpdateSkinConcern
+                          skinConcern={skinConcern}
+                          skinConcernId={skinConcern.id}
+                          updateSkinConcern={updateSkinConcern}
+                          setIsEditing={setIsEditing}
+                        />
+                        <button
+                          onClick={() => onClickCancelBtn(skinConcern.id)}
+                        >
+                          Annuler
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {skinConcern.label}
+                        <button
+                          onClick={() => {
+                            setIsEditing(true);
+                            setSkinConcernId(skinConcern.id);
+                          }}
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() =>
+                            onClickDeleteSkinConcern(skinConcern.id)
+                          }
+                        >
+                          Supprimer
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p> Aucune préoccupation trouvée</p>
+            )}
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "skinConcern/addSkinConcern" && (
+          <AddSkinConcern addSkinConcern={addSkinConcern} />
+        )}
+      </section>
+    </main>
   );
 }
 

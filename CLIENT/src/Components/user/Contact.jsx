@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { validEmail, validSubjet, validContent } from "../utils/validators.js";
+import useCloseMenu from "../../Hook/useCloseMenu";
 
 function Contact() {
+  useCloseMenu();
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [content, setContent] = useState("");
+
+  const [message, setMessage] = useState("");
 
   // Handling maximum character limit
 
@@ -62,19 +66,26 @@ function Contact() {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
       body: JSON.stringify({ email, content, subject }),
     });
+
     if (response === 201) {
       setEmail("");
       setSubject("");
       setContent("");
       setErrors({});
+      setMessage("Votre message a été envoyé avec succès !");
+    } else {
+      setMessage(
+        "Une erreur s'est produite lors de l'envoi. Veuillez réessayer."
+      );
     }
   }
+
   return (
     <main>
       <h2>Contactez-nous</h2>
+      <p>Veuillez remplir ce formulaire pour nous contacter.</p>
       <section>
         <form onSubmit={submitHandler}>
           <p>*Champs obligatoires</p>
@@ -146,6 +157,7 @@ function Contact() {
           </div>
           <button type="submit">Envoyer</button>
         </form>
+        {message && <p>{message}</p>}
       </section>
     </main>
   );

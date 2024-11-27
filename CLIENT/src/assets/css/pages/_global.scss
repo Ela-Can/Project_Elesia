@@ -1,10 +1,42 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 62.5%;
+    width: 100%;
+}
+
 main, 
 .container {
-    max-width: 1024px;
-    margin: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
     
 }
 
-h2 {
+h2, h3 {
     text-align: center;
+    text-transform: uppercase;
+}
+
+h3 {
+    position: relative;
+}
+
+h3::after {
+    content: "";
+    display: block;
+    width: 30%;
+    height: 2px;
+    background-color: #007bff;
+    margin: 0.3rem auto 0.3rem;
+}
+
+
+@media (min-width: 768px) {
+    main,
+    .container {
+        max-width: 768px;
+    }
 }

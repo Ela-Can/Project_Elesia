@@ -19,7 +19,7 @@ function Dashboard() {
   return (
     <div className="container">
       <aside>
-        <h3>Menu</h3>
+        <h3>Tableau de bord</h3>
 
         <button onClick={() => setIsContentMenuOpen(!isContentMenuOpen)}>
           Gestion du contenu {isContentMenuOpen ? "▲" : "▼"}
@@ -56,7 +56,7 @@ function Dashboard() {
 
       <main>
         <h2>Dashboard</h2>
-        <div>
+        <section>
           {activeSection === "products" && <ProductList />}
           {activeSection === "categories" && <CategoryList />}
           {activeSection === "subjects" && <SubjectList />}
@@ -68,7 +68,7 @@ function Dashboard() {
           )}
           {activeSection === "skinTypes" && <SkinTypeList />}
           {activeSection === "skinConcerns" && <SkinConcernList />}
-        </div>
+        </section>
       </main>
     </div>
   );

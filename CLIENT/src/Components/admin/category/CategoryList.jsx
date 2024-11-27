@@ -9,6 +9,8 @@ function CategoryList() {
   const [isEditing, setIsEditing] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
 
+  const [activeSection, setActiveSection] = useState("category/list");
+
   useEffect(() => {
     async function fetchCategories() {
       const response = await fetch("/api/v1/category/list");
@@ -76,49 +78,68 @@ function CategoryList() {
   }
 
   return (
-    <>
-      <h3>Liste des categories</h3>
-      {categories.length > 0 ? (
-        <ul>
-          {categories.map((category) => (
-            <li key={category.id}>
-              {isEditing === true && categoryId === category.id ? (
-                <>
-                  <UpdateCategory
-                    category={category}
-                    categoryId={category.id}
-                    updateCategory={updateCategory}
-                    setIsEditing={setIsEditing}
-                  />
-                  <button onClick={() => onClickCancelBtn(category.id)}>
-                    Annuler
-                  </button>
-                </>
-              ) : (
-                <>
-                  {category.label} : {category.ref}
-                  <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      setCategoryId(category.id);
-                    }}
-                  >
-                    Modifier
-                  </button>
-                  <button onClick={() => onClickDeleteCategory(category.id)}>
-                    Supprimer
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p> Aucune catégorie trouvée</p>
-      )}
-
-      <AddCategory addCategory={addCategory} />
-    </>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("category/list")}>
+          Liste des produits
+        </button>
+        <button onClick={() => setActiveSection("category/addCategory")}>
+          Ajouter un produit
+        </button>
+      </section>
+      <section>
+        {activeSection === "category/list" && (
+          <>
+            <h3>Liste des categories</h3>
+            {categories.length > 0 ? (
+              <ul>
+                {categories.map((category) => (
+                  <li key={category.id}>
+                    {isEditing === true && categoryId === category.id ? (
+                      <>
+                        <UpdateCategory
+                          category={category}
+                          categoryId={category.id}
+                          updateCategory={updateCategory}
+                          setIsEditing={setIsEditing}
+                        />
+                        <button onClick={() => onClickCancelBtn(category.id)}>
+                          Annuler
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {category.label} : {category.ref}
+                        <button
+                          onClick={() => {
+                            setIsEditing(true);
+                            setCategoryId(category.id);
+                          }}
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => onClickDeleteCategory(category.id)}
+                        >
+                          Supprimer
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p> Aucune catégorie trouvée</p>
+            )}
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "category/addCategory" && (
+          <AddCategory addCategory={addCategory} />
+        )}
+      </section>
+    </main>
   );
 }
 

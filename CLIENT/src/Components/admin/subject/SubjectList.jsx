@@ -5,6 +5,8 @@ import UpdateSubject from "./UpdateSubject";
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
 
+  const [activeSection, setActiveSection] = useState("subject/list");
+
   useEffect(() => {
     async function fetchSubjects() {
       try {
@@ -78,35 +80,56 @@ function SubjectList() {
   }
 
   return (
-    <>
-      <h3>Liste des sujets</h3>
-      {subjects.length > 0 ? (
-        <ul>
-          {subjects.map((subject) => (
-            <>
-              <li key={subject.id}>
-                {subject.label} : {subject.subjectStatus}
-              </li>
-              <UpdateSubject
-                subjectId={subject.id}
-                updateSubject={updateSubject}
-              />
-              <button
-                onClick={() => {
-                  console.log("ID passé au bouton Supprimer :", subject.id);
-                  onClickDeleteSubject(subject.id);
-                }}
-              >
-                Supprimer
-              </button>
-            </>
-          ))}
-        </ul>
-      ) : (
-        <p> Aucune catégorie trouvée</p>
-      )}
-      <AddSubject addSubject={addSubject} />
-    </>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("subject/list")}>
+          Liste des produits
+        </button>
+        <button onClick={() => setActiveSection("subject/addSubject")}>
+          Ajouter un produit
+        </button>
+      </section>
+      <section>
+        {activeSection === "subject/list" && (
+          <>
+            <h3>Liste des sujets</h3>
+            {subjects.length > 0 ? (
+              <ul>
+                {subjects.map((subject) => (
+                  <>
+                    <li key={subject.id}>
+                      {subject.label} : {subject.subjectStatus}
+                    </li>
+                    <UpdateSubject
+                      subjectId={subject.id}
+                      updateSubject={updateSubject}
+                    />
+                    <button
+                      onClick={() => {
+                        console.log(
+                          "ID passé au bouton Supprimer :",
+                          subject.id
+                        );
+                        onClickDeleteSubject(subject.id);
+                      }}
+                    >
+                      Supprimer
+                    </button>
+                  </>
+                ))}
+              </ul>
+            ) : (
+              <p> Aucune catégorie trouvée</p>
+            )}
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "subject/addSubject" && (
+          <AddSubject addSubject={addSubject} />
+        )}
+      </section>
+    </main>
   );
 }
 

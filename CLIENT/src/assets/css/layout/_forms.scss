@@ -1,14 +1,14 @@
 form {
-    max-width: 700px;
+    max-width: 70vw;
     margin: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.2rem;
 
     div {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 0.5px;
 
         label {
             text-align: center;
@@ -22,7 +22,7 @@ form {
 
     button {
         text-align: center;
-        border: 1px solid black;
+        border: 0.1rem solid black;
     }
 
 }

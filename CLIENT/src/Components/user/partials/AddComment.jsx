@@ -8,8 +8,6 @@ function AddComment({ productId }) {
   const [newContent, setNewContent] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  console.log("Utilisateur actuel dans AddComment :", user);
-
   async function onSumbitAddComment(e) {
     e.preventDefault();
     setSuccessMessage("");
@@ -29,7 +27,6 @@ function AddComment({ productId }) {
         }),
       });
       if (response.ok) {
-        console.log("Commentaire envoyé avec succès !");
         setSuccessMessage(
           "Votre commentaire a été envoyé avec succès et est en attente de modération."
         );
@@ -54,9 +51,10 @@ function AddComment({ productId }) {
 
   return (
     <>
-      {!isFormVisible ? (
+      {!isFormVisible && !successMessage && (
         <button onClick={onClickFormHandler}>Rédiger un commentaire</button>
-      ) : (
+      )}
+      {isFormVisible && !successMessage && (
         <form onSubmit={onSumbitAddComment}>
           <h5>Rédigez un commentaire</h5>
           <label htmlFor="title">
@@ -80,6 +78,7 @@ function AddComment({ productId }) {
           <button type="submit">Envoyer</button>
         </form>
       )}
+      {successMessage && <p>{successMessage}</p>}
     </>
   );
 }

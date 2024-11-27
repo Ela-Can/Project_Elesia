@@ -13,6 +13,7 @@ import Footer from "../Components/user/partials/Footer.jsx";
 import Dashboard from "../Components/user/Dashboard.jsx";
 import Diagnostic from "../Components/user/Diagnostic.jsx";
 import ProtectedRoute from "../HOC/ProtectedRoute";
+import StoreLocator from "../Components/user/StoreLocator.jsx";
 
 function UserRouter() {
   return (
@@ -28,6 +29,7 @@ function UserRouter() {
         <Route path="authentification/register" element={<Register />} />
 
         <Route path="product/:id" element={<ProductDetails />} />
+        <Route path="store_locator" element={<StoreLocator />} />
 
         <Route path="user" element={<ProtectedRoute element={Dashboard} />} />
         <Route path="*" element={<h1>404 NOT FOUND</h1>} />

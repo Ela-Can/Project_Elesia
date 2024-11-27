@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import useCheckAuth from "../../Hook/useCheckAuth.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import useCloseMenu from "../../Hook/useCloseMenu";
 
 function Diagnostic() {
+  useCloseMenu();
   const [user, isLoading] = useCheckAuth();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();

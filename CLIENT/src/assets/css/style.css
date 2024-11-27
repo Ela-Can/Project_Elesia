@@ -74,30 +74,54 @@ q::after {
 
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  position: relative;
   text-transform: uppercase;
   background-color: grey;
 }
-header nav {
-  display: flex;
-  gap: 20px;
+header h1 {
+  text-align: center;
 }
-header nav .active {
-  text-decoration: underline;
+header button {
+  position: absolute;
+  left: 20px;
+  z-index: 1001;
+}
+header nav {
+  display: none;
+}
+header nav.burger {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: white;
+  gap: 20px;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+footer {
+  display: flex;
+  justify-content: space-around;
+  background-color: grey;
 }
 
 form {
-  max-width: 700px;
+  max-width: 70vw;
   margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.2rem;
 }
 form div {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.5px;
 }
 form div label {
   text-align: center;
@@ -107,61 +131,99 @@ form div textarea {
 }
 form button {
   text-align: center;
-  border: 1px solid black;
+  border: 0.1rem solid black;
 }
 
 .card_section {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 1rem;
 }
 .card_section .card {
   width: 100%;
-  max-width: 300px;
+  max-width: 15rem;
   margin: auto;
-  height: 400px;
+  height: 18.5rem;
+  position: relative;
 }
 .card_section .card p:first-child {
-  text-align: end;
+  position: absolute;
+  top: 0.5rem;
+  right: -0.3rem;
+  font-size: 0.5rem;
+  background-color: grey;
+  color: #fff;
+  padding: 0.1rem 0.5rem;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
 }
 .card_section .card img {
   width: 100%;
-  height: 300px;
+  height: 15rem;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 62.5%;
+  width: 100%;
 }
 
 main,
 .container {
-  max-width: 1024px;
-  margin: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
-h2 {
+h2, h3 {
   text-align: center;
+  text-transform: uppercase;
 }
 
-.product_details_section {
-  display: flex;
+h3 {
+  position: relative;
 }
-.product_details_section .product_details_top {
-  display: flex;
-  gap: 30px;
+
+h3::after {
+  content: "";
+  display: block;
+  width: 30%;
+  height: 2px;
+  background-color: #007bff;
+  margin: 0.3rem auto 0.3rem;
+}
+
+@media (min-width: 768px) {
+  main,
+  .container {
+    max-width: 768px;
+  }
+}
+.product_details_section {
+  max-width: 100%;
 }
 .product_details_section .product_details_top img {
-  width: 50%;
-  height: 80vh;
+  width: 50vh;
+  height: 50vh;
+  margin: auto;
   -o-object-fit: cover;
      object-fit: cover;
 }
 .product_details_section .product_details_top div {
-  width: 50%;
+  width: 60vh;
 }
 
 .banner_section {
   position: relative;
   width: 100%;
-  height: 55vh;
+  height: 20vh;
 }
 .banner_section img {
   position: absolute;
@@ -171,8 +233,8 @@ h2 {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
-  -o-object-position: center 35%;
-     object-position: center 35%;
+  -o-object-position: center 30%;
+     object-position: center 30%;
 }
 .banner_section h3 {
   position: absolute;

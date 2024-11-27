@@ -8,6 +8,8 @@ function SkinTypeList() {
 
   const [skinTypeId, setSkinTypeId] = useState([]);
 
+  const [activeSection, setActiveSection] = useState("skinType/list");
+
   useEffect(() => {
     async function fetchSkinTypes() {
       const response = await fetch("/api/v1/skintype/list");
@@ -73,49 +75,68 @@ function SkinTypeList() {
   }
 
   return (
-    <>
-      <h3>Liste des préoccupations</h3>
-      {skinTypes.length > 0 ? (
-        <ul>
-          {skinTypes.map((skinType) => (
-            <li key={skinType.id}>
-              {isEditing === true && skinTypeId === skinType.id ? (
-                <>
-                  <UpdateSkinType
-                    skinType={skinType}
-                    skinTypeId={skinType.id}
-                    updateSkinType={updateSkinType}
-                    setIsEditing={setIsEditing}
-                  />
-                  <button onClick={() => onClickCancelBtn(skinType.id)}>
-                    Annuler
-                  </button>
-                </>
-              ) : (
-                <>
-                  {skinType.label}
-                  <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      setSkinTypeId(skinType.id);
-                    }}
-                  >
-                    Modifier
-                  </button>
-                  <button onClick={() => onClickDeleteSkinType(skinType.id)}>
-                    Supprimer
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p> Aucun type de peau trouvé</p>
-      )}
-
-      <AddSkinType addSkinType={addSkinType} />
-    </>
+    <main>
+      <section>
+        <button onClick={() => setActiveSection("skinType/list")}>
+          Liste des produits
+        </button>
+        <button onClick={() => setActiveSection("skinType/addSkinType")}>
+          Ajouter un produit
+        </button>
+      </section>
+      <section>
+        {activeSection === "skinType/list" && (
+          <>
+            <h3>Liste des préoccupations</h3>
+            {skinTypes.length > 0 ? (
+              <ul>
+                {skinTypes.map((skinType) => (
+                  <li key={skinType.id}>
+                    {isEditing === true && skinTypeId === skinType.id ? (
+                      <>
+                        <UpdateSkinType
+                          skinType={skinType}
+                          skinTypeId={skinType.id}
+                          updateSkinType={updateSkinType}
+                          setIsEditing={setIsEditing}
+                        />
+                        <button onClick={() => onClickCancelBtn(skinType.id)}>
+                          Annuler
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {skinType.label}
+                        <button
+                          onClick={() => {
+                            setIsEditing(true);
+                            setSkinTypeId(skinType.id);
+                          }}
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => onClickDeleteSkinType(skinType.id)}
+                        >
+                          Supprimer
+                        </button>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p> Aucun type de peau trouvé</p>
+            )}
+          </>
+        )}
+      </section>
+      <section>
+        {activeSection === "skinType/addSkinType" && (
+          <AddSkinType addSkinType={addSkinType} />
+        )}
+      </section>
+    </main>
   );
 }
 

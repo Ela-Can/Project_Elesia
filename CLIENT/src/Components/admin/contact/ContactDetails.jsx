@@ -15,6 +15,7 @@ function ContactDetails({ contact, statusUpdated, setSelectedRequest }) {
       const data = await response.json();
       setUpdateStatus(data);
       statusUpdated();
+      setSelectedRequest(null);
     } catch (error) {
       console.error("An error occurred:", error);
     }
