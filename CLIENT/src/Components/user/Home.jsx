@@ -2,39 +2,29 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useCloseMenu from "../../Hook/useCloseMenu";
 
+import { fetchProducts } from "../../services/api";
+
 function Home() {
   useCloseMenu();
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await fetch("/api/v1/product/list", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      console.log("Données récupérées :", data);
-      setProducts(data);
-    };
-    fetchProducts();
+    fetchProducts().then(setProducts);
   }, []);
-
-  function seeMoreBtnHandler(productId) {
-    navigate(`/product/${productId}`);
-  }
 
   return (
     <>
-      <header className="banner_section">
-        <img src="" alt="" />
-        <h3>Des soins marins pensés pour l'efficacité</h3>
-        <p>
-          Chez Elésia, nous croyons que l'efficacité réside dans la simplicité.
-        </p>
+      <header className="home_banner_section" role="banner">
+        <img
+          src="src/assets/img/banner/banner-small.webp"
+          srcset="
+            src/assets/img/banner/banner-small.webp 2000w, 
+            src/assets/img/banner/banner-medium.webp 3000w, 
+            src/assets/img/banner/banner-large.webp 4000w"
+          alt="Flacon en verre posé sur le sable au bord de l'eau"
+        />
+        <h2>Des soins marins pensés pour l'efficacité</h2>
         <p>
           Chaque ingrédient marin est sélectionné avec soin pour sublimer votre
           peau, sans superflu.
@@ -45,15 +35,23 @@ function Home() {
           <h3>Nos produits</h3>
           <div className="card_section">
             {products.length === 0 ? (
-              <p>Aucun produit disponible</p>
+              <p role="status">Aucun produit disponible</p>
             ) : (
               products.map((product) => (
-                <article key={product.id} className="card">
+                <article
+                  key={product.id}
+                  className="card"
+                  role="region"
+                  aria-label={product.name}
+                >
                   <p>{product.skinConcern_label}</p>
                   <img src={product.image} alt={product.alt} />
                   <h4>{product.name}</h4>
                   <p>{product.skinType_label}</p>
-                  <button onClick={() => seeMoreBtnHandler(product.id)}>
+                  <button
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    aria-label={`Voir plus sur ${product.name}`}
+                  >
                     Voir plus
                   </button>
                 </article>
@@ -63,7 +61,35 @@ function Home() {
         </section>
         <section>
           <h3>Découvrez le produit qui vous convient</h3>
-          <img src="" alt="" />
+          <div className="diagnostic_banner_section">
+            <img
+              src="src/assets/img/diagnostic/diagnostic-small.webp"
+              srcset="
+            src/assets/img/diagnostic/diagnostic-small.webp 2000w, 
+            src/assets/img/diagnostic/diagnostic-medium.webp 3000w, 
+            src/assets/img/diagnostic/diagnostic-large.webp 4000w"
+              alt="Une femme portant un soin exfoliant sur sa joue"
+            />
+            <p>Trouvez le produit idéal pour sublimer votre peau.</p>
+            <button
+              onClick={() => navigate("diagnostic/create")}
+              aria-label="Faire mon diagnostic"
+            >
+              Faire mon diagnostic
+            </button>
+          </div>
+        </section>
+        <section>
+          <h3>Nos valeurs</h3>
+          <p>
+            Nos produits sont soigneusement formulés à partir d'ingrédients
+            d'origine marine, sélectionnés pour leur efficacité naturelle et
+            leurs bienfaits exceptionnels sur la peau. Nous croyons en la
+            puissance de la simplicité : des formules courtes et précises,
+            pensées pour offrir des résultats visibles sans compromis. Chaque
+            soin respecte votre peau autant que l'environnement, en s'inscrivant
+            dans une démarche transparente et écoresponsable.
+          </p>
         </section>
       </main>
     </>

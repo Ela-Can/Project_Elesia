@@ -77,7 +77,7 @@ class Product {
         return await pool.query(SELECT_ONE, [id]);
     }
 
-    static async findOneProductByName(name) {
+    /*static async findOneProductByName(name) {
         const SELECT_ONE = `
             SELECT
                 product.id,
@@ -119,7 +119,7 @@ class Product {
             LEFT JOIN skinConcern ON product.id_skinConcern = skinConcern.id
             WHERE name = ?`;
         return await pool.query(SELECT_ONE, [name]);
-    }
+    }*/
 
     static async createProduct(datas) {
         const INSERT = `

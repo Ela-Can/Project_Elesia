@@ -1,27 +1,38 @@
 * {
     box-sizing: border-box;
+    //border: 1px solid red;
 }
 
 body {
     font-size: 62.5%;
     width: 100%;
+    font-family: "Raleway Light", Arial, Helvetica, sans-serif;
+    font-weight: 300;
 }
 
 main, 
 .container {
-    max-width: 100%;
+    width: 100%;
     margin: 0 auto;
     padding: 1rem;
-    
+    font-family: "Raleway Light", Arial, Helvetica, sans-serif;
+    font-weight: 300;
 }
 
-h2, h3 {
+h1, 
+h2, 
+h3, 
+h4,
+h5 {
+    font-family: "Montserrat Light", Arial, Helvetica, sans-serif;
+    font-weight: 300;
     text-align: center;
     text-transform: uppercase;
+    padding: 0.5rem;
 }
 
 h3 {
-    position: relative;
+    padding: 1rem;
 }
 
 h3::after {

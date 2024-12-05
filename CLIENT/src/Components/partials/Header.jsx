@@ -4,7 +4,7 @@ import Nav from "./Nav.jsx";
 function Header() {
   return (
     <header>
-      <Link to={"/"}>
+      <Link to={"/"} aria-label="Aller à la page d'accueil">
         <h1>Elésia</h1>
       </Link>
       <Nav />

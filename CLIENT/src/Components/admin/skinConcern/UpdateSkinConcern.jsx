@@ -4,7 +4,9 @@ function UpdateSkinConcern({
   skinConcern,
   skinConcernId,
   updateSkinConcern,
-  setIsEditing,
+  setErrorMessage,
+  setSuccessMessage,
+  onCloseOrCancel,
 }) {
   const [updatedSkinConcern, setUpdatedSkinConcern] = useState(
     skinConcern.label
@@ -30,44 +32,32 @@ function UpdateSkinConcern({
         }
       );
 
-      console.log("Réponse reçue après la mise à jour :", response);
+      const data = await response.json();
 
-      if (response.ok) {
-        const updatedSkinConcern = await response.json();
-        console.log("Préoccupation modifiée avec succès :", updatedSkinConcern);
-
-        console.log("Préoccupation modifiée avec succès");
-
-        setUpdatedSkinConcern("");
-
-        setIsEditing(false);
-      } else {
-        const errorDetails = await response.text();
-        console.error(
-          "Erreur lors de la modif de la catégorie :",
-          response.status,
-          response.statusText,
-          errorDetails
-        );
-      }
+      setSuccessMessage("SkinConcern mis à jour avec succès !");
+      setUpdatedSkinConcern("");
+      onCloseOrCancel();
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
+      setErrorMessage("Une erreur s'est produite lors de la mise à jour.");
     }
   }
 
   return (
     <>
-      <h4>Modifier une préoccupation</h4>
       <form onSubmit={onSubmitUpdateSkinConcern}>
-        <label htmlFor="label">Nouvelle préoccupation : </label>
-        <input
-          type="text"
-          name="label"
-          id="label"
-          value={updatedSkinConcern}
-          onChange={(e) => setUpdatedSkinConcern(e.target.value)}
-        />
-        <button type="submit">Enregistrer</button>
+        <div>
+          <label htmlFor="updateSkinConcern">Nouvelle préoccupation : </label>
+          <input
+            type="text"
+            name="updateSkinConcern"
+            id="updateSkinConcern"
+            value={updatedSkinConcern}
+            onChange={(e) => setUpdatedSkinConcern(e.target.value)}
+            aria-required="true"
+            required
+          />
+        </div>
+        <button type="submit">Mettre à jour</button>
       </form>
     </>
   );

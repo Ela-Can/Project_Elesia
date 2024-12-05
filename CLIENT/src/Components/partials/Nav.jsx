@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faTimes,
+  faUser,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { toggleMenu } from "../../store/slices/menu.js";
 import { logout } from "../../store/slices/user.js";
@@ -60,9 +65,29 @@ function Nav() {
   return (
     <>
       {type === "mobile" && (
-        <button onClick={() => dispatch(toggleMenu())}>
-          <FontAwesomeIcon icon={menu.isOpen ? faTimes : faBars} />
-        </button>
+        <div>
+          <button
+            onClick={() => dispatch(toggleMenu())}
+            aria-label={menu.isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            <FontAwesomeIcon icon={menu.isOpen ? faTimes : faBars} />
+          </button>
+
+          <button
+            onClick={() => navigate("/authentification/login")}
+            aria-label="Se connecter"
+          >
+            <FontAwesomeIcon icon={faUser} />
+          </button>
+          <button
+            onClick={() => {
+              navigate("/store_locator");
+            }}
+            aria-label="Trouver un point de vente"
+          >
+            <FontAwesomeIcon icon={faLocationDot} />
+          </button>
+        </div>
       )}
       <nav
         className={`nav ${
@@ -78,12 +103,16 @@ function Nav() {
           user.role === "user" ? (
             <>
               <NavLink to={"user"}>Dashboard</NavLink>
-              <button onClick={onClickLogout}>Se déconnecter</button>
+              <button onClick={onClickLogout} aria-label="Se déconnecter">
+                Se déconnecter
+              </button>
             </>
           ) : (
             <>
               <NavLink to={"admin"}>Tableau de bord admin</NavLink>
-              <button onClick={onClickLogout}>Se déconnecter</button>
+              <button onClick={onClickLogout} aria-label="Se déconnecter">
+                Se déconnecter
+              </button>
             </>
           )
         ) : (

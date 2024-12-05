@@ -1,13 +1,29 @@
 .container {
-    display:flex;
-    gap: 20px;
+    
 
     aside {
-        width: 25%;
+        background-color: rgb(228, 228, 228);
+        padding: 1rem;
+        
+        div {
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-evenly;
+            position: relative;
+
+            ul {
+                padding: 0.5rem;
+
+                li {
+                    padding: 0.1rem;
+                }
+            }
+            
+        }
     }
 
     main {
-        width: 75%;
+        padding: 1rem;
     }
 
 }

@@ -1,9 +1,14 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProducts } from "../../../store/slices/product.js";
 
 import UpdateProduct from "./UpdateProduct.jsx";
 import AddProduct from "./AddProduct.jsx";
+
+import { fetchProducts } from "../../../services/api.js";
 
 function ProductList() {
   const productList = useSelector((state) => state.product.productList);
@@ -16,19 +21,16 @@ function ProductList() {
   const [isEditing, setIsEditing] = useState(false);
   const [productId, setProductId] = useState([]);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      const response = await fetch("/api/v1/product/list");
-      const data = await response.json();
-      console.log("produits récupérées :", data);
-      dispatch(setProducts(data));
-    }
-    fetchProducts();
-  }, []);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  function onClickCancelBtn() {
-    setIsEditing(false);
-  }
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    fetchProducts().then((data) => {
+      dispatch(setProducts(data));
+    });
+  }, []);
 
   async function onClickDeleteProduct(productId) {
     try {
@@ -36,72 +38,121 @@ function ProductList() {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Erreur côté serveur :", errorText);
-        throw new Error("Erreur lors de la suppression du produit");
-      }
+      const updatedProductList = productList.filter(
+        (product) => product.id !== productId
+      );
 
-      const updatedProductList = [];
-
-      for (let i = 0; i < productList.length; i++) {
-        if (productList[i].id !== productId) {
-          updatedProductList[updatedProductList.length] = productList[i];
-        }
-      }
       dispatch(setProducts(updatedProductList));
+
+      setSuccessMessage("Produit supprimé avec succès");
+      setShowConfirmation(false);
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
+      setErrorMessage(
+        "Une erreur s'est produite lors de l'archivage. Veuillez réessayer."
+      );
     }
   }
 
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setProductId(null);
+    setIsEditing(false);
+  }
+
+  function onClickOpenConfirmation(productId) {
+    setProductId(productId);
+    setShowConfirmation(true);
+  }
+
   return (
-    <main>
-      <section>
-        <button onClick={() => setActiveSection("product/list")}>
+    <>
+      <section className="dashboard_controls">
+        <button
+          onClick={() => {
+            setActiveSection("product/list"), resetMessages();
+          }}
+        >
           Liste des produits
         </button>
-        <button onClick={() => setActiveSection("product/addProduct")}>
+        <button
+          onClick={() => {
+            setActiveSection("product/addProduct"), resetMessages();
+          }}
+        >
           Ajouter un produit
         </button>
       </section>
-      <section>
+      <section className="dashboard_content">
+        {showConfirmation && (
+          <div className="popup_confirmation">
+            <p>Êtes-vous sûr de vouloir supprimer ce produit?</p>
+            <button onClick={() => onClickDeleteProduct(productId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseOrCancel}>Annuler</button>
+          </div>
+        )}
+
         {activeSection === "product/list" && (
           <>
             <h3>Liste des produits</h3>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
             {productList.length > 0 ? (
               <ul>
                 {productList.map((product) => (
                   <li key={product.id}>
                     {isEditing === true && productId === product.id ? (
-                      <>
+                      <article>
                         <UpdateProduct
                           product={selectedProduct}
                           productId={product.id}
                           setIsEditing={setIsEditing}
+                          setSuccessMessage={setSuccessMessage}
+                          setErrorMessage={setErrorMessage}
+                          onCloseOrCancel={onCloseOrCancel}
                         />
-                        <button onClick={() => onClickCancelBtn(product.id)}>
+                        <button
+                          onClick={() => {
+                            onCloseOrCancel(product.id), resetMessages();
+                          }}
+                        >
                           Annuler
                         </button>
-                      </>
+                      </article>
                     ) : (
                       <>
                         {product.name}
-                        <button
-                          onClick={() => {
-                            setIsEditing(true);
-                            setProductId(product.id);
-                            setSelectedProduct(product);
-                          }}
-                        >
-                          Modifier
-                        </button>
+                        <div>
+                          <button
+                            onClick={() => {
+                              setProductId(product.id);
+                              setSelectedProduct(product);
+                              setIsEditing(true);
+                              resetMessages();
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
 
-                        <button
-                          onClick={() => onClickDeleteProduct(product.id)}
-                        >
-                          Supprimer
-                        </button>
+                          <button
+                            onClick={() => {
+                              onClickOpenConfirmation(product.id),
+                                resetMessages();
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
                       </>
                     )}
                   </li>
@@ -116,7 +167,7 @@ function ProductList() {
       <section>
         {activeSection === "product/addProduct" && <AddProduct />}
       </section>
-    </main>
+    </>
   );
 }
 

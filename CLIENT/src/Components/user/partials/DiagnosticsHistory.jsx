@@ -14,7 +14,7 @@ function DiagnosticHistory() {
   const dispatch = useDispatch();
 
   if (!user.id) {
-    return <p>Chargement des données utilisateur...</p>;
+    return <p role="status">Chargement des données utilisateur...</p>;
   }
 
   async function onClickDeleteDiagnostic(id) {
@@ -52,9 +52,9 @@ function DiagnosticHistory() {
     <>
       <h4>Vos diagnostics de peau</h4>
       {diagnosticList.length > 0 ? (
-        <ul>
+        <ul role="list">
           {diagnosticList.map((diagnostic) => (
-            <li key={diagnostic.id}>
+            <li key={diagnostic.id} role="listitem">
               <h4>{diagnostic.createdDate}</h4>
               <p>Comment décririez-vous votre type de peau ?</p>
               <p>Votre réponse : {diagnostic.skinTypeLabel}</p>
@@ -78,17 +78,23 @@ function DiagnosticHistory() {
               <p>Votre réponse : {diagnostic.isPregnantOrBreastfeeding}</p>
               <p>Le produit recommandé : </p>
               <p>{diagnostic.product_name}</p>
-              <Link to={`/product/${diagnostic.product_id}`}>
+              <Link
+                to={`/product/${diagnostic.product_id}`}
+                aria-label={`Voir plus sur le produit ${diagnostic.product_name}`}
+              >
                 <button>Voir plus</button>
               </Link>
-              <button onClick={() => onClickDeleteDiagnostic(diagnostic.id)}>
+              <button
+                onClick={() => onClickDeleteDiagnostic(diagnostic.id)}
+                aria-label={`Supprimer le diagnostic du ${diagnostic.createdDate}`}
+              >
                 Supprimer le diagnostic
               </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>Vous n'avez réalisé de diagnostic de peau</p>
+        <p role="status">Vous n'avez réalisé de diagnostic de peau</p>
       )}
     </>
   );

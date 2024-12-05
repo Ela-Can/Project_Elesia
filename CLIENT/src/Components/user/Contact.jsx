@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { validEmail, validSubjet, validContent } from "../utils/validators.js";
 import useCloseMenu from "../../Hook/useCloseMenu";
+import { validEmail } from "../../services/validators";
 
 function Contact() {
   useCloseMenu();
@@ -9,7 +9,8 @@ function Contact() {
   const [subjects, setSubjects] = useState([]);
   const [content, setContent] = useState("");
 
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Handling maximum character limit
 
@@ -19,34 +20,18 @@ function Contact() {
     const value = e.target.value;
     if (value.length <= maxCharacters) {
       setContent(value);
+      setSuccessMessage("");
+      setErrorMessage("");
     }
-  }
-
-  // Validation of the required fields
-
-  const [errors, setErrors] = useState({});
-
-  function requiredFields() {
-    const error = {};
-
-    validEmail(email, error);
-    validSubjet(subject, error);
-    validContent(content, error);
-
-    return error;
   }
 
   // Fetching active subjects
 
   useEffect(() => {
     async function fetchSujects() {
-      try {
-        const response = await fetch(`/api/v1/subject/list/1`);
-        const data = await response.json();
-        setSubjects(data);
-      } catch (error) {
-        console.error("Erreur de récupération des sujets :", error);
-      }
+      const response = await fetch(`/api/v1/subject/list/1`);
+      const data = await response.json();
+      setSubjects(data);
     }
     fetchSujects();
   }, []);
@@ -54,10 +39,17 @@ function Contact() {
   async function submitHandler(e) {
     e.preventDefault();
 
-    const error = requiredFields();
-    setErrors(error);
+    if (!validEmail(email, setErrorMessage)) {
+      return;
+    }
 
-    if (error.email || error.subject || error.content) {
+    if (!subject) {
+      setErrorMessage("Veuillez sélectionner un sujet.");
+      return;
+    }
+
+    if (!content.trim()) {
+      setErrorMessage("Veuillez ajouter un message.");
       return;
     }
 
@@ -69,14 +61,14 @@ function Contact() {
       body: JSON.stringify({ email, content, subject }),
     });
 
-    if (response === 201) {
+    if (response.ok) {
       setEmail("");
       setSubject("");
       setContent("");
-      setErrors({});
-      setMessage("Votre message a été envoyé avec succès !");
+      setErrorMessage("");
+      setSuccessMessage("Votre message a été envoyé avec succès !");
     } else {
-      setMessage(
+      setErrorMessage(
         "Une erreur s'est produite lors de l'envoi. Veuillez réessayer."
       );
     }
@@ -85,8 +77,17 @@ function Contact() {
   return (
     <main>
       <h2>Contactez-nous</h2>
-      <p>Veuillez remplir ce formulaire pour nous contacter.</p>
       <section>
+        {successMessage && (
+          <p className="success-message" role="status">
+            {successMessage}
+          </p>
+        )}
+        {errorMessage && (
+          <p className="error-message" role="status">
+            {errorMessage}
+          </p>
+        )}
         <form onSubmit={submitHandler}>
           <p>*Champs obligatoires</p>
           <div>
@@ -100,13 +101,12 @@ function Contact() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setErrors((prev) => ({
-                  ...prev,
-                  email: "",
-                }));
+                setSuccessMessage("");
+                setErrorMessage("");
               }}
+              aria-required="true"
+              required
             />
-            {errors.email && <span>{errors.email}</span>}
           </div>
           <div>
             <label htmlFor="subject">
@@ -118,11 +118,11 @@ function Contact() {
               value={subject}
               onChange={(e) => {
                 setSubject(e.target.value);
-                setErrors((prev) => ({
-                  ...prev,
-                  subject: "",
-                }));
+                setSuccessMessage("");
+                setErrorMessage("");
               }}
+              aria-required="true"
+              required
             >
               <option value="" disabled>
                 Choisissez un sujet
@@ -133,7 +133,6 @@ function Contact() {
                 </option>
               ))}
             </select>
-            {errors.subject && <span>{errors.subject}</span>}
           </div>
           <div>
             <label htmlFor="content">
@@ -146,18 +145,17 @@ function Contact() {
               value={content}
               onChange={(e) => {
                 onChangeNbrMax(e);
-                setErrors((prev) => ({
-                  ...prev,
-                  content: "",
-                }));
+                setSuccessMessage("");
+                setErrorMessage("");
               }}
+              aria-required="true"
+              aria-describedby="content-limit"
+              required
             ></textarea>
             <p>{maxCharacters - content.length} caractères restants</p>
-            {errors.content && <span>{errors.content}</span>}
           </div>
           <button type="submit">Envoyer</button>
         </form>
-        {message && <p>{message}</p>}
       </section>
     </main>
   );

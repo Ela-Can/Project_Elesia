@@ -1,28 +1,37 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 import AddSkinType from "./AddSkinType.jsx";
 import UpdateSkinType from "./UpdateSkinType.jsx";
+
+import { fetchSkinTypes } from "../../../services/api.js";
 
 function SkinTypeList() {
   const [skinTypes, setSkinTypes] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
   const [skinTypeId, setSkinTypeId] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [activeSection, setActiveSection] = useState("skinType/list");
 
   useEffect(() => {
-    async function fetchSkinTypes() {
-      const response = await fetch("/api/v1/skintype/list");
-      const data = await response.json();
-      console.log("SkinType récupérées :", data);
+    fetchSkinTypes().then((data) => {
       setSkinTypes(data);
-    }
-    fetchSkinTypes();
+    });
   }, []);
+
+  // Add a skinType
 
   function addSkinType(newSkinType) {
     setSkinTypes((prevSkinType) => [...prevSkinType, newSkinType]);
   }
+
+  // Update a skinType
 
   function updateSkinType(updatedSkinType) {
     const { id, label } = updatedSkinType;
@@ -39,104 +48,151 @@ function SkinTypeList() {
     });
   }
 
-  function onClickCancelBtn() {
-    setIsEditing(false);
-  }
+  // Delete a skinType
 
-  async function onClickDeleteSkinType(id) {
+  async function onClickDeleteSkinType(skinTypeId) {
     try {
-      const response = await fetch(`/api/v1/skintype/delete/${id}`, {
+      const response = await fetch(`/api/v1/skintype/delete/${skinTypeId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      if (response.ok) {
-        alert("SkinType supprimé avec succès.");
-        setSkinTypes((prevSkinTypes) => {
-          const idToDelete = id;
 
-          const updatedList = [];
+      setSkinTypes((prevSkinTypes) =>
+        prevSkinTypes.filter((skinType) => skinType.id !== skinTypeId)
+      );
 
-          for (let i = 0; i < prevSkinTypes.length; i++) {
-            if (prevSkinTypes[i].id !== idToDelete) {
-              updatedList[updatedList.length] = prevSkinTypes[i];
-            }
-          }
-          return updatedList;
-        });
-      } else {
-        //console.error("Erreur lors de la suppression :", err);
-      }
+      setSuccessMessage("SkinType supprimé avec succès");
+      setShowConfirmation(false);
     } catch (error) {
-      //console.error("Erreur de connexion à l'API", error);
+      setErrorMessage(
+        "Une erreur s'est produite lors de l'archivage. Veuillez réessayer."
+      );
     }
   }
 
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setSkinTypeId(null);
+  }
+
+  function onClickOpenConfirmation(skinTypeId) {
+    setSkinTypeId(skinTypeId);
+    setShowConfirmation(true);
+  }
+
   return (
-    <main>
-      <section>
-        <button onClick={() => setActiveSection("skinType/list")}>
-          Liste des produits
+    <>
+      <section className="dashboard_controls">
+        <button
+          onClick={() => {
+            setActiveSection("skinType/list"), resetMessages();
+          }}
+        >
+          Liste des types de peau
         </button>
-        <button onClick={() => setActiveSection("skinType/addSkinType")}>
-          Ajouter un produit
+        <button
+          onClick={() => {
+            setActiveSection("skinType/addSkinType"), resetMessages();
+          }}
+        >
+          Ajouter un type de peau
         </button>
       </section>
-      <section>
+      <section className="dashboard_content">
+        {showConfirmation && (
+          <div className="popup_confirmation">
+            <p>Êtes-vous sûr de vouloir supprimer ce type de peau ?</p>
+            <button onClick={() => onClickDeleteSkinType(skinTypeId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseOrCancel}>Annuler</button>
+          </div>
+        )}
+
         {activeSection === "skinType/list" && (
           <>
-            <h3>Liste des préoccupations</h3>
-            {skinTypes.length > 0 ? (
-              <ul>
+            <h3>Liste des types de peau</h3>
+
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
+            {skinTypes && skinTypes.length > 0 ? (
+              <ul role="list">
                 {skinTypes.map((skinType) => (
-                  <li key={skinType.id}>
+                  <li key={skinType.id} role="listitem">
                     {isEditing === true && skinTypeId === skinType.id ? (
-                      <>
+                      <article className="update_form">
                         <UpdateSkinType
                           skinType={skinType}
                           skinTypeId={skinType.id}
                           updateSkinType={updateSkinType}
-                          setIsEditing={setIsEditing}
+                          setSuccessMessage={setSuccessMessage}
+                          setErrorMessage={setErrorMessage}
+                          onCloseOrCancel={onCloseOrCancel}
                         />
-                        <button onClick={() => onClickCancelBtn(skinType.id)}>
+                        <button
+                          onClick={() => {
+                            onCloseOrCancel(skinType.id), resetMessages();
+                          }}
+                        >
                           Annuler
                         </button>
-                      </>
+                      </article>
                     ) : (
                       <>
                         {skinType.label}
-                        <button
-                          onClick={() => {
-                            setIsEditing(true);
-                            setSkinTypeId(skinType.id);
-                          }}
-                        >
-                          Modifier
-                        </button>
-                        <button
-                          onClick={() => onClickDeleteSkinType(skinType.id)}
-                        >
-                          Supprimer
-                        </button>
+                        <div>
+                          <button
+                            onClick={() => {
+                              setIsEditing(true);
+                              setSkinTypeId(skinType.id);
+                              resetMessages();
+                            }}
+                            aria-label={`Modifier le type de peau : ${skinType.label}`}
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              onClickOpenConfirmation(skinType.id),
+                                resetMessages();
+                            }}
+                            aria-label={`Supprimer le type de peau : ${skinType.label}`}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
                       </>
                     )}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p> Aucun type de peau trouvé</p>
+              <p role="status"> Aucun type de peau trouvé</p>
             )}
           </>
         )}
       </section>
       <section>
         {activeSection === "skinType/addSkinType" && (
-          <AddSkinType addSkinType={addSkinType} />
+          <AddSkinType
+            addSkinType={addSkinType}
+            existingSkinTypes={skinTypes}
+          />
         )}
       </section>
-    </main>
+    </>
   );
 }
 

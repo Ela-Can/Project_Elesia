@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useCloseMenu from "../../Hook/useCloseMenu";
 
+import {
+  fetchProducts,
+  fetchCategories,
+  fetchSkinTypes,
+  fetchSkinConcerns,
+} from "../../services/api";
+
 function Product() {
   useCloseMenu();
 
@@ -20,50 +27,28 @@ function Product() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchCategories() {
-      const response = await fetch("/api/v1/category/list");
-      const data = await response.json();
-      console.log("Catégories récupérées :", data);
+    fetchCategories().then((data) => {
       setCategories(data);
-    }
-    fetchCategories();
+    });
   }, []);
 
   useEffect(() => {
-    async function fetchSkinTypes() {
-      const response = await fetch("/api/v1/skintype/list");
-      const data = await response.json();
-      console.log("SkinType récupérées :", data);
+    fetchSkinTypes().then((data) => {
       setSkinTypes(data);
-    }
-    fetchSkinTypes();
+    });
   }, []);
 
   useEffect(() => {
-    async function fetchSkinConcerns() {
-      const response = await fetch("/api/v1/skinconcern/list");
-      const data = await response.json();
-      console.log("SkinConcern récupérées :", data);
+    fetchSkinConcerns().then((data) => {
       setSkinConcerns(data);
-    }
-    fetchSkinConcerns();
+    });
   }, []);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await fetch("/api/v1/product/list", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-
-      const data = await response.json();
-      console.log("Données récupérées :", data);
+    fetchProducts().then((data) => {
       setProducts(data);
       setAllProducts(data);
-    };
-    fetchProducts();
+    });
   }, []);
 
   useEffect(() => {
@@ -111,9 +96,9 @@ function Product() {
   return (
     <main>
       <h2>Nos produits</h2>
-      <section>
+      <section className="filters_section">
         <div>
-          <label htmlFor="category">Filtrer par catégorie :</label>
+          <label htmlFor="category">Que recherchez-vous ?</label>
           <select
             id="category"
             value={selectedCategory}
@@ -128,7 +113,7 @@ function Product() {
           </select>
         </div>
         <div>
-          <label htmlFor="skinType">Filtrer par type de peau :</label>
+          <label htmlFor="skinType">Quel est votre type de peau ?</label>
           <select
             id="skinType"
             value={selectedSkinType}
@@ -145,13 +130,15 @@ function Product() {
           </select>
         </div>
         <div>
-          <label htmlFor="skinConcern">Filtrer par préoccupation :</label>
+          <label htmlFor="skinConcern">
+            Quelle est votre préoccupation principale ?
+          </label>
           <select
             id="skinConcern"
             value={selectedSkinConcern}
             onChange={(e) => skinConcernChangeBtnHandler(e.target.value)}
           >
-            <option value="">Sélectionner une péroccupation</option>
+            <option value="">Sélectionner une préoccupation</option>
             {skinConcerns.map((skinConcern) => (
               <option key={skinConcern.id} value={skinConcern.id}>
                 {skinConcern.label}
@@ -162,7 +149,7 @@ function Product() {
       </section>
       <section className="card_section">
         {products.length === 0 ? (
-          <p>Aucun produit disponible</p>
+          <p role="status">Aucun produit disponible</p>
         ) : (
           products.map((product) => (
             <article key={product.id} className="card">
@@ -170,7 +157,10 @@ function Product() {
               <img src={product.image} alt={product.alt} />
               <h4>{product.name}</h4>
               <p>{product.skinType_label}</p>
-              <button onClick={() => seeMoreBtnHandler(product.id)}>
+              <button
+                onClick={() => seeMoreBtnHandler(product.id)}
+                aria-label={`Voir plus sur le produit ${product.name}`}
+              >
                 Voir plus
               </button>
             </article>

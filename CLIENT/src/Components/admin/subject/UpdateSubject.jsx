@@ -1,10 +1,18 @@
 import { useState } from "react";
 
-function UpdateSubject({ subjectId, updateSubject }) {
-  const [updatedSubject, setUpdatedSubject] = useState("");
+function UpdateSubject({
+  subject,
+  subjectId,
+  updateSubject,
+  setErrorMessage,
+  setSuccessMessage,
+  onCloseOrCancel,
+}) {
+  const [updatedSubject, setUpdatedSubject] = useState(subject.label);
 
   async function onSubmitUpdateSubject(e) {
     e.preventDefault();
+
     updateSubject({
       id: subjectId,
       label: updatedSubject,
@@ -21,26 +29,28 @@ function UpdateSubject({ subjectId, updateSubject }) {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log(data);
+
+      setSuccessMessage("Sujet mis à jour avec succès !");
       setUpdatedSubject("");
+      onCloseOrCancel();
     } catch (error) {
-      console.error("Erreur lors de la récupération des sujets :", error);
+      setErrorMessage("Une erreur s'est produite lors de la mise à jour.");
     }
   }
   return (
     <form onSubmit={onSubmitUpdateSubject}>
-      <label htmlFor="updateSubject">Mettre à jour le sujet :</label>
-      <input
-        type="text"
-        id="updateSubject"
-        value={updatedSubject}
-        onChange={(e) => setUpdatedSubject(e.target.value)}
-      />
+      <div>
+        <label htmlFor="updateSubject">Mettre à jour le sujet :</label>
+        <input
+          type="text"
+          id="updateSubject"
+          value={updatedSubject}
+          onChange={(e) => setUpdatedSubject(e.target.value)}
+          aria-required="true"
+          required
+        />
+      </div>
       <button type="submit">Mettre à jour</button>
     </form>
   );

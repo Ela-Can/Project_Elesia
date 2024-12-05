@@ -87,21 +87,24 @@ function CommentsHistory() {
     <>
       <h4>Vos commentaires</h4>
       {comments.length > 0 ? (
-        <ul>
+        <ul role="status">
           {comments.map((comment) => (
-            <li key={comment.id}>
+            <li key={comment.id} role="listitem">
               <h4>{comment.title}</h4>
               <p>{comment.content}</p>
               <p>{comment.isPublished}</p>
               <p>Produit : {comment.product_name}</p>
-              <button onClick={() => onClickDeleteComment(comment.id, user.id)}>
+              <button
+                onClick={() => onClickDeleteComment(comment.id, user.id)}
+                aria-label={`Supprimer le commentaire intitulé ${comment.title}`}
+              >
                 Supprimer
               </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p>Aucun commentaire</p>
+        <p role="status">Aucun commentaire</p>
       )}
     </>
   );

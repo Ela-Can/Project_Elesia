@@ -44,8 +44,8 @@ function ContactList({ status, setUnreadCount }) {
   }
 
   return (
-    <main>
-      <section>
+    <>
+      <section className="dashboard_controls">
         <button onClick={() => setActiveSection("contact/pending")}>
           Demandes en attente
         </button>
@@ -53,7 +53,7 @@ function ContactList({ status, setUnreadCount }) {
           Historique
         </button>
       </section>
-      <section>
+      <section className="dashboard_comments">
         {activeSection === "contact/pending" && (
           <>
             <h3>Demandes de contact en attente</h3>
@@ -97,7 +97,7 @@ function ContactList({ status, setUnreadCount }) {
       <section>
         {activeSection === "contact/history" && <ContactHistory />}
       </section>
-    </main>
+    </>
   );
 }
 

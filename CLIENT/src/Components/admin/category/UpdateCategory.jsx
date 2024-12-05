@@ -4,7 +4,9 @@ function UpdateCategory({
   category,
   categoryId,
   updateCategory,
-  setIsEditing,
+  setErrorMessage,
+  setSuccessMessage,
+  onCloseOrCancel,
 }) {
   const [updatedLabel, setUpdatedLabel] = useState(category.label);
   const [updatedRef, setUpdatedRef] = useState(category.ref);
@@ -26,56 +28,47 @@ function UpdateCategory({
         },
         body: JSON.stringify({ label: updatedLabel, ref: updatedRef }),
       });
+      const data = await response.json();
 
-      console.log("Réponse reçue après la mise à jour :", response);
+      setSuccessMessage("Catégorie mise à jour avec succès !");
 
-      if (response.ok) {
-        const updatedCategory = await response.json();
-        console.log("Catégorie modifiée avec succès :", updatedCategory);
-
-        console.log("Catégorie modifiée avec succès");
-
-        setUpdatedLabel("");
-        setUpdatedRef("");
-
-        setIsEditing(false);
-      } else {
-        console.error(
-          "Erreur lors de la modif de la catégorie :",
-          response.statusText
-        );
-      }
+      setUpdatedLabel("");
+      setUpdatedRef("");
+      onCloseOrCancel();
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
+      setErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
     }
   }
 
   return (
     <>
-      <h4>Modifier une catégorie</h4>
       <form onSubmit={onSubmitUpdateCategory}>
-        <label htmlFor="reference">Choisir une référence : </label>
-        <select
-          name="reference"
-          id="reference"
-          value={updatedRef}
-          onChange={(e) => setUpdatedRef(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Sélectionnez une référence
-          </option>
-          <option value="produits">Produits</option>
-          <option value="articles">Articles</option>
-        </select>
-        <label htmlFor="label">Nouvelle categorie : </label>
-        <input
-          type="text"
-          name="label"
-          id="label"
-          value={updatedLabel}
-          onChange={(e) => setUpdatedLabel(e.target.value)}
-        />
+        <div>
+          <label htmlFor="reference">Choisir une référence : </label>
+          <select
+            name="reference"
+            id="reference"
+            value={updatedRef}
+            onChange={(e) => setUpdatedRef(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Sélectionnez une référence
+            </option>
+            <option value="produits">Produits</option>
+            <option value="articles">Articles</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="label">Nouvelle categorie : </label>
+          <input
+            type="text"
+            name="label"
+            id="label"
+            value={updatedLabel}
+            onChange={(e) => setUpdatedLabel(e.target.value)}
+          />
+        </div>
         <button type="submit">Enregistrer</button>
       </form>
     </>

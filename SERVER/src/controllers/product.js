@@ -28,7 +28,7 @@ const getOneProductById = async (req, res) => {
     }
 };
 
-const getOneProductByName = async (req, res) => {
+/*const getOneProductByName = async (req, res) => {
     try {
         const [response] = await Product.findOneProductByName(req.params.name);
         if (!response.length) {
@@ -39,7 +39,7 @@ const getOneProductByName = async (req, res) => {
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
-};
+};*/
 
 const createProduct = async (req, res) => {
     console.log("Middleware et contrôleur atteints !");
@@ -288,4 +288,4 @@ const addCommentToProduct = async (req, res) => {
 }
 
 
-export { getAllProducts, getOneProductById, getOneProductByName, createProduct, updateProduct, removeProduct, addCommentToProduct };
+export { getAllProducts, getOneProductById, createProduct, updateProduct, removeProduct, addCommentToProduct };

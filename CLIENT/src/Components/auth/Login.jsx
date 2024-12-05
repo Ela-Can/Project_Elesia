@@ -3,13 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, loginFailed } from "../../store/slices/user";
 import useCloseMenu from "../../Hook/useCloseMenu";
+import { validEmail } from "../../services/validators";
+import useCheckAuth from "../../Hook/useCheckAuth.jsx";
 
 function Login() {
   useCloseMenu();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,12 +21,17 @@ function Login() {
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
 
-    console.log("Email:", email);
-    console.log("Password:", password);
+    if (!validEmail(email, setErrorMessage)) {
+      return;
+    }
+
+    if (!password.trim()) {
+      setErrorMessage("Veuillez entrer un mot de passe valide.");
+      return;
+    }
 
     try {
       const requestBody = { email, password };
-      console.log("Request Body:", requestBody);
 
       const response = await fetch(`/api/v1/authentification/login`, {
         method: "POST",
@@ -31,27 +40,34 @@ function Login() {
         credentials: "include",
       });
 
-      console.log("Server response status:", response.status);
-
       if (response.ok) {
         const datas = await response.json();
-        console.log("Données utilisateur reçues :", datas);
         dispatch(login(datas));
-        setMessage("Connexion réussie !");
+        setSuccessMessage("Connexion réussie ! Vous allez être redirigés...");
         setTimeout(() => navigate("/"), 2000);
       } else {
         const errorDatas = await response.json();
         dispatch(loginFailed({ error: errorDatas.message }));
+        setErrorMessage("Adresse email ou mot de passe incorrect.");
       }
     } catch (error) {
-      console.log(error);
-      dispatch(setMessage("Erreur lors de la connexion. Veuillez réessayer.")); // Gestion d'une erreur de connexion
+      setErrorMessage("Erreur lors de la connexion. Veuillez réessayer.");
     }
   }
 
   return (
     <main>
       <h2>Connectez-vous</h2>
+      {successMessage && (
+        <p className="success-message" role="status">
+          {successMessage}
+        </p>
+      )}
+      {errorMessage && (
+        <p className="error-message" role="status">
+          {errorMessage}
+        </p>
+      )}
       <form onSubmit={onSubmitBtnHandler}>
         <p>*Champs obligatoires</p>
         <div>
@@ -64,6 +80,7 @@ function Login() {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            aria-required="true"
             required
           />
         </div>
@@ -77,14 +94,17 @@ function Login() {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            aria-required="true"
             required
           />
         </div>
-        {/*authError && <p>{authError}</p>*/}
         <button type="submit">Se connecter</button>
       </form>
       <p>Pas de compte ?</p>
-      <button onClick={() => navigate("/authentification/register")}>
+      <button
+        onClick={() => navigate("/authentification/register")}
+        aria-label="Aller à la page d'inscription"
+      >
         S&apos;inscrire
       </button>
     </main>

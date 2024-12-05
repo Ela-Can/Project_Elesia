@@ -49,36 +49,74 @@ function AddComment({ productId }) {
     }
   }
 
+  const maxCharactersTitle = 50;
+  const maxCharactersContent = 255;
+
+  function onChangeNbrMaxTitle(e) {
+    const value = e.target.value;
+    if (value.length <= maxCharactersTitle) {
+      setNewTitle(value);
+    }
+  }
+
+  function onChangeNbrMaxContent(e) {
+    const value = e.target.value;
+    if (value.length <= maxCharactersContent) {
+      setNewContent(value);
+    }
+  }
+
   return (
     <>
       {!isFormVisible && !successMessage && (
-        <button onClick={onClickFormHandler}>Rédiger un commentaire</button>
+        <button
+          onClick={onClickFormHandler}
+          aria-label="Cliquez pour rédiger un commentaire"
+        >
+          Rédiger un commentaire
+        </button>
       )}
       {isFormVisible && !successMessage && (
         <form onSubmit={onSumbitAddComment}>
           <h5>Rédigez un commentaire</h5>
-          <label htmlFor="title">
-            Votre impression générale sur le produit :
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            required
-          />
-          <label htmlFor="content">Votre commentaire</label>
-          <input
-            type="text"
-            name="content"
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-            required
-          />
+          <div>
+            <label htmlFor="title">
+              Votre impression générale sur le produit :
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={newTitle}
+              onChange={
+                ((e) => setNewTitle(e.target.value), onChangeNbrMaxTitle)
+              }
+              aria-required="true"
+              aria-describedby="title-limit"
+              required
+            />
+            <p>{maxCharactersTitle - newTitle.length} caractères restants</p>
+          </div>
+          <div>
+            <label htmlFor="content">Votre commentaire</label>
+            <input
+              type="text"
+              name="content"
+              value={newContent}
+              onChange={
+                ((e) => setNewContent(e.target.value), onChangeNbrMaxContent)
+              }
+              aria-required="true"
+              aria-describedby="content-limit"
+              required
+            />
+            <p>
+              {maxCharactersContent - newContent.length} caractères restants
+            </p>
+          </div>
           <button type="submit">Envoyer</button>
         </form>
       )}
-      {successMessage && <p>{successMessage}</p>}
+      {successMessage && <p role="status">{successMessage}</p>}
     </>
   );
 }

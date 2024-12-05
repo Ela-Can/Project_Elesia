@@ -1,0 +1,15 @@
+.comment_section {
+
+    article {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid grey; // A modifier
+
+        div {
+            display: flex;
+            gap: 2rem;
+        }
+
+    }
+
+}

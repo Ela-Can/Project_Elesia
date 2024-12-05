@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Accordion from "../partials/Accordion";
 import ProductComments from "./partials/ProductComments.jsx";
 
-import productImage from "../../../../SERVER/public/img/productImg/pexels-vie-studio-7005936.jpg";
+//import productImage from "../../../../SERVER/public/img/productImg/pexels-vie-studio-7005936.jpg";
 
 function ProductDetails() {
   const [product, setProduct] = useState([]);
@@ -42,19 +42,34 @@ function ProductDetails() {
   return (
     <main>
       <section className="product_details_section">
-        {product.length === 0 ? (
-          <p>Product not found</p>
+        {!product || !product.id ? (
+          <p role="status">Produit introuvable</p>
         ) : (
           <article key={product.id}>
             <div className="product_details_top">
-              <img src={productImage} alt={product.alt} />
+              <img src="" alt={product.alt} />
               <div>
                 <h4>{product.name}</h4>
                 <p>{product.description}</p>
                 <p>{product.precautions}</p>
               </div>
             </div>
-            <button onClick={onClickBuyBtn}>Acheter</button>
+            <button
+              onClick={onClickBuyBtn}
+              aria-label="Afficher les options d'achat"
+            >
+              Acheter
+            </button>
+
+            {isToggleVisible && (
+              <div className={isToggleVisible ? "buy_btn active" : "buy_btn"}>
+                <button onClick={onClickBuyOnlineBtn}>Acheter en ligne</button>
+                <button onClick={onClickFindStoreBtn}>
+                  Trouver un point de vente
+                </button>
+              </div>
+            )}
+
             <div className="product_details_bottom">
               <Accordion title="Ingrédients">
                 <p>{product.ingredients}</p>
@@ -72,27 +87,15 @@ function ProductDetails() {
           </article>
         )}
       </section>
-      <section>
-        <h3>Vous pourriez aussi aimer</h3>
-      </section>
-      <section>
-        <ProductComments productId={id} />
-      </section>
-
-      {isToggleVisible && (
-        <div>
-          <button onClick={onClickBuyOnlineBtn}>Acheter en ligne</button>
-          <button onClick={onClickFindStoreBtn}>
-            Trouver un point de vente
-          </button>
-        </div>
-      )}
+      <ProductComments productId={id} />
 
       {isPopupOpen && (
-        <div>
+        <div className={isPopupOpen ? "popup active" : "popup"} role="dialog">
           <h5>Nos partenaires en ligne</h5>
           <a href="#">Pharma...</a>
-          <button onClick={onClickClosePopUp}>Fermer</button>
+          <button onClick={onClickClosePopUp} aria-label="Fermer la popup">
+            Fermer
+          </button>
         </div>
       )}
     </main>

@@ -15,15 +15,18 @@ function ProductComments({ productId }) {
   }, [productId]);
 
   return (
-    <section className="comment_section">
+    <section className="comment_section" role="region">
       <h3>Vous en parlez le mieux</h3>
       {comments.length === 0 ? (
-        <p>Soyez le premier à laisser un avis sur le produit !</p>
+        <p role="status">Soyez le premier à laisser un avis sur le produit !</p>
       ) : (
         comments.map((comment) => (
           <article key={comment.id}>
-            <h4>{comment.pseudo ? comment.pseudo : "Utilisateur inconnu"}</h4>
-            <h5>{comment.title}</h5>
+            <div>
+              <p>{comment.pseudo ? comment.pseudo : "Utilisateur inconnu"}</p>
+              <p>{comment.publishDate}</p>
+            </div>
+            <p>{comment.title}</p>
             <p>{comment.content}</p>
           </article>
         ))

@@ -1,29 +1,37 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 
 import AddCategory from "./AddCategory.jsx";
 import UpdateCategory from "./UpdateCategory.jsx";
 
+import { fetchCategories } from "../../../services/api.js";
+
 function CategoryList() {
   const [categories, setCategories] = useState([]);
-
   const [isEditing, setIsEditing] = useState(false);
   const [categoryId, setCategoryId] = useState(null);
-
   const [activeSection, setActiveSection] = useState("category/list");
 
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
-    async function fetchCategories() {
-      const response = await fetch("/api/v1/category/list");
-      const data = await response.json();
-      console.log("Catégories récupérées :", data);
+    fetchCategories().then((data) => {
       setCategories(data);
-    }
-    fetchCategories();
+    });
   }, []);
+
+  // Add a category
 
   function addCategory(newCategory) {
     setCategories((prevCategory) => [...prevCategory, newCategory]);
   }
+
+  // Update a category
 
   function updateCategory(updatedCategory) {
     const { id, label, ref } = updatedCategory;
@@ -41,88 +49,124 @@ function CategoryList() {
     });
   }
 
-  function onClickCancelBtn() {
-    setIsEditing(false);
-    setCategoryId(null);
-  }
-
-  async function onClickDeleteCategory(id) {
+  async function onClickDeleteCategory(categoryId) {
     try {
-      const response = await fetch(`/api/v1/category/delete/${id}`, {
+      const response = await fetch(`/api/v1/category/delete/${categoryId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
       });
-      if (response.ok) {
-        alert("Category supprimé avec succès.");
-        setCategories((prevCategories) => {
-          const idToDelete = id;
 
-          const updatedList = [];
+      setCategories((prevCategories) =>
+        prevCategories.filter((category) => category.id !== categoryId)
+      );
 
-          for (let i = 0; i < prevCategories.length; i++) {
-            if (prevCategories[i].id !== idToDelete) {
-              updatedList[updatedList.length] = prevCategories[i];
-            }
-          }
-          return updatedList;
-        });
-      } else {
-        //console.error("Erreur lors de la suppression :", err);
-      }
+      setSuccessMessage("Catégorie supprimée avec succès !");
+      setShowConfirmation(false);
     } catch (error) {
-      //console.error("Erreur de connexion à l'API", error);
+      setErrorMessage(
+        "Une erreur s'est produite lors de la suppression. Veuillez réessayer."
+      );
     }
+  }
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setCategoryId(null);
+  }
+
+  function onClickOpenConfirmation(categoryId) {
+    setCategoryId(categoryId);
+    setShowConfirmation(true);
   }
 
   return (
-    <main>
-      <section>
-        <button onClick={() => setActiveSection("category/list")}>
-          Liste des produits
+    <>
+      <section className="dashboard_controls">
+        <button
+          onClick={() => {
+            setActiveSection("category/list"), resetMessages();
+          }}
+        >
+          Liste des categories
         </button>
-        <button onClick={() => setActiveSection("category/addCategory")}>
-          Ajouter un produit
+        <button
+          onClick={() => {
+            setActiveSection("category/addCategory"), resetMessages();
+          }}
+        >
+          Ajouter une categorie
         </button>
       </section>
-      <section>
+      <section className="dashboard_content">
+        {showConfirmation && (
+          <div className="popup_confirmation">
+            <p>Êtes-vous sûr de vouloir supprimer cette categorie?</p>
+            <button onClick={() => onClickDeleteCategory(categoryId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseOrCancel}>Annuler</button>
+          </div>
+        )}
         {activeSection === "category/list" && (
           <>
             <h3>Liste des categories</h3>
-            {categories.length > 0 ? (
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
+            {categories && categories.length > 0 ? (
               <ul>
                 {categories.map((category) => (
                   <li key={category.id}>
                     {isEditing === true && categoryId === category.id ? (
-                      <>
+                      <article className="update_form">
                         <UpdateCategory
                           category={category}
                           categoryId={category.id}
                           updateCategory={updateCategory}
-                          setIsEditing={setIsEditing}
+                          setSuccessMessage={setSuccessMessage}
+                          setErrorMessage={setErrorMessage}
+                          onCloseOrCancel={onCloseOrCancel}
                         />
-                        <button onClick={() => onClickCancelBtn(category.id)}>
-                          Annuler
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        {category.label} : {category.ref}
                         <button
                           onClick={() => {
-                            setIsEditing(true);
-                            setCategoryId(category.id);
+                            onCloseOrCancel(category.id), resetMessages();
                           }}
                         >
-                          Modifier
+                          Annuler
                         </button>
-                        <button
-                          onClick={() => onClickDeleteCategory(category.id)}
-                        >
-                          Supprimer
-                        </button>
+                      </article>
+                    ) : (
+                      <>
+                        {category.label} - {category.ref}
+                        <div>
+                          <button
+                            onClick={() => {
+                              setIsEditing(true);
+                              setCategoryId(category.id);
+                              resetMessages();
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              onClickOpenConfirmation(category.id),
+                                resetMessages();
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
                       </>
                     )}
                   </li>
@@ -136,10 +180,13 @@ function CategoryList() {
       </section>
       <section>
         {activeSection === "category/addCategory" && (
-          <AddCategory addCategory={addCategory} />
+          <AddCategory
+            addCategory={addCategory}
+            existingCategories={categories}
+          />
         )}
       </section>
-    </main>
+    </>
   );
 }
 

@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/list", getAllProducts);
 router.get("/:id", getOneProductById);
-router.get("/name/:name", getOneProductById);
+//router.get("/name/:name", getOneProductById);
 
 router.post("/create/:folder", uploadImg, withAdminAuth, createProduct); // Ajouter le middelware
 

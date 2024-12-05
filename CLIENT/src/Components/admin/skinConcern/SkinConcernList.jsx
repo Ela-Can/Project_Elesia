@@ -1,29 +1,38 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
 
 import AddSkinConcern from "./AddSkinConcern.jsx";
 import UpdateSkinConcern from "./UpdateSkinConcern.jsx";
+
+import { fetchSkinConcerns } from "../../../services/api.js";
 
 function SkinConcernList() {
   const [skinConcerns, setSkinConcerns] = useState([]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [skinConcernId, setSkinConcernId] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [activeSection, setActiveSection] = useState("skinConcern/list");
 
   useEffect(() => {
-    async function fetchSkinConcerns() {
-      const response = await fetch("/api/v1/skinconcern/list");
-      const data = await response.json();
-      console.log("SkinConcern récupérées :", data);
+    fetchSkinConcerns().then((data) => {
       setSkinConcerns(data);
-    }
-    fetchSkinConcerns();
+    });
   }, []);
+
+  // Add a skinConcern
 
   function addSkinConcern(newSkinConcern) {
     setSkinConcerns((prevSkinConcern) => [...prevSkinConcern, newSkinConcern]);
   }
+
+  // Update a skinConcern
 
   function updateSkinConcern(updatedSkinConcern) {
     const { id, label } = updatedSkinConcern;
@@ -40,91 +49,136 @@ function SkinConcernList() {
     });
   }
 
-  function onClickCancelBtn() {
-    setIsEditing(false);
-  }
+  // Delete a skinConcern
 
-  async function onClickDeleteSkinConcern(id) {
+  async function onClickDeleteSkinConcern(skinConcernId) {
     try {
-      const response = await fetch(`/api/v1/skinconcern/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (response.ok) {
-        alert("SkinConcern supprimé avec succès.");
-        setSkinConcerns((prevSkinConcerns) => {
-          const idToDelete = id;
+      const response = await fetch(
+        `/api/v1/skinconcern/delete/${skinConcernId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
-          const updatedList = [];
+      setSkinConcerns((prevSkinConcerns) =>
+        prevSkinConcerns.filter(
+          (skinConcern) => skinConcern.id !== skinConcernId
+        )
+      );
 
-          for (let i = 0; i < prevSkinConcerns.length; i++) {
-            if (prevSkinConcerns[i].id !== idToDelete) {
-              updatedList[updatedList.length] = prevSkinConcerns[i];
-            }
-          }
-          return updatedList;
-        });
-      } else {
-        //console.error("Erreur lors de la suppression :", err);
-      }
+      setSuccessMessage("SkinConcern supprimé avec succès");
+      setShowConfirmation(false);
     } catch (error) {
-      //console.error("Erreur de connexion à l'API", error);
+      setErrorMessage(
+        "Une erreur s'est produite lors de l'archivage. Veuillez réessayer."
+      );
     }
   }
 
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setSkinConcernId(null);
+  }
+
+  function onClickOpenConfirmation(skinConcernId) {
+    setSkinConcernId(skinConcernId);
+    setShowConfirmation(true);
+  }
+
   return (
-    <main>
-      <section>
-        <button onClick={() => setActiveSection("skinConcern/list")}>
-          Liste des produits
+    <>
+      <section className="dashboard_controls">
+        <button
+          onClick={() => {
+            setActiveSection("skinConcern/list"), resetMessages();
+          }}
+        >
+          Liste des préoccupations
         </button>
-        <button onClick={() => setActiveSection("skinConcern/addSkinConcern")}>
-          Ajouter un produit
+        <button
+          onClick={() => {
+            setActiveSection("skinConcern/addSkinConcern"), resetMessages();
+          }}
+        >
+          Ajouter une préoccupation
         </button>
       </section>
-      <section>
+      <section className="dashboard_content">
+        {showConfirmation && (
+          <div className="popup_confirmation">
+            <p>Êtes-vous sûr de vouloir supprimer cette préoccupation?</p>
+            <button onClick={() => onClickDeleteSkinConcern(skinConcernId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseOrCancel}>Annuler</button>
+          </div>
+        )}
+
         {activeSection === "skinConcern/list" && (
           <>
             <h3>Liste des préoccupations</h3>
-            {skinConcerns.length > 0 ? (
-              <ul>
+
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
+            {skinConcerns && skinConcerns.length > 0 ? (
+              <ul role="list">
                 {skinConcerns.map((skinConcern) => (
-                  <li key={skinConcern.id}>
+                  <li key={skinConcern.id} role="listitem">
                     {isEditing === true && skinConcernId === skinConcern.id ? (
-                      <>
+                      <article className="update_form">
                         <UpdateSkinConcern
                           skinConcern={skinConcern}
                           skinConcernId={skinConcern.id}
                           updateSkinConcern={updateSkinConcern}
-                          setIsEditing={setIsEditing}
+                          setSuccessMessage={setSuccessMessage}
+                          setErrorMessage={setErrorMessage}
+                          onCloseOrCancel={onCloseOrCancel}
                         />
                         <button
-                          onClick={() => onClickCancelBtn(skinConcern.id)}
+                          onClick={() => {
+                            onCloseOrCancel(skinConcern.id), resetMessages();
+                          }}
                         >
                           Annuler
                         </button>
-                      </>
+                      </article>
                     ) : (
                       <>
                         {skinConcern.label}
-                        <button
-                          onClick={() => {
-                            setIsEditing(true);
-                            setSkinConcernId(skinConcern.id);
-                          }}
-                        >
-                          Modifier
-                        </button>
-                        <button
-                          onClick={() =>
-                            onClickDeleteSkinConcern(skinConcern.id)
-                          }
-                        >
-                          Supprimer
-                        </button>
+                        <div>
+                          <button
+                            onClick={() => {
+                              setIsEditing(true);
+                              setSkinConcernId(skinConcern.id);
+                              resetMessages();
+                            }}
+                            aria-label={`Modifier la préoccupation : ${skinConcern.label}`}
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              onClickOpenConfirmation(skinConcern.id),
+                                resetMessages();
+                            }}
+                            aria-label={`Supprimer la préoccupation : ${skinConcern.label}`}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
                       </>
                     )}
                   </li>
@@ -138,10 +192,13 @@ function SkinConcernList() {
       </section>
       <section>
         {activeSection === "skinConcern/addSkinConcern" && (
-          <AddSkinConcern addSkinConcern={addSkinConcern} />
+          <AddSkinConcern
+            addSkinConcern={addSkinConcern}
+            existingSkinConcerns={skinConcerns}
+          />
         )}
       </section>
-    </main>
+    </>
   );
 }
 

@@ -74,8 +74,8 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
   }, [isPublished]);
 
   return (
-    <main>
-      <section>
+    <>
+      <section className="dashboard_controls">
         <button onClick={() => setActiveSection("comment/pending")}>
           Commentaires en attente
         </button>
@@ -83,7 +83,7 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
           Historique
         </button>
       </section>
-      <section>
+      <section className="dashboard_comments">
         {activeSection === "comment/pending" && (
           <>
             <h3>Commentaires en attente</h3>
@@ -92,25 +92,30 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
             ) : (
               pendingComments.map((comment) => (
                 <article key={comment.id}>
-                  {comment.pseudo} {comment.publishDate}: {comment.title}{" "}
-                  {comment.content} {comment.product_name}
-                  <p>Statut : {comment.isPublished}</p>
-                  <button onClick={() => onClickMarkAsValid(comment.id)}>
-                    Valider le commentaire
-                  </button>
-                  <button onClick={() => onClickMarkAsNotValid(comment.id)}>
-                    Refuser le commentaire
-                  </button>
+                  <div>
+                    <p>{comment.title}</p>
+                    <p>{comment.content}</p>
+                    <p>publié par : {comment.pseudo}</p>
+                    <p>le : {comment.publishDate} </p>
+                  </div>
+                  <div>
+                    <button onClick={() => onClickMarkAsValid(comment.id)}>
+                      Valider le commentaire
+                    </button>
+                    <button onClick={() => onClickMarkAsNotValid(comment.id)}>
+                      Refuser le commentaire
+                    </button>
+                  </div>
                 </article>
               ))
             )}
           </>
         )}
       </section>
-      <section>
+      <section className="dashboard_comments">
         {activeSection === "comment/moderated" && <CommentHistory />}
       </section>
-    </main>
+    </>
   );
 }
 

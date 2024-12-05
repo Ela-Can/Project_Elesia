@@ -1,29 +1,38 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useState } from "react";
+
 import AddSubject from "./AddSubject";
 import UpdateSubject from "./UpdateSubject";
 
 function SubjectList() {
   const [subjects, setSubjects] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [subjectId, setSubjectId] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [activeSection, setActiveSection] = useState("subject/list");
 
   useEffect(() => {
     async function fetchSubjects() {
-      try {
-        const response = await fetch(`api/v1/subject/list`);
-        const data = await response.json();
-        console.log(data);
-        setSubjects(data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des sujets :", error);
-      }
+      const response = await fetch(`api/v1/subject/list/1`);
+      const data = await response.json();
+      setSubjects(data);
     }
     fetchSubjects();
   }, []);
 
+  // Add a subject
+
   function addSubject(newSubject) {
     setSubjects((prevSubjects) => [...prevSubjects, newSubject]);
   }
+
+  // Update a subject
 
   function updateSubject(updatedSubject) {
     const { id, label } = updatedSubject;
@@ -40,10 +49,10 @@ function SubjectList() {
     });
   }
 
+  // Delete a subject
+
   async function onClickDeleteSubject(subjectId) {
     try {
-      console.log("ID du sujet à supprimer :", subjectId);
-      console.log("subjectStatus à envoyer :", 0);
       const response = await fetch(`/api/v1/subject/delete/${subjectId}`, {
         method: "PATCH",
         headers: {
@@ -52,84 +61,139 @@ function SubjectList() {
         body: JSON.stringify({ subjectStatus: 0 }),
       });
 
-      console.log("Statut de la réponse : ", response.status);
-
-      if (!response.ok) {
-        console.error("Erreur de réponse du serveur : ", response.statusText);
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("Réponse du serveur : ", data);
 
-      setSubjects((prevSubjectList) => {
-        const updatedList = [...prevSubjectList];
+      setSubjects((prevSubjectList) =>
+        prevSubjectList.filter((subject) => subject.id !== subjectId)
+      );
 
-        for (let i = 0; i < updatedList.length; i++) {
-          if (updatedList[i].id === subjectId) {
-            updatedList[i].subjectStatus = 0;
-            break;
-          }
-        }
-
-        return updatedList;
-      });
+      setSuccessMessage("Sujet archivé avec succès !");
+      setShowConfirmation(false);
     } catch (error) {
-      console.error("Erreur lors de la suppression du sujet :", error);
+      setErrorMessage(
+        "Une erreur s'est produite lors de l'archivage. Veuillez réessayer."
+      );
     }
   }
 
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setSubjectId(null);
+  }
+
+  function onClickOpenConfirmation(subjectId) {
+    setSubjectId(subjectId);
+    setShowConfirmation(true);
+  }
+
   return (
-    <main>
-      <section>
-        <button onClick={() => setActiveSection("subject/list")}>
-          Liste des produits
+    <>
+      <section className="dashboard_controls">
+        <button
+          onClick={(e) => {
+            setActiveSection("subject/list"), resetMessages();
+          }}
+        >
+          Liste des sujets
         </button>
-        <button onClick={() => setActiveSection("subject/addSubject")}>
-          Ajouter un produit
+        <button
+          onClick={(e) => {
+            setActiveSection("subject/addSubject"), resetMessages();
+          }}
+        >
+          Ajouter un sujet
         </button>
       </section>
-      <section>
+      <section className="dashboard_content">
+        {showConfirmation && (
+          <div className="popup_confirmation">
+            <p>Êtes-vous sûr de vouloir archiver ce sujet ?</p>
+            <button onClick={() => onClickDeleteSubject(subjectId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseOrCancel}>Annuler</button>
+          </div>
+        )}
+
         {activeSection === "subject/list" && (
           <>
             <h3>Liste des sujets</h3>
-            {subjects.length > 0 ? (
-              <ul>
+
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {successMessage && (
+              <p className="success-message">{successMessage}</p>
+            )}
+
+            {subjects && subjects.length > 0 ? (
+              <ul role="list">
                 {subjects.map((subject) => (
-                  <>
-                    <li key={subject.id}>
-                      {subject.label} : {subject.subjectStatus}
-                    </li>
-                    <UpdateSubject
-                      subjectId={subject.id}
-                      updateSubject={updateSubject}
-                    />
-                    <button
-                      onClick={() => {
-                        console.log(
-                          "ID passé au bouton Supprimer :",
-                          subject.id
-                        );
-                        onClickDeleteSubject(subject.id);
-                      }}
-                    >
-                      Supprimer
-                    </button>
-                  </>
+                  <li key={subject.id} role="listitem">
+                    {isEditing === true && subjectId === subject.id ? (
+                      <article className="update_form">
+                        <UpdateSubject
+                          subject={subject}
+                          subjectId={subject.id}
+                          updateSubject={updateSubject}
+                          setSuccessMessage={setSuccessMessage}
+                          setErrorMessage={setErrorMessage}
+                          onCloseOrCancel={onCloseOrCancel}
+                        />
+
+                        <button
+                          onClick={(e) => {
+                            onCloseOrCancel(subject.id), resetMessages();
+                          }}
+                          aria-label={`Annuler la modification du sujet ${subject.label}`}
+                        >
+                          Annuler
+                        </button>
+                      </article>
+                    ) : (
+                      <>
+                        {subject.label}
+                        <div>
+                          <button
+                            onClick={(e) => {
+                              setIsEditing(true);
+                              setSubjectId(subject.id);
+                              resetMessages();
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faPenToSquare} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              onClickOpenConfirmation(subject.id),
+                                resetMessages();
+                            }}
+                            aria-label={`Archiver le sujet ${subject.label}`}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </li>
                 ))}
               </ul>
             ) : (
-              <p> Aucune catégorie trouvée</p>
+              <p role="status"> Aucun sujet trouvé</p>
             )}
           </>
         )}
       </section>
       <section>
         {activeSection === "subject/addSubject" && (
-          <AddSubject addSubject={addSubject} />
+          <AddSubject addSubject={addSubject} existingSubjects={subjects} />
         )}
       </section>
-    </main>
+    </>
   );
 }
 

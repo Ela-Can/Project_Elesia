@@ -21,9 +21,15 @@ function CommentHistory() {
       ) : (
         moderatedComments.map((comment) => (
           <article key={comment.id}>
-            {comment.pseudo} {comment.publishDate}: {comment.title}{" "}
-            {comment.content} {comment.product_name}
-            <p>Statut : {comment.isPublished}</p>
+            <div>
+              <p>{comment.title}</p>
+              <p>{comment.content}</p>
+              <p>publié par : {comment.pseudo}</p>
+              <p>le : {comment.publishDate} </p>
+            </div>
+            <div>
+              <p>{comment.isPublished}</p>
+            </div>
           </article>
         ))
       )}

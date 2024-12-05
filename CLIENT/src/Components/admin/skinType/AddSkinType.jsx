@@ -1,10 +1,15 @@
 import { useState } from "react";
 
-function AddSkinType({ addSkinType }) {
+function AddSkinType({ addSkinType, existingSkinTypes }) {
   const [newSkinType, setNewSkinType] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function onSubmitAddSkinType(e) {
     e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
 
     try {
       const response = await fetch("/api/v1/skintype/create", {
@@ -15,23 +20,24 @@ function AddSkinType({ addSkinType }) {
         body: JSON.stringify({ label: newSkinType }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Nouveau type de peau ajouté :", data);
-
-        setNewSkinType("");
-        addSkinType({
-          id: data.id,
-          label: newSkinType,
-        });
-      } else {
-        console.error(
-          "Erreur lors de l'ajout de la préoccupation :",
-          response.statusText
-        );
+      for (const skinType of existingSkinTypes) {
+        if (skinType.label === newSkinType) {
+          setErrorMessage("Le skinType existe déjà !");
+          return;
+        }
       }
+
+      const data = await response.json();
+
+      setNewSkinType("");
+      setSuccessMessage("SkinType créé avec succès !");
+
+      addSkinType({
+        id: data.id,
+        label: newSkinType,
+      });
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
+      setErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
     }
   }
 
@@ -46,9 +52,21 @@ function AddSkinType({ addSkinType }) {
           id="label"
           value={newSkinType}
           onChange={(e) => setNewSkinType(e.target.value)}
+          aria-required="true"
+          required
         />
         <button type="submit">Ajouter</button>
       </form>
+      {errorMessage && (
+        <p className="error-message" role="alert">
+          {errorMessage}
+        </p>
+      )}
+      {successMessage && (
+        <p className="success-message" role="status">
+          {successMessage}
+        </p>
+      )}
     </>
   );
 }

@@ -1,11 +1,16 @@
 import { useState } from "react";
 
-function AddCategory({ addCategory }) {
+function AddCategory({ addCategory, existingCategories }) {
   const [newLabel, setNewLabel] = useState("");
   const [newRef, setNewRef] = useState("");
 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   async function onSubmitAddCategory(e) {
     e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
 
     try {
       const response = await fetch("/api/v1/category/create", {
@@ -16,26 +21,25 @@ function AddCategory({ addCategory }) {
         body: JSON.stringify({ label: newLabel, ref: newRef }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Nouvelle catégorie ajoutée :", data);
-
-        setNewLabel("");
-        setNewRef("");
-
-        addCategory({
-          id: data.id,
-          label: newLabel,
-          ref: newRef,
-        });
-      } else {
-        console.error(
-          "Erreur lors de l'ajout de la catégorie :",
-          response.statusText
-        );
+      for (const category of existingCategories) {
+        if (category.label === newLabel) {
+          setErrorMessage("Le skinConcern existe déjà !");
+          return;
+        }
       }
+
+      const data = await response.json();
+
+      setNewLabel("");
+      setNewRef("");
+      setSuccessMessage("Catégorie créée avec succès !");
+      addCategory({
+        id: data.id,
+        label: newLabel,
+        ref: newRef,
+      });
     } catch (error) {
-      console.error("Erreur lors de la requête : ", error);
+      setErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
     }
   }
 
@@ -43,30 +47,44 @@ function AddCategory({ addCategory }) {
     <>
       <h4>Ajouter une catégorie</h4>
       <form onSubmit={onSubmitAddCategory}>
-        <label htmlFor="reference">Choisir une référence : </label>
-        <select
-          name="reference"
-          id="reference"
-          value={newRef}
-          onChange={(e) => setNewRef(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            Sélectionnez une référence
-          </option>
-          <option value="produits">Produits</option>
-          <option value="articles">Articles</option>
-        </select>
-        <label htmlFor="label">Nouvelle categorie : </label>
-        <input
-          type="text"
-          name="label"
-          id="label"
-          value={newLabel}
-          onChange={(e) => setNewLabel(e.target.value)}
-        />
+        <div>
+          <label htmlFor="reference">Choisir une référence : </label>
+          <select
+            name="reference"
+            id="reference"
+            value={newRef}
+            onChange={(e) => setNewRef(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Sélectionnez une référence
+            </option>
+            <option value="produits">Produits</option>
+            <option value="articles">Articles</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="label">Nouvelle categorie : </label>
+          <input
+            type="text"
+            name="label"
+            id="label"
+            value={newLabel}
+            onChange={(e) => setNewLabel(e.target.value)}
+          />
+        </div>
         <button type="submit">Ajouter</button>
       </form>
+      {errorMessage && (
+        <p className="error-message" role="alert">
+          {errorMessage}
+        </p>
+      )}
+      {successMessage && (
+        <p className="success-message" role="status">
+          {successMessage}
+        </p>
+      )}
     </>
   );
 }

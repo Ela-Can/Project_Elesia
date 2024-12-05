@@ -48,7 +48,7 @@ function Settings() {
   }
 
   if (!userInfo) {
-    return <p>Chargement...</p>;
+    return <p role="status">Chargement...</p>;
   }
 
   return (
@@ -56,18 +56,34 @@ function Settings() {
       <h4>Vos informations personnelles</h4>
       {isEditing ? (
         <form onSubmit={onSubmitUpdate}>
-          <label htmlFor="pseudo">Pseudo :</label>
-          <input
-            type="text"
-            name="pseudo"
-            id="pseudo"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-          />
-          <label htmlFor="email">Email :</label>
-          <input type="email" name="email" id="email" value={email} readOnly />
+          <div>
+            <label htmlFor="pseudo">Pseudo :</label>
+            <input
+              type="text"
+              name="pseudo"
+              id="pseudo"
+              value={pseudo}
+              onChange={(e) => setPseudo(e.target.value)}
+              aria-required="true"
+            />
+          </div>
+          <div>
+            <label htmlFor="email">Email :</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              readOnly
+              aria-readonly="true"
+            />
+          </div>
           <button type="submit">Enregistrer les modifications</button>
-          <button type="button" onClick={() => setIsEditing(false)}>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            aria-label="Annuler et revenir aux informations affichées"
+          >
             Annuler
           </button>
         </form>
@@ -75,7 +91,10 @@ function Settings() {
         <div>
           <p>Pseudo : {user.pseudo}</p>
           <p>Email : {user.email} </p>
-          <button onClick={() => setIsEditing(true)}>
+          <button
+            onClick={() => setIsEditing(true)}
+            aria-label="Passer en mode édition pour modifier vos informations"
+          >
             Modifier vos informations
           </button>
         </div>

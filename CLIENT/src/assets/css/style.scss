@@ -1,6 +1,9 @@
 
 ////////// BASE ///////////
 @import "base/_reset";
+@import "base/_fonts";
+@import "base/_global";
+
 
 ///////// LAYOUT //////////
 
@@ -13,13 +16,18 @@
 
 ////////// PAGES //////////
 
-@import "pages/_global";
 @import "pages/_diagnostic";
 @import "pages/_product-details";
+@import "pages/_admin-dashboard";
 
 
 
 //////// ELEMENTS /////////
 
-@import "elements/_banner";
+@import "elements/_banners";
 @import "elements/_sidebar";
+@import "elements/_filters";
+@import "elements/_comments";
+@import "elements/_buttons";
+@import "elements/_popup";
+@import "elements/_loader";

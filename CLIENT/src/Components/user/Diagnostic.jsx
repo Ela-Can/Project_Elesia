@@ -3,6 +3,9 @@ import useCheckAuth from "../../Hook/useCheckAuth.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import useCloseMenu from "../../Hook/useCloseMenu";
 
+import { fetchSkinConcerns, fetchSkinTypes } from "../../services/api.js";
+import Loading from "../Loading.jsx";
+
 function Diagnostic() {
   useCloseMenu();
   const [user, isLoading] = useCheckAuth();
@@ -22,29 +25,36 @@ function Diagnostic() {
 
   const [recommendedProduct, setRecommendedProduct] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    async function fetchSkinTypes() {
-      const response = await fetch("/api/v1/skintype/list");
-      const data = await response.json();
+    fetchSkinTypes().then((data) => {
       setSkinTypes(data);
-    }
-    fetchSkinTypes();
+    });
   }, []);
 
   useEffect(() => {
-    async function fetchSkinConcerns() {
-      const response = await fetch("/api/v1/skinconcern/list");
-      const data = await response.json();
+    fetchSkinConcerns().then((data) => {
       setSkinConcerns(data);
-    }
-    fetchSkinConcerns();
+    });
   }, []);
 
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
 
     setIsSubmitted(false);
+
+    if (
+      !selectedSkinType ||
+      !selectedSkinConcern ||
+      isSkinSensitive === "" ||
+      isExposedToPollution === "" ||
+      isExposedToSun === "" ||
+      isPregnantOrBreastfeeding === ""
+    ) {
+      setErrorMessage("Veuillez remplir tous les champs avant de soumettre.");
+      return;
+    }
 
     const diagnosticData = {
       id_user: user.id,
@@ -66,12 +76,6 @@ function Diagnostic() {
         body: JSON.stringify(diagnosticData),
       });
 
-      if (!response.ok) {
-        const errorDetails = await response.text();
-        console.error("Détails de l'erreur :", errorDetails);
-        throw new Error("Erreur lors de la création du diagnostic");
-      }
-
       const result = await response.json();
 
       setRecommendedProduct(result.product || null);
@@ -90,17 +94,27 @@ function Diagnostic() {
   }
 
   if (isLoading) {
-    return <p>Vérification de l'authentification en cours...</p>;
+    return <Loading />;
   }
 
-  function seeMoreBtnHandler(productId) {
-    navigate(`/product/${productId}`);
-  }
+  //function seeMoreBtnHandler(productId) {
+  //  navigate(`/product/${productId}`);
+  //}
 
   return (
     <main>
       <h2>Diagnostic de peau</h2>
       <section>
+        {successMessage && (
+          <p className="success-message" role="status">
+            {successMessage}
+          </p>
+        )}
+        {errorMessage && (
+          <p className="error-message" role="status">
+            {errorMessage}
+          </p>
+        )}
         {user.isLogged ? (
           <form onSubmit={onSubmitBtnHandler}>
             <div>
@@ -116,11 +130,8 @@ function Diagnostic() {
                         id={skinType.label}
                         value={skinType.id}
                         onChange={(e) => {
-                          console.log(
-                            "Nouveau type de peau sélectionné :",
-                            e.target.value
-                          );
                           setSelectedSkinType(e.target.value);
+                          setErrorMessage("");
                         }}
                       />
                       <label for="skinType">{skinType.label}</label>
@@ -143,7 +154,10 @@ function Diagnostic() {
                       name="skinConcern"
                       id={skinConcern.label}
                       value={skinConcern.id}
-                      onChange={(e) => setSelectedSkinConcern(e.target.value)}
+                      onChange={(e) => {
+                        setSelectedSkinConcern(e.target.value);
+                        setErrorMessage("");
+                      }}
                     />
                     <label for="skinConcern">{skinConcern.label}</label>
                   </div>
@@ -163,7 +177,10 @@ function Diagnostic() {
                 id="isSkinSensitiveYes"
                 value="true"
                 checked={isSkinSensitive === true}
-                onChange={() => setIsSkinSensitive(true)}
+                onChange={() => {
+                  setIsSkinSensitive(true);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isSkinSensitiveYes">Oui</label>
               <input
@@ -172,7 +189,10 @@ function Diagnostic() {
                 id="isSkinSensitiveNo"
                 value="false"
                 checked={isSkinSensitive === false}
-                onChange={() => setIsSkinSensitive(false)}
+                onChange={() => {
+                  setIsSkinSensitive(false);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isSkinSensitiveNo">Non</label>
             </div>
@@ -184,7 +204,10 @@ function Diagnostic() {
                 id="isExposedToPollutionYes"
                 value="true"
                 checked={isExposedToPollution === true}
-                onChange={() => setIsExposedToPollution(true)}
+                onChange={() => {
+                  setIsExposedToPollution(true);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isExposedToPollutionYes">Fréquemment</label>
               <input
@@ -193,7 +216,10 @@ function Diagnostic() {
                 id="isExposedToPollutionNo"
                 value="false"
                 checked={isExposedToPollution === false}
-                onChange={() => setIsExposedToPollution(false)}
+                onChange={() => {
+                  setIsExposedToPollution(false);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isExposedToPollutionNo">Occasionnellement</label>
             </div>
@@ -205,7 +231,10 @@ function Diagnostic() {
                 id="isExposedToSunYes"
                 value="true"
                 checked={isExposedToSun === true}
-                onChange={() => setIsExposedToSun(true)}
+                onChange={() => {
+                  setIsExposedToSun(true);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isExposedToSunYes">Fréquemment</label>
               <input
@@ -214,7 +243,10 @@ function Diagnostic() {
                 id="isExposedToSunNo"
                 value="false"
                 checked={isExposedToSun === false}
-                onChange={() => setIsExposedToSun(false)}
+                onChange={() => {
+                  setIsExposedToSun(false);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isExposedToSunNo">
                 Occasionnellement, voire jamais
@@ -230,7 +262,10 @@ function Diagnostic() {
                 id="isPregnantOrBreastfeedingYes"
                 value="true"
                 checked={isPregnantOrBreastfeeding === true}
-                onChange={() => setIsPregnantOrBreastfeeding(true)}
+                onChange={() => {
+                  setIsPregnantOrBreastfeeding(true);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isPregnantOrBreastfeedingYes">Oui</label>
               <input
@@ -239,7 +274,10 @@ function Diagnostic() {
                 id="isPregnantOrBreastfeedingNo"
                 value="false"
                 checked={isPregnantOrBreastfeeding === false}
-                onChange={() => setIsPregnantOrBreastfeeding(false)}
+                onChange={() => {
+                  setIsPregnantOrBreastfeeding(false);
+                  setErrorMessage("");
+                }}
               />
               <label htmlFor="isPregnantOrBreastfeedingNo">Non</label>
             </div>
@@ -252,7 +290,7 @@ function Diagnostic() {
           </div>
         )}
       </section>
-      <section>
+      <section aria-live="polite">
         {isSubmitted && (
           <>
             {recommendedProduct ? (
@@ -265,7 +303,8 @@ function Diagnostic() {
                 <h3>{recommendedProduct.name}</h3>
                 <p>{recommendedProduct.description}</p>
                 <button
-                  onClick={() => seeMoreBtnHandler(recommendedProduct.id)}
+                  onClick={() => navigate(`/product/${recommendedProduct.id}`)}
+                  aria-label={`Voir plus de détails sur le produit ${recommendedProduct.name}`}
                 >
                   Voir plus
                 </button>
