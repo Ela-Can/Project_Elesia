@@ -42,6 +42,14 @@ function Login() {
 
       if (response.ok) {
         const datas = await response.json();
+
+        if (datas.user.isActive === 0) {
+          setErrorMessage(
+            "Votre compte est désactivé. Vous ne pouvez plus vous connecter."
+          );
+          return;
+        }
+
         dispatch(login(datas));
         setSuccessMessage("Connexion réussie ! Vous allez être redirigés...");
         setTimeout(() => navigate("/"), 2000);
