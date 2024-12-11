@@ -19,26 +19,6 @@ function Nav() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [type, setType] = useState(
-    window.innerWidth > 768 ? "tabletAndMore" : "mobile"
-  );
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setType("tabletAndMore");
-        return;
-      }
-      setType("mobile");
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   async function onClickLogout() {
     try {
       const response = await fetch("/api/v1/authentification/logout", {
@@ -64,59 +44,68 @@ function Nav() {
 
   return (
     <>
-      {type === "mobile" && (
-        <div>
-          <button
-            onClick={() => dispatch(toggleMenu())}
-            aria-label={menu.isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            <FontAwesomeIcon icon={menu.isOpen ? faTimes : faBars} />
-          </button>
+      <div className="burger-menu">
+        <button
+          onClick={() => dispatch(toggleMenu())}
+          aria-label={menu.isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        >
+          <FontAwesomeIcon icon={menu.isOpen ? faTimes : faBars} />
+        </button>
 
-          <button
-            onClick={() => navigate("/authentification/login")}
-            aria-label="Se connecter"
-          >
-            <FontAwesomeIcon icon={faUser} />
-          </button>
-          <button
-            onClick={() => {
-              navigate("/store_locator");
-            }}
-            aria-label="Trouver un point de vente"
-          >
-            <FontAwesomeIcon icon={faLocationDot} />
-          </button>
-        </div>
-      )}
-      <nav
-        className={`nav ${
-          type === "mobile" && menu.isOpen ? "burger" : "screen"
-        }`}
-      >
-        <NavLink to={"/"}>Accueil</NavLink>
-        <NavLink to={"product"}>Produits</NavLink>
-        <NavLink to={"diagnostic/create"}>Diagnostic</NavLink>
-        <NavLink to={"contact"}>Contact</NavLink>
+        <button
+          onClick={() => navigate("/authentification/login")}
+          aria-label="Se connecter"
+        >
+          <FontAwesomeIcon icon={faUser} />
+        </button>
+        <button
+          onClick={() => {
+            navigate("/store_locator");
+          }}
+          aria-label="Trouver un point de vente"
+        >
+          <FontAwesomeIcon icon={faLocationDot} />
+        </button>
+      </div>
+
+      <nav className={menu.isOpen ? "nav_open" : "nav_closed"}>
+        <NavLink to={"/"} tabIndex="0">
+          Accueil
+        </NavLink>
+        <NavLink to={"product"} tabIndex="0">
+          Produits
+        </NavLink>
+        <NavLink to={"diagnostic/create"} tabIndex="0">
+          Diagnostic
+        </NavLink>
+        <NavLink to={"contact"} tabIndex="0">
+          Contact
+        </NavLink>
 
         {user.isLogged ? (
           user.role === "user" ? (
             <>
-              <NavLink to={"user"}>Dashboard</NavLink>
+              <NavLink to={"user"} tabIndex="0">
+                Dashboard
+              </NavLink>
               <button onClick={onClickLogout} aria-label="Se déconnecter">
                 Se déconnecter
               </button>
             </>
           ) : (
             <>
-              <NavLink to={"admin"}>Tableau de bord admin</NavLink>
+              <NavLink to={"admin"} tabIndex="0">
+                Dashboard admin
+              </NavLink>
               <button onClick={onClickLogout} aria-label="Se déconnecter">
                 Se déconnecter
               </button>
             </>
           )
         ) : (
-          <NavLink to={"authentification/login"}>Se connecter</NavLink>
+          <NavLink to={"authentification/login"} tabIndex="0">
+            Se connecter
+          </NavLink>
         )}
       </nav>
     </>

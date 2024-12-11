@@ -17,6 +17,7 @@ import StoreLocator from "../Components/user/StoreLocator.jsx";
 import PrivacyPolicy from "../Components/user/PrivatePolicy.jsx";
 import LegalInformation from "../Components/user/LegalInformation.jsx";
 import TermsOfUse from "../Components/user/TermsOfUse.jsx";
+import CodeOfConduct from "../Components/user/CodeOfConduct.jsx";
 
 function UserRouter() {
   return (
@@ -37,6 +38,7 @@ function UserRouter() {
         <Route path="legal_information" element={<LegalInformation />} />
         <Route path="privacy_policy" element={<PrivacyPolicy />} />
         <Route path="terms_of_use" element={<TermsOfUse />} />
+        <Route path="code_of_conduct" element={<CodeOfConduct />} />
 
         <Route path="user" element={<ProtectedRoute element={Dashboard} />} />
         <Route path="*" element={<h1>404 NOT FOUND</h1>} />

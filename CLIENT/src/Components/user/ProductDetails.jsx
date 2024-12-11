@@ -47,7 +47,7 @@ function ProductDetails() {
         ) : (
           <article key={product.id}>
             <div className="product_details_top">
-              <img src="" alt={product.alt} />
+              <img src={product.image} alt={product.alt} />
               <div>
                 <h4>{product.name}</h4>
                 <p>{product.description}</p>
@@ -62,7 +62,13 @@ function ProductDetails() {
             </button>
 
             {isToggleVisible && (
-              <div className={isToggleVisible ? "buy_btn active" : "buy_btn"}>
+              <div
+                className={
+                  isToggleVisible
+                    ? "purchase_options active"
+                    : "purchase_options"
+                }
+              >
                 <button onClick={onClickBuyOnlineBtn}>Acheter en ligne</button>
                 <button onClick={onClickFindStoreBtn}>
                   Trouver un point de vente
@@ -92,7 +98,31 @@ function ProductDetails() {
       {isPopupOpen && (
         <div className={isPopupOpen ? "popup active" : "popup"} role="dialog">
           <h5>Nos partenaires en ligne</h5>
-          <a href="#">Pharma...</a>
+          <p>
+            Les partenaires listés ci-dessus sont des distributeurs agréés par
+            notre marque. Ils sont libres de fixer leurs propres prix.
+          </p>
+          <div>
+            <a href="#">
+              <img
+                src="/src/assets/img/partners/pharma_GDD.svg"
+                alt="Logo de Pharma GDD"
+              />
+            </a>
+            <a href="#">
+              <img
+                src="/src/assets/img/partners/newpharma.svg"
+                alt="Logo de Pharma GDD"
+              />
+            </a>
+            <a href="#">
+              <img
+                src="/src/assets/img/partners/docmorris.svg"
+                alt="Logo de Pharma GDD"
+              />
+            </a>
+          </div>
+
           <button onClick={onClickClosePopUp} aria-label="Fermer la popup">
             Fermer
           </button>

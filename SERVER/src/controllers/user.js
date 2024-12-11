@@ -9,6 +9,9 @@ const getAllUsers = async (req, res) => {
 
 const getOneUserById = async (req, res) => {
     const [users] = await User.findOneUserById(req.params.id);
+    if (!users) {
+    return res.status(404).json({ message: "Utilisateur non trouvé" });
+  }
     res.json(users);
 }
 
@@ -71,7 +74,7 @@ const removeUser = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try {
-        const [comment] = await User.findAllPublishedCommentsFromUserId(req.params.id_user);
+        const [comment] = await User.findAllValidatedCommentsFromUserId(req.params.id_user);
         res.status(200).json(comment);
     } catch (err) {
         res.status(500).json({ msg: err.message });
@@ -92,15 +95,15 @@ const updateComment = async (req, res) => {
             return res.status(400).json({ msg: "Le champ content est requis et ne peut pas être vide." });
         }
 
-        if (title.length < 100) {
+        if (title.length > 100) {
             return res.status(400).json({ msg: "Le champ 'title' ne peut pas dépasser 100 caractères." });
         }
 
-        if (content.length < 255) {
+        if (content.length > 255) {
             return res.status(400).json({ msg: "Le champ 'content' ne peut pas dépasser 500 caractères." });
         }
 
-        const [response] = await User.updateComment(title, content, req.params.id_user, req.params.id_product);
+        const [response] = await User.updateComment(title, content, req.params.id_user, req.params.id_comment);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Comment not updated" });
             return;
@@ -130,30 +133,22 @@ const getAllDiagnosticByUserId = async (req, res) => {
     try {
         const id_user = req.session.user.id;
         const [response] = await User.findAllDiagnostics(id_user);
-        if (response.length === 0) {
-            return res.status(404).json({ msg: "Aucun diagnostic trouvé pour cet utilisateur." });
-        }
-        res.json(response);
+        res.json(response || []);
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
 };
 
 const removeDiagnostic = async (req, res) => {
-    console.log("Paramètres reçus :", req.params);
     try {
         const [response] = await User.removeDiagnostic(req.params.id, req.params.id_user);
-        console.log("Réponse SQL :", response);
         
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Diagnostic not deleted" });
             return;
         }
         res.json({ msg: "Diagnostic deleted" });
-
-        
     } catch (err) {
-        console.error("Erreur de suppression :", err);
         res.status(500).json({ msg: err.message });
     }
 };

@@ -1,14 +1,14 @@
 .container {
-    
-
     aside {
-        background-color: rgb(228, 228, 228);
+        background-color: rgb(228, 228, 228); // A modifier
         padding: 1rem;
         
         div {
             padding-top: 1rem;
             display: flex;
-            justify-content: space-evenly;
+            justify-content: space-around;
+            gap: 1rem;
+            text-align: center;
             position: relative;
 
             ul {

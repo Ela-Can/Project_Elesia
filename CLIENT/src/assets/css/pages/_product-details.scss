@@ -1,68 +1,105 @@
 .product_details_section {
     position: relative;
     max-width: 100%;
+    
 
     .product_details_top {
-        
+
+        padding: 2rem;
 
         img {
-            width: 50vh;
+            width: 70vw;
             height: 50vh;
             margin: auto;
             object-fit: cover;
         }
 
         div {
-            width: 60vh;
-    
+            width: 80vw;
+            margin: auto;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            
+            h4 {
+                text-align: start;
+                padding-left: 0;
+            }
+            
         }
 
     }
 
-}
-
-
-.buy_btn {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9; // A modifier
-    display: none;
 
     button {
-        width: 100%;
-        border: none;
-        background-color: #616870; // A modifier
-        color: white; // A modifier
-        border-radius: 5px;
+        width: 60%;
+        text-align: center;
+        padding: 0.5rem;
+        border: 0.1px solid grey;
+        border-radius: 0;
+        display: block;
+        margin: auto;
+        //background-color: #981f1f; // A modifier
     }
-   
-}
 
-.buy_btn.active {
-    display: block;
+
+    .purchase_options.active {
+        display: flex;
+        flex-direction: column;
+        
+        button {
+            background-color: transparent;
+        }
+    }
+
+    .product_details_bottom {
+        padding-top: 2rem;
+    }
+
+
+
 }
 
 .popup {
     position: absolute;
-    top: 50%;
-    left: 18%;
-    width: 90%;
-    max-width: 400px;
+    top: 59%;
+    left: 10%;
+    width: 80vw;
+    height: auto;
+    margin: auto;
     background-color: white; // A modifier
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // A modifier
     border-radius: 8px;
     padding: 20px;
-    z-index: 1000;
-    display: none;
+    z-index: 999;
+
+    p {
+        padding: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    div {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        padding: 2rem 0 3rem 0;
+
+        img {
+            width: 130px;
+            height: 50px;
+        }
+    }
 
     button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #ff6b6b; // A modifier
-        color: white;// A modifier
-        border: none;
+        width: 70%;
+        margin: auto;
+        text-align: center;
+        padding: 0.5rem;
+        background-color: lightgray; // A modifier
         border-radius: 5px;
-        
+        display: block;
     }
 
 }

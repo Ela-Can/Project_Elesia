@@ -2,6 +2,7 @@
 ////////// BASE ///////////
 @import "base/_reset";
 @import "base/_fonts";
+//@import "base/_responsive";
 @import "base/_global";
 
 
@@ -19,6 +20,7 @@
 @import "pages/_diagnostic";
 @import "pages/_product-details";
 @import "pages/_admin-dashboard";
+@import "pages/_diagnostics-history";
 
 
 
@@ -26,8 +28,11 @@
 
 @import "elements/_banners";
 @import "elements/_sidebar";
-@import "elements/_filters";
 @import "elements/_comments";
+@import "elements/_contacts";
 @import "elements/_buttons";
 @import "elements/_popup";
 @import "elements/_loader";
+@import "elements/_focus";
+@import "elements/_erros";
+@import "elements/_accordion";

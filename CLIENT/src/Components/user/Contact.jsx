@@ -98,6 +98,7 @@ function Contact() {
               type="email"
               name="email"
               id="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);

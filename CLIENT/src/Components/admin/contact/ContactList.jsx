@@ -53,7 +53,7 @@ function ContactList({ status, setUnreadCount }) {
           Historique
         </button>
       </section>
-      <section className="dashboard_comments">
+      <section className="dashboard_contacts">
         {activeSection === "contact/pending" && (
           <>
             <h3>Demandes de contact en attente</h3>
@@ -73,11 +73,18 @@ function ContactList({ status, setUnreadCount }) {
                       <div
                         key={contact.id}
                         onClick={() => setSelectedRequest(contact)}
+                        role="button"
+                        aria-label={`Demande de ${contact.email}`}
+                        tabindex="0"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            setSelectedRequest(contact);
+                          }
+                        }}
                       >
                         <p>{contact.email}</p>
-                        <p>{contact.subject}</p>
-                        <p>{contact.content}</p>
                         <p>{contact.date}</p>
+                        <p>{contact.subject}</p>
                       </div>
                       <button
                         onClick={(e) => {

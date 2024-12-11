@@ -49,7 +49,6 @@ const create = async (req, res) => {
         const [response] = await Contact.create(email, content, subject);
         res.json({ msg: "Contact Form created", id: response.insertId });
     } catch (err) {
-        console.error("Erreur lors de l'appel à Contact.create :", err);
         res.status(500).json({ msg: err.message });
     }
 };

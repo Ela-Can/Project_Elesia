@@ -78,11 +78,11 @@ const register = async (req, res) => {
         const [[userByPseudo]] = await Auth.findOneByPseudo(pseudo);
 
         if (userByEmail) {
-            return res.status(400).json({ msg: "Email already exists" });
+            return res.status(400).json({ field: "email", msg: "Email already exists" });
         }
 
         if (userByPseudo) {
-            return res.status(400).json({ msg: "Pseudo already exists" });
+            return res.status(400).json({ field: "pseudo", msg: "Pseudo already exists" });
         }
 
         if (!userByEmail && !userByPseudo) {
@@ -103,8 +103,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-
-        console.log("Contenu de req.body :", req.body);
         const email = req.body.email //.trim();
         const password = req.body.password //.trim();
 
@@ -130,7 +128,6 @@ const login = async (req, res) => {
             const match = await bcrypt.compare(password, user.password);
             if (match) {
                 const [[userById]] = await Auth.findOneById(user.id);
-                console.log("Informations utilisateur récupérées :", userById);
                 req.session.user = { id: user.id, ...userById };
 
                 return res.status(200).json({
@@ -159,7 +156,6 @@ const logout = async (req, res) => {
             isLogged: false,
         });
     } catch (err) {
-        console.error("Logout error:", err);
         res.status(500).json({ msg: err });
     }
 };

@@ -70,17 +70,17 @@ q::after {
 
 @font-face {
   font-family: "Montserrat Light";
-  src: url("/fonts/Montserrat/static/Montserrat-Light.woff2") format("woff2");
-  src: url("/fonts/Montserrat/static/Montserrat-Light.woff") format("woff");
-  src: url("/fonts/Montserrat/static/Montserrat-Light.ttf") format("truetype");
+  src: url("/src/assets/fonts/Montserrat/static/Montserrat-Light.woff2") format("woff2");
+  src: url("/src/assets/fonts/Montserrat/static/Montserrat-Light.woff") format("woff");
+  src: url("/src/assets/fonts/Montserrat/static/Montserrat-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
 @font-face {
   font-family: "Raleway Light";
-  src: url("/fonts/Raleway/static/Raleway-Light.woff2") format("woff2");
-  src: url("/fonts/Raleway/static/Raleway-Light.woff") format("woff");
-  src: url("/fonts/Raleway/static/Raleway-Light.ttf") format("truetype");
+  src: url("/src/assets/fonts/Raleway/static/Raleway-Light.woff2") format("woff2");
+  src: url("/src/assets/fonts/Raleway/static/Raleway-Light.woff") format("woff");
+  src: url("/src/assets/fonts/Raleway/static/Raleway-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
 }
@@ -88,18 +88,22 @@ q::after {
   box-sizing: border-box;
 }
 
+html {
+  font-size: 50%;
+}
+
 body {
-  font-size: 62.5%;
   width: 100%;
   font-family: "Raleway Light", Arial, Helvetica, sans-serif;
   font-weight: 300;
+  font-size: 1.6rem;
+  text-align: justify;
 }
 
 main,
 .container {
   width: 100%;
   margin: 0 auto;
-  padding: 1rem;
   font-family: "Raleway Light", Arial, Helvetica, sans-serif;
   font-weight: 300;
 }
@@ -116,8 +120,15 @@ h5 {
   padding: 0.5rem;
 }
 
+h2,
+h3,
+h4,
+h5 {
+  padding-top: 1.2rem;
+}
+
 h3 {
-  padding: 1rem;
+  padding: 1rem 0 2rem 0;
 }
 
 h3::after {
@@ -129,102 +140,164 @@ h3::after {
   margin: 0.3rem auto 0.3rem;
 }
 
+section {
+  padding: 1rem 0 2rem 0;
+  height: auto;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 2.3rem;
+}
+
+h4 {
+  font-size: 2rem;
+}
+
+h5 {
+  font-size: 1.8rem;
+}
+
+.our_values p {
+  max-width: 80vw;
+  margin: auto;
+  padding: 2rem;
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
 @media (min-width: 768px) {
+  html {
+    font-size: 56.25%;
+  }
+}
+@media (min-width: 1024px) {
+  html {
+    font-size: 62.5%;
+  }
   main,
   .container {
-    max-width: 768px;
+    width: 1024px;
   }
 }
 header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  text-transform: uppercase;
   background-color: grey;
+  padding: 0.3rem 2rem 0.3rem 2rem;
+  position: relative;
 }
-header div {
-  display: flex;
-  align-items: center;
-}
-header div button {
-  font-size: 1rem;
-}
-header div button:first-child {
+header .burger-menu button {
   position: absolute;
-  left: 20px;
-  z-index: 1001;
+  top: 8px;
+  background-color: transparent;
+  font-size: 2.2rem;
 }
-header div button:nth-child(2) {
+header .burger-menu button:nth-child(2) {
   position: absolute;
+  top: 8px;
   right: 45px;
 }
-header div button:nth-child(3) {
+header .burger-menu button:nth-child(3) {
   position: absolute;
-  right: 20px;
+  top: 8px;
+  right: 15px;
 }
 header nav {
   display: none;
 }
-header nav.burger {
+header .nav_open {
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0;
+  position: absolute;
+  top: 100%;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  gap: 1.5rem;
   background-color: white;
-  padding: 2rem;
-  gap: 20px;
-  transition: transform 0.3s ease;
+  padding: 1.5rem;
   z-index: 1000;
 }
-header nav.burger a {
+header .nav_open a {
   padding: 1rem;
+  text-transform: uppercase;
+  font-size: 1.8rem;
 }
-header nav.burger a.active {
+header .nav_open a.active {
   text-decoration: underline;
 }
+header .nav_open button {
+  border: none;
+  background-color: transparent;
+  text-transform: uppercase;
+  font-size: 1.8rem;
+  padding-left: 1rem;
+}
 
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    text-align: start;
+  }
+  header .burger-menu {
+    display: none;
+  }
+  header nav {
+    display: flex;
+    gap: 2rem;
+  }
+}
 footer {
-  width: 100vw;
+  width: 100%;
   height: auto;
   text-align: center;
   background-color: grey;
 }
 footer h5 {
-  padding-top: 1rem;
+  padding-top: 1.3rem;
 }
 footer ul {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+footer ul a {
+  font-size: 2rem;
 }
 footer div:nth-child(2) {
+  padding: 1.5rem;
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding-top: 1rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+footer p {
   padding-bottom: 1rem;
 }
 
 form {
-  max-width: 70vw;
+  max-width: 80vw;
   margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 2rem;
   background-color: #F3F4F1;
-  padding: 1rem;
+  padding: 2rem;
 }
 form div {
   display: flex;
   flex-direction: column;
-  gap: 0.5px;
-}
-form div label {
-  text-align: center;
+  gap: 0.3rem;
 }
 form div textarea {
   resize: none;
@@ -234,22 +307,59 @@ form button {
   border: 0.1rem solid black;
 }
 
+.register_redirection {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+.register_redirection a {
+  text-decoration: underline;
+}
+
+.login_redirection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+}
+.login_redirection a {
+  text-decoration: underline;
+}
+
 .card_section {
-  width: 90vw;
+  width: 95vw;
+  height: auto;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1rem;
 }
 .card_section .card {
-  width: 15rem;
+  width: 19.6rem;
   margin: auto;
-  height: 22rem;
+  height: 33rem;
   position: relative;
   background-color: #F3F4F1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.card_section .card h4 {
+  font-size: 1.6rem;
+  text-transform: none;
+  text-align: start;
 }
 .card_section .card p, .card_section .card button {
-  padding-left: 0.8rem;
+  padding-left: 1rem;
+}
+.card_section .card p {
+  color: darkgrey;
+}
+.card_section .card button, .card_section .card a {
+  text-align: center;
+  border: none;
+  background-color: darkgrey;
 }
 .card_section .card p:first-child {
   position: absolute;
@@ -257,72 +367,109 @@ form button {
   right: -0.3rem;
   background-color: grey;
   color: #fff;
-  padding: 0.1rem 0.5rem;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  padding: 0.2rem 1rem;
+  border-bottom-left-radius: 1px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-transform: uppercase;
+  font-size: 1.2rem;
 }
 .card_section .card img {
   width: 100%;
-  height: 17rem;
+  height: 20rem;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.diagnostic_question div {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 1rem;
+  padding-left: 0.5rem;
 }
 
 .product_details_section {
   position: relative;
   max-width: 100%;
 }
+.product_details_section .product_details_top {
+  padding: 2rem;
+}
 .product_details_section .product_details_top img {
-  width: 50vh;
+  width: 70vw;
   height: 50vh;
   margin: auto;
   -o-object-fit: cover;
      object-fit: cover;
 }
 .product_details_section .product_details_top div {
-  width: 60vh;
+  width: 80vw;
+  margin: auto;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
-
-.buy_btn {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  display: none;
+.product_details_section .product_details_top div h4 {
+  text-align: start;
+  padding-left: 0;
 }
-.buy_btn button {
-  width: 100%;
-  border: none;
-  background-color: #616870;
-  color: white;
-  border-radius: 5px;
-}
-
-.buy_btn.active {
+.product_details_section button {
+  width: 60%;
+  text-align: center;
+  padding: 0.5rem;
+  border: 0.1px solid grey;
+  border-radius: 0;
   display: block;
+  margin: auto;
+}
+.product_details_section .purchase_options.active {
+  display: flex;
+  flex-direction: column;
+}
+.product_details_section .purchase_options.active button {
+  background-color: transparent;
+}
+.product_details_section .product_details_bottom {
+  padding-top: 2rem;
 }
 
 .popup {
   position: absolute;
-  top: 50%;
-  left: 18%;
-  width: 90%;
-  max-width: 400px;
+  top: 59%;
+  left: 10%;
+  width: 80vw;
+  height: auto;
+  margin: auto;
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 20px;
-  z-index: 1000;
-  display: none;
+  z-index: 999;
+}
+.popup p {
+  padding: 1rem;
+  font-size: 1.3rem;
+}
+.popup div {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding: 2rem 0 3rem 0;
+}
+.popup div img {
+  width: 130px;
+  height: 50px;
 }
 .popup button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
+  width: 70%;
+  margin: auto;
+  text-align: center;
+  padding: 0.5rem;
+  background-color: lightgray;
   border-radius: 5px;
+  display: block;
 }
 
 .popup.active {
@@ -402,10 +549,18 @@ main .dashboard_comments article div:last-child p {
   text-transform: uppercase;
 }
 
+#diagnostic_history {
+  display: flex;
+  flex-wrap: wrap;
+}
+#diagnostic_history div {
+  flex: 1;
+}
+
 .home_banner_section {
   position: relative;
   width: 100%;
-  height: 30vh;
+  height: 25vh;
 }
 .home_banner_section img {
   position: absolute;
@@ -449,15 +604,15 @@ main .dashboard_comments article div:last-child p {
 }
 .diagnostic_banner_section p {
   position: absolute;
-  width: 15%;
-  top: 15%;
-  left: 10%;
+  width: 35%;
+  top: 10%;
+  left: 4%;
   text-transform: uppercase;
 }
 .diagnostic_banner_section button {
   position: absolute;
-  bottom: 15%;
-  left: 10%;
+  bottom: 10%;
+  left: 4%;
 }
 
 .container aside {
@@ -467,7 +622,9 @@ main .dashboard_comments article div:last-child p {
 .container aside div {
   padding-top: 1rem;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
+  gap: 1rem;
+  text-align: center;
   position: relative;
 }
 .container aside div ul {
@@ -480,19 +637,6 @@ main .dashboard_comments article div:last-child p {
   padding: 1rem;
 }
 
-.filters_section {
-  display: flex;
-  gap: 1rem;
-  text-align: center;
-  padding: 0.5rem 1rem;
-}
-.filters_section div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
 .comment_section article {
   display: flex;
   flex-direction: column;
@@ -501,6 +645,14 @@ main .dashboard_comments article div:last-child p {
 .comment_section article div {
   display: flex;
   gap: 2rem;
+}
+
+.dashboard_contacts article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 button {
@@ -513,10 +665,11 @@ button {
 .popup_confirmation {
   position: fixed;
   top: 30%;
-  left: 25%;
+  left: 15%;
   border: 1px solid grey;
   background-color: grey;
   padding: 1rem;
+  z-index: 999;
 }
 
 #loader {
@@ -528,4 +681,42 @@ button {
   animation: spin 1s linear infinite;
   margin: auto;
   display: block;
+}
+
+:focus {
+  outline: 2px solid blue;
+}
+
+.error-message {
+  color: red;
+}
+
+#accordion {
+  width: 90vw;
+  margin: auto;
+  padding: 0;
+}
+#accordion button {
+  width: 90vw;
+  margin: auto;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  justify-content: space-between;
+}
+#accordion button span {
+  padding-left: 1rem;
+  padding-right: 2rem;
+  text-transform: uppercase;
+}
+#accordion div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+#accordion .card_section {
+  width: 80vw;
+}
+#accordion .card_section .card {
+  height: 30rem;
 }/*# sourceMappingURL=style.css.map */

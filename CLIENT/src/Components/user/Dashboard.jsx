@@ -16,9 +16,9 @@ function Dashboard() {
   const user = useSelector((state) => state.user);
   const [activeSection, setActiveSection] = useState(null);
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  //if (isLoading) {
+  //  return <Loading />;
+  //}
 
   return (
     <div className="container">

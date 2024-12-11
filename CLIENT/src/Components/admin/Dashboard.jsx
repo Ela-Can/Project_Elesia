@@ -39,27 +39,42 @@ function Dashboard() {
             {isContentMenuOpen && (
               <ul>
                 <li>
-                  <NavLink onClick={() => setActiveSection("products")}>
+                  <NavLink
+                    onClick={() => setActiveSection("products")}
+                    tabindex="0"
+                  >
                     Gestion des produits
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink onClick={() => setActiveSection("categories")}>
+                  <NavLink
+                    onClick={() => setActiveSection("categories")}
+                    tabindex="0"
+                  >
                     Gestion des categories
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink onClick={() => setActiveSection("subjects")}>
+                  <NavLink
+                    onClick={() => setActiveSection("subjects")}
+                    tabindex="0"
+                  >
                     Gestion des sujets
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink onClick={() => setActiveSection("skinTypes")}>
+                  <NavLink
+                    onClick={() => setActiveSection("skinTypes")}
+                    tabindex="0"
+                  >
                     Gestion des types de peau
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink onClick={() => setActiveSection("skinConcerns")}>
+                  <NavLink
+                    onClick={() => setActiveSection("skinConcerns")}
+                    tabindex="0"
+                  >
                     Gestion des préocupations
                   </NavLink>
                 </li>
@@ -67,11 +82,11 @@ function Dashboard() {
             )}
           </button>
 
-          <NavLink onClick={() => setActiveSection("comments")}>
+          <NavLink onClick={() => setActiveSection("comments")} tabindex="0">
             Modérations des commentaires {unmoderatedCount}
           </NavLink>
 
-          <NavLink onClick={() => setActiveSection("contacts")}>
+          <NavLink onClick={() => setActiveSection("contacts")} tabindex="0">
             Demandes de contact {unreadCount}
           </NavLink>
         </div>

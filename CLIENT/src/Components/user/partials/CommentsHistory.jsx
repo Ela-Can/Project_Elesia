@@ -1,83 +1,157 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 function CommentsHistory() {
   const [comments, setComments] = useState([]);
-  const [commentTitle, setCommentTitle] = useState("");
-  const [commentContent, setCommentContent] = useState("");
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [commentId, setCommentId] = useState([]);
+
+  //const [commentTitle, setCommentTitle] = useState("");
+  //const [commentContent, setCommentContent] = useState("");
+
+  const [updatedTitle, setUpdatedTitle] = useState("");
+  const [updatedContent, setUpdatedContent] = useState("");
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [isChecked, setIsChecked] = useState(false);
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchCommentsByUserId() {
-      //console.log("User ID pour les commentaires:", user.id);
       const response = await fetch(`api/v1/user/${user.id}/comments/list`);
       const data = await response.json();
-      //console.log("Commentaires récupérés :", data);
+      console.log("Commentaires récupérés :", data);
       setComments(data);
     }
     fetchCommentsByUserId();
   }, [user.id]);
 
-  async function onClickUpdateComment(id, id_user) {
-    try {
-      const response = await fetch(
-        `/api/v1/user/${id_user}/comments/update/${id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: commentTitle,
-            content: commentContent,
-          }),
-        }
+  async function onClickUpdateComment(commentId, id_user) {
+    if (!isChecked) {
+      setErrorMessage(
+        "Vous devez accepter la charte de bonne conduite avant de soumettre votre commentaire."
       );
-
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === id
-            ? { ...comment, title: commentTitle, content: commentContent }
-            : comment
-        )
-      );
-
-      console.log("Commentaire mis à jour, ID:", id);
-    } catch (error) {
-      console.error("Erreur lors de la MAJ du commentaire:", error);
+      return;
     }
-  }
 
-  async function onClickDeleteComment(id, id_user) {
     try {
       const response = await fetch(
-        `/api/v1/user/${id_user}/comments/delete/${id}`,
+        `/api/v1/user/${id_user}/comments/update/${commentId}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            title: updatedTitle,
+            content: updatedContent,
+          }),
         }
       );
 
-      setComments((prevComments) => {
-        const idToDelete = id;
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error("Erreur serveur :", response.status, errorDetails);
+        throw new Error(
+          `Erreur serveur : ${response.status} - ${errorDetails}`
+        );
+      }
 
-        const updatedList = [];
+      const updatedComment = await response.json();
 
-        for (let i = 0; i < prevComments.length; i++) {
-          if (prevComments[i].id !== idToDelete) {
-            updatedList[updatedList.length] = prevComments[i];
-          }
-        }
-        return updatedList;
-      });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === commentId
+            ? { ...comment, title: updatedTitle, content: updatedContent }
+            : comment
+        )
+      );
 
-      console.log("Commentaire supprimé, ID:", id);
+      setIsEditing(false);
+      setSuccessMessage(
+        "Votre commentaire a été mis à jour avec succès et est en attente de modération."
+      );
+      setIsChecked(false);
     } catch (error) {
-      console.error("Erreur lors de la suppression du commentaire:", error);
+      console.error(error);
+      setErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
+    }
+  }
+
+  async function onClickDeleteComment(commentId, id_user) {
+    try {
+      const response = await fetch(
+        `/api/v1/user/${id_user}/comments/delete/${commentId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            isPublished: 1,
+          }),
+        }
+      );
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+
+      setSuccessMessage("SkinConcern supprimé avec succès");
+      setShowConfirmation(false);
+    } catch (error) {
+      setErrorMessage(
+        "Une erreur s'est produite lors de l'archivage. Veuillez réessayer."
+      );
+    }
+  }
+
+  function onClickEditComment(comment) {
+    setIsEditing(true);
+    setCommentId(comment.id);
+    setUpdatedTitle(comment.title);
+    setUpdatedContent(comment.content);
+    resetMessages();
+  }
+
+  function resetMessages() {
+    setSuccessMessage("");
+    setErrorMessage("");
+  }
+
+  function onCloseOrCancel() {
+    setIsEditing(false);
+    setShowConfirmation(false);
+    setCommentId(null);
+  }
+
+  function onClickOpenConfirmation(commentId) {
+    setCommentId(commentId);
+    setShowConfirmation(true);
+  }
+
+  const maxCharactersTitle = 100;
+  const maxCharactersContent = 255;
+
+  function onChangeNbrMaxTitle(e) {
+    const value = e.target.value;
+    if (value.length <= maxCharactersTitle) {
+      setUpdatedTitle(value);
+    }
+  }
+
+  function onChangeNbrMaxContent(e) {
+    const value = e.target.value;
+    if (value.length <= maxCharactersContent) {
+      setUpdatedContent(value);
     }
   }
 
@@ -86,20 +160,112 @@ function CommentsHistory() {
   return (
     <>
       <h4>Vos commentaires</h4>
+      {showConfirmation && (
+        <div className="popup_confirmation">
+          <p>Êtes-vous sûr de vouloir supprimer cette préoccupation?</p>
+          <button onClick={() => onClickDeleteComment(commentId)}>
+            Confirmer
+          </button>
+          <button onClick={onCloseOrCancel}>Annuler</button>
+        </div>
+      )}
+
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+
       {comments.length > 0 ? (
         <ul role="status">
           {comments.map((comment) => (
             <li key={comment.id} role="listitem">
-              <h4>{comment.title}</h4>
-              <p>{comment.content}</p>
-              <p>{comment.isPublished}</p>
-              <p>Produit : {comment.product_name}</p>
-              <button
-                onClick={() => onClickDeleteComment(comment.id, user.id)}
-                aria-label={`Supprimer le commentaire intitulé ${comment.title}`}
-              >
-                Supprimer
-              </button>
+              {isEditing === true && commentId === comment.id ? (
+                <article>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      onClickUpdateComment(comment.id, user.id);
+                    }}
+                  >
+                    <div>
+                      <label htmlFor="title">
+                        Votre impression générale sur le produit :
+                      </label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={updatedTitle}
+                        onChange={(e) => {
+                          setUpdatedTitle(e.target.value), onChangeNbrMaxTitle;
+                        }}
+                        aria-required="true"
+                        aria-describedby="title-limit"
+                        required
+                      />
+                      <p>
+                        {maxCharactersTitle - updatedTitle.length} caractères
+                        restants
+                      </p>
+                    </div>
+                    <div>
+                      <label htmlFor="content">Votre commentaire :</label>
+                      <input
+                        type="text"
+                        name="content"
+                        value={updatedContent}
+                        onChange={(e) => {
+                          setUpdatedContent(e.target.value),
+                            onChangeNbrMaxContent;
+                        }}
+                        aria-required="true"
+                        aria-describedby="content-limit"
+                        required
+                      />
+                      <p>
+                        {maxCharactersTitle - updatedContent.length} caractères
+                        restants
+                      </p>
+                    </div>
+                    <div>
+                      <input
+                        type="checkbox"
+                        name="acceptCharte"
+                        checked={isChecked}
+                        onChange={(e) => {
+                          setIsChecked(e.target.checked), setErrorMessage("");
+                        }}
+                        required
+                      />
+                      <label htmlFor="acceptCharte">
+                        J'ai lu et j'accepte la{" "}
+                        <Link to="/code_of_conduct" target="_blank">
+                          charte de bonne conduite
+                        </Link>
+                        .
+                      </label>
+                      {errorMessage && <p>{errorMessage}</p>}
+                    </div>
+                    <button type="submit">Enregistrer</button>
+                    <button onClick={onCloseOrCancel}>Annuler</button>
+                  </form>
+                </article>
+              ) : (
+                <>
+                  <h4>{comment.title}</h4>
+                  <p>{comment.content}</p>
+                  <p>{comment.isPublished}</p>
+                  <p>Produit : {comment.product_name}</p>
+                  <button onClick={() => onClickEditComment(comment)}>
+                    Modifier
+                  </button>
+                  <button
+                    onClick={() => {
+                      onClickOpenConfirmation(comment.id, user.id),
+                        resetMessages();
+                    }}
+                  >
+                    Supprimer
+                  </button>
+                </>
+              )}
             </li>
           ))}
         </ul>

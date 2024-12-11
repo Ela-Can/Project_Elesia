@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { validEmail } from "../../services/validators";
 
@@ -14,6 +14,8 @@ function Register() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const [isChecked, setIsChecked] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,6 +37,13 @@ function Register() {
 
   async function onSubmitBtnHandler(e) {
     e.preventDefault();
+
+    if (!isChecked) {
+      setErrorMessage(
+        "Vous devez accepter les CGU et la politique de confidentialité"
+      );
+      return;
+    }
 
     if (!birthdate) {
       setErrorMessage("Veuillez entrer votre date de naissance.");
@@ -80,7 +89,13 @@ function Register() {
         setTimeout(() => navigate("/authentification/login"), 2000);
       } else {
         const errorData = await response.json();
-        dispatch(loginFailed({ error: errorData.message }));
+        if (errorData.field === "email") {
+          setErrorMessage("Cet email est déjà utilisé.");
+        } else if (errorData.field === "pseudo") {
+          setErrorMessage("Ce pseudo est déjà pris.");
+        } else {
+          setErrorMessage(errorData.msg || "Erreur lors de l'inscription.");
+        }
       }
     } catch (error) {
       setErrorMessage("Erreur lors de l'inscription. Veuillez réessayer.");
@@ -90,90 +105,115 @@ function Register() {
   return (
     <main>
       <h2>Créer un compte</h2>
-      {successMessage && (
-        <p className="success-message" role="status">
-          {successMessage}
-        </p>
-      )}
-      {errorMessage && (
-        <p className="error-message" role="status">
-          {errorMessage}
-        </p>
-      )}
-      <form onSubmit={onSubmitBtnHandler}>
-        <p>*Champs obligatoires</p>
-        <div>
-          <label htmlFor="pseudo">
-            Nom d&apos;utilisateur<span>*</span>
-          </label>
-          <input
-            type="text"
-            name="pseudo"
-            id="pseudo"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="birthdate">
-            Votre date de naissance<span>*</span>
-          </label>
-          <input
-            type="date"
-            name="birthdate"
-            id="birthdate"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">
-            Entrez votre adresse mail<span>*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">
-            Entrez votre mot de passe<span>*</span>
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="passwordConfirmation">
-            Confirmer votre mot de passe<span>*</span>
-          </label>
-          <input
-            type="password"
-            name="passwordConfirmation"
-            id="passwordConfirmation"
-            value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <button type="submit">S&apos;inscrire</button>
-      </form>
+      <section>
+        {successMessage && (
+          <p className="success-message" role="status">
+            {successMessage}
+          </p>
+        )}
+        {errorMessage && (
+          <p className="error-message" role="status">
+            {errorMessage}
+          </p>
+        )}
+        <form onSubmit={onSubmitBtnHandler}>
+          <p>*Champs obligatoires</p>
+          <div>
+            <label htmlFor="pseudo">
+              Nom d&apos;utilisateur<span>*</span>
+            </label>
+            <input
+              type="text"
+              //name="pseudo"
+              id="pseudo"
+              value={pseudo}
+              onChange={(e) => setPseudo(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="birthdate">
+              Votre date de naissance<span>*</span>
+            </label>
+            <input
+              type="date"
+              //name="birthdate"
+              id="birthdate"
+              value={birthdate}
+              onChange={(e) => setBirthdate(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="email">
+              Entrez votre adresse mail<span>*</span>
+            </label>
+            <input
+              type="email"
+              //name="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">
+              Entrez votre mot de passe<span>*</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="passwordConfirmation">
+              Confirmer votre mot de passe<span>*</span>
+            </label>
+            <input
+              type="password"
+              name="passwordConfirmation"
+              id="passwordConfirmation"
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              name="acceptConditions"
+              checked={isChecked}
+              onChange={(e) => {
+                setIsChecked(e.target.checked), setErrorMessage("");
+              }}
+              required
+            />
+            <label htmlFor="acceptConditions">
+              J'ai lu et j'accepte les{" "}
+              <Link to="/terms_of_use" target="_blank">
+                conditions générales d'utilisation{" "}
+              </Link>
+              et la{" "}
+              <Link to="/privacy_policy" target="_blank">
+                politique de confidentialité
+              </Link>
+              .
+            </label>
+            {errorMessage && <p>{errorMessage}</p>}
+          </div>
+          <button type="submit">S&apos;inscrire</button>
+        </form>
+      </section>
     </main>
   );
 }

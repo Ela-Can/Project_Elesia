@@ -54,7 +54,7 @@ class User {
 
     // Gestion des commentaires
 
-    static async findAllPublishedCommentsFromUserId(id) {
+    static async findAllValidatedCommentsFromUserId(id) {
         const SELECT_ONE = `
             SELECT
                 comment.id,
@@ -71,13 +71,13 @@ class User {
             JOIN user ON comment.id_user = user.id
             JOIN product ON comment.id_product = product.id
             WHERE comment.id_user = ?
-            AND isPublished = 1`;
+            AND isPublished = 3`;
         return await pool.execute(SELECT_ONE, [id]);
     }
 
-    static async updateComment(title, content, id_user, id_product) {
-        const UPDATE_COMMENT = `UPDATE comment SET title = ?, content = ? WHERE id_user = ? AND id_product = ?`
-        return await pool.execute(UPDATE_COMMENT, [title, content, id_user, id_product]);
+    static async updateComment(title, content, id_user, id_comment) {
+        const UPDATE_COMMENT = `UPDATE comment SET title = ?, content = ?, isPublished = 0 WHERE id_user = ? AND comment.id = ?`
+        return await pool.execute(UPDATE_COMMENT, [title, content, id_user, id_comment]);
     }
 
     static async hideComment(id, id_user) {
@@ -114,7 +114,6 @@ class User {
                 END AS isPregnantOrBreastfeeding,
                 product.id AS product_id,
                 product.name AS product_name, 
-                product.description AS product_description, 
                 product.image AS product_image, 
                 product.alt AS product_alt
             FROM diagnosticForm
@@ -122,7 +121,8 @@ class User {
             LEFT JOIN skinConcern ON diagnosticForm.id_skinConcern = skinConcern.id
             LEFT JOIN productRecommandation ON diagnosticForm.id = productRecommandation.id_diagnosticForm
             LEFT JOIN product ON productRecommandation.id_product = product.id
-            WHERE id_user = ?`;
+            WHERE id_user = ?
+            ORDER BY diagnosticForm.createdDate DESC`;
         return await pool.query(SELECT_ALL, [id_user]);
     }
 

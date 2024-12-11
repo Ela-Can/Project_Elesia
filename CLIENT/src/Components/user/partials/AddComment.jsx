@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useCheckAuth from "../../../Hook/useCheckAuth";
+import { Link } from "react-router-dom";
 
 function AddComment({ productId }) {
   const [user, isLoading] = useCheckAuth();
@@ -7,9 +8,21 @@ function AddComment({ productId }) {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [isChecked, setIsChecked] = useState(false);
 
   async function onSumbitAddComment(e) {
     e.preventDefault();
+
+    if (!isChecked) {
+      setErrorMessage(
+        "Vous devez accepter la charte de bonne conduite avant de soumettre votre commentaire."
+      );
+      return;
+    }
+
+    setErrorMessage("");
     setSuccessMessage("");
 
     try {
@@ -33,6 +46,7 @@ function AddComment({ productId }) {
         setNewTitle("");
         setNewContent("");
         setIsFormVisible(false);
+        setIsChecked(false);
       } else {
         console.error("Erreur lors de l'envoi du commentaire.");
       }
@@ -112,6 +126,25 @@ function AddComment({ productId }) {
             <p>
               {maxCharactersContent - newContent.length} caractères restants
             </p>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              name="acceptCharte"
+              checked={isChecked}
+              onChange={(e) => {
+                setIsChecked(e.target.checked), setErrorMessage("");
+              }}
+              required
+            />
+            <label htmlFor="acceptCharte">
+              J'ai lu et j'accepte la{" "}
+              <Link to="/code_of_conduct" target="_blank">
+                charte de bonne conduite
+              </Link>
+              .
+            </label>
+            {errorMessage && <p>{errorMessage}</p>}
           </div>
           <button type="submit">Envoyer</button>
         </form>

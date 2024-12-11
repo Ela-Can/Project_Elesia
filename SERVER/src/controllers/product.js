@@ -7,10 +7,8 @@ import Product from "../model/Product.js";
 const getAllProducts = async (req, res) => {
     try {
         const [response] = await Product.findAllProducts();
-        console.log("Données envoyées :", response);
         res.status(200).json(response);
     } catch (err) {
-        console.error("Erreur lors de la récupération des produits :", err);
         res.status(500).json({ msg: err.message });
     }
 };
@@ -42,12 +40,8 @@ const getOneProductById = async (req, res) => {
 };*/
 
 const createProduct = async (req, res) => {
-    console.log("Middleware et contrôleur atteints !");
 
     try {
-
-        console.log("req.body reçu par le contrôleur :", req.body);
-
         const {
             name,
             description,
@@ -127,7 +121,7 @@ const createProduct = async (req, res) => {
         res.json({ msg: "Product Created", id: response.insertId });
 
     } catch (err) {
-        console.error("Erreur complète :", err);
+        res.status(500).json({ msg: err.message });
     }
 };
 
@@ -226,7 +220,7 @@ const updateProduct = async (req, res) => {
 
             fs.unlink(oldImagePath, (err) => {
                 if (err) {
-                    console.error("Erreur lors de la suppression de l'image :", err);
+                    res.status(500).json({ msg: err.message });
                 }  
             });
         }
@@ -253,7 +247,6 @@ const removeProduct = async (req, res) => {
 
         fs.unlink(imagePath, (err) => {
             if (err) {
-                console.error("Erreur lors de la suppression de l'image :", err);
                 return res.status(200).json({ msg: "Produit supprimé, mais impossible de supprimer l'image." });
             } else {
                 return res.status(200).json({ msg: "Produit et image supprimés avec succès !" });
@@ -270,6 +263,14 @@ const addCommentToProduct = async (req, res) => {
     try {
         const title = req.body.title.trim();
         const content = req.body.content.trim();
+
+        if (!title || !content) {
+            return res.status(400).json({ msg: "Titre et contenu sont obligatoires." });
+        }
+
+        if (title.length > 100 || content.length > 255) {
+            return res.status(400).json({ msg: "Titre ou contenu trop long." });
+        }
 
         if (!req.session.user) {
             return res.status(401).json({ msg: "Vous devez être connecté pour ajouter un commentaire." });

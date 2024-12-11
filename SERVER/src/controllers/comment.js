@@ -35,8 +35,6 @@ const getAllFromProduct = async (req, res) => {
 
 const hideCommentAsUser = async (req, res) => {
     try {
-        console.log("req.user :", req.user);
-        
         const [response] = await Comment.hideCommentAsUser(req.params.id, req.user.id);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Failed to hide the comment" });
@@ -44,7 +42,6 @@ const hideCommentAsUser = async (req, res) => {
         }
         res.json({ msg: "Comment successfully hidden" });
     } catch (err) {
-        console.error("Erreur dans hideComment:", err);
         res.status(500).json({ msg: err.message });
     }
 };
@@ -66,7 +63,6 @@ const updateCommentStatus = async (req, res) => {
 
         res.json({ msg: "Comment successfully hidden" });
     } catch (err) {
-        console.error(`Error updating comment status (id: ${id}, isPublished: ${isPublished}):`, err);
         res.status(500).json({ msg: "Internal server error" });
     }
 }

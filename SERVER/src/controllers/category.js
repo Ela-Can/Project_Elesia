@@ -59,13 +59,8 @@ const update = async (req, res) => {
         const [existingCategory] = await Category.findOne(id);
 
         if (existingCategory.length === 0) {
-            console.error("Catégorie non trouvée pour l'ID :", id);
             return res.status(404).json({ msg: "Category not found" });
         }
-
-        console.log("Catégorie actuelle trouvée :", existingCategory[0]);
-
-
         const label = req.body.label;
         const ref = req.body.ref;
 
@@ -79,8 +74,6 @@ const update = async (req, res) => {
         if (label.length > 50) {
             return res.status(400).json({ msg: "Label must be 50 characters or less" });
         }
-        
-        console.log("Mise à jour de la catégorie avec ID :", req.params.id, "Label :", label, "Ref :", ref);
 
         const [response] = await Category.update(label, ref, id);
         if (!response.affectedRows) {

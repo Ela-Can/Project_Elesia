@@ -1,0 +1,38 @@
+#accordion {
+    width: 90vw;
+    margin: auto;
+    padding: 0;
+
+    button {
+        width: 90vw; // A corriger-
+        margin: auto;
+        border: none;
+        border-radius: 0;
+        display: flex;
+        justify-content: space-between;
+
+        span {
+            padding-left: 1rem;
+            padding-right: 2rem;
+            text-transform: uppercase;
+        }
+
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .card_section {
+        width: 80vw;
+
+        .card{
+            height: 30rem;
+        }
+
+    }
+
+
+}

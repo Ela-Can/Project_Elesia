@@ -8,12 +8,10 @@ function Accordion({ title, children }) {
   };
 
   return (
-    <div>
+    <div id="accordion">
       <button onClick={toggleAccordion}>
-        <span>
-          {title}
-          {isActive ? "-" : "+"}
-        </span>
+        <span>{title}</span>
+        <span>{isActive ? "-" : "+"}</span>
       </button>
       {isActive ? <div>{children}</div> : null}
     </div>

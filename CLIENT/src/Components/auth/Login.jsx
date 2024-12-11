@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login, loginFailed } from "../../store/slices/user";
 import useCloseMenu from "../../Hook/useCloseMenu";
@@ -58,55 +58,58 @@ function Login() {
   return (
     <main>
       <h2>Connectez-vous</h2>
-      {successMessage && (
-        <p className="success-message" role="status">
-          {successMessage}
-        </p>
-      )}
-      {errorMessage && (
-        <p className="error-message" role="status">
-          {errorMessage}
-        </p>
-      )}
-      <form onSubmit={onSubmitBtnHandler}>
-        <p>*Champs obligatoires</p>
-        <div>
-          <label htmlFor="email">
-            Entrez votre adresse mail<span>*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            aria-required="true"
-            required
-          />
+      <section>
+        {successMessage && (
+          <p className="success-message" role="status">
+            {successMessage}
+          </p>
+        )}
+        {errorMessage && (
+          <p className="error-message" role="status">
+            {errorMessage}
+          </p>
+        )}
+        <form onSubmit={onSubmitBtnHandler}>
+          <p>*Champs obligatoires</p>
+          <div>
+            <label htmlFor="email">
+              Entrez votre adresse mail<span>*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">
+              Entrez votre mot de passe<span>*</span>
+            </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-required="true"
+              required
+            />
+          </div>
+          <button type="submit">Se connecter</button>
+        </form>
+        <div className="register_redirection">
+          <p>Pas de compte ?</p>
+          <Link to="/authentification/register" tabIndex="0">
+            Incrivez-vous
+          </Link>
         </div>
-        <div>
-          <label htmlFor="password">
-            Entrez votre mot de passe<span>*</span>
-          </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-required="true"
-            required
-          />
-        </div>
-        <button type="submit">Se connecter</button>
-      </form>
-      <p>Pas de compte ?</p>
-      <button
-        onClick={() => navigate("/authentification/register")}
-        aria-label="Aller à la page d'inscription"
-      >
-        S&apos;inscrire
-      </button>
+      </section>
     </main>
   );
 }

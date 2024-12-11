@@ -1,26 +1,32 @@
 footer {
-    width: 100vw;
+    width: 100%;
     height : auto;
     text-align: center;
     background-color: grey; // Modifier la couleur
 
     h5 {
-        padding-top: 1rem;
-
-        
+        padding-top: 1.3rem;
     }
 
     ul {
         display: flex;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 1rem;
+
+        a {
+            font-size: 2rem
+        }
     }
     
     div:nth-child(2) {
+        padding: 1.5rem;
         display: flex;
-        justify-content: center;
-        gap: 1rem;
-        padding-top: 1rem;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 0.3rem; 
+    }
+    
+    p {
         padding-bottom: 1rem;
     }
 

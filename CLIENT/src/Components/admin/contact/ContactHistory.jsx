@@ -33,7 +33,17 @@ function ContactHistory() {
           ) : (
             finishedRequests.map((contact) => (
               <article key={contact.id}>
-                <div onClick={() => setSelectedRequest(contact)}>
+                <div
+                  onClick={() => setSelectedRequest(contact)}
+                  role="button"
+                  aria-label={`Demande de ${contact.email}`}
+                  tabindex="0"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      setSelectedRequest(contact);
+                    }
+                  }}
+                >
                   <p>{contact.email}</p>
                   <p>{contact.subject}</p>
                   <p>{contact.content}</p>

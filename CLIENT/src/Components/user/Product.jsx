@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useCloseMenu from "../../Hook/useCloseMenu";
+import Accordion from "../partials/Accordion";
 
 import {
   fetchProducts,
@@ -96,7 +97,7 @@ function Product() {
   return (
     <main>
       <h2>Nos produits</h2>
-      <section className="filters_section">
+      <Accordion title="Filtrer">
         <div>
           <label htmlFor="category">Que recherchez-vous ?</label>
           <select
@@ -146,7 +147,7 @@ function Product() {
             ))}
           </select>
         </div>
-      </section>
+      </Accordion>
       <section className="card_section">
         {products.length === 0 ? (
           <p role="status">Aucun produit disponible</p>
