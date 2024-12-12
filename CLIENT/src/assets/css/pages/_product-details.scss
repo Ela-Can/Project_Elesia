@@ -69,7 +69,7 @@
     width: 80vw;
     height: auto;
     margin: auto;
-    background-color: white; // A modifier
+    background-color: $background-color; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // A modifier
     border-radius: 8px;
     padding: 20px;
@@ -97,7 +97,7 @@
         margin: auto;
         text-align: center;
         padding: 0.5rem;
-        background-color: lightgray; // A modifier
+        background-color: $button-color; // A modifier
         border-radius: 5px;
         display: block;
     }

@@ -9,17 +9,18 @@ html{
 
 body {
     width: 100%;
-    font-family: "Raleway Light", Arial, Helvetica, sans-serif;
+    font-family: $font-family-text;
     font-weight: 300;
     font-size: 1.6rem;
     text-align: justify;
+    color: $text-color;
 }
 
 main, 
 .container {
     width: 100%;
     margin: 0 auto;
-    font-family: "Raleway Light", Arial, Helvetica, sans-serif;
+    font-family: $font-family-text;
     font-weight: 300;
 }
 
@@ -28,7 +29,7 @@ h2,
 h3, 
 h4,
 h5 {
-    font-family: "Montserrat Light", Arial, Helvetica, sans-serif;
+    font-family: $font-family-title;
     font-weight: 300;
     text-align: center;
     text-transform: uppercase;
@@ -51,7 +52,7 @@ h3::after {
     display: block;
     width: 30%;
     height: 2px;
-    background-color: #007bff;
+    background-color: $secondary-color;
     margin: 0.3rem auto 0.3rem;
 }
 
@@ -86,7 +87,7 @@ h5 {
         max-width : 80vw;
         margin: auto;
         padding: 2rem;
-        background-color: lightgrey; // A modifier
+        background-color: $tertiary-color;
         border-radius: 10px;
     }
 }

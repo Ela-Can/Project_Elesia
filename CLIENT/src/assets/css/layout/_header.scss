@@ -1,5 +1,5 @@
 header {
-    background-color: grey; // Modifier la couleur
+    background-color: $primary-color; // Modifier la couleur
     padding: 0.3rem 2rem 0.3rem 2rem;
     position: relative;
     
@@ -39,7 +39,7 @@ header {
         width: 100vw;
         height: 100vh;
         gap: 1.5rem;
-        background-color: white; // a modifier -
+        background-color: $background-color; 
         padding: 1.5rem;
         z-index: 1000;
 

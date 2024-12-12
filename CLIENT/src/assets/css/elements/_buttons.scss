@@ -1,6 +1,5 @@
 button{
-    border: 1px solid grey; // A modifier
-    background-color: whitesmoke; // A modifier
+    background-color: $button-color; // A modifier
     border-radius: 0.5rem;
     padding: 0.3rem 0.5rem;
 }

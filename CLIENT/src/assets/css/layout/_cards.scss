@@ -11,7 +11,7 @@
         margin: auto;
         height: 37rem;
         position: relative;
-        background-color: #F3F4F1; // mettre dans les variables
+        background-color: $tertiary-color; // mettre dans les variables
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -26,25 +26,20 @@
             padding-left: 1rem;
         }
 
-        p {
-            color: darkgrey; // A modifier
-        }
-
         button, a {
             text-align: center;
             border: none;
-            background-color: darkgrey; // A modifier
         }
 
         p:first-child{
             position: absolute;
             top: 0.5rem;
             right: -0.3rem;
-            background-color: grey; // A modifier
-            color: #fff; // A modifier
+            background-color: $primary-color;
+            color: $tertiary-color;
             padding: 0.2rem 1rem;
             border-bottom-left-radius: 1px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // A modifier
             text-transform: uppercase;
             font-size: 1.2rem;
         }

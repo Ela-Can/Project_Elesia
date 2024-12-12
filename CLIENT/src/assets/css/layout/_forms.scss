@@ -4,7 +4,7 @@ form {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #F3F4F1; // A ajouter à 1 variable
+    background-color: $tertiary-color; // A ajouter à 1 variable
     padding: 2rem;
 
     div {
@@ -19,7 +19,6 @@ form {
 
     button {
         text-align: center;
-        border: 0.1rem solid black;
     }
 }
 

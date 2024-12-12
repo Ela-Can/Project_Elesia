@@ -98,6 +98,7 @@ body {
   font-weight: 300;
   font-size: 1.6rem;
   text-align: justify;
+  color: black;
 }
 
 main,
@@ -136,7 +137,7 @@ h3::after {
   display: block;
   width: 30%;
   height: 2px;
-  background-color: #007bff;
+  background-color: #A1887F;
   margin: 0.3rem auto 0.3rem;
 }
 
@@ -169,7 +170,7 @@ h5 {
   max-width: 80vw;
   margin: auto;
   padding: 2rem;
-  background-color: lightgrey;
+  background-color: #DADADA;
   border-radius: 10px;
 }
 
@@ -188,7 +189,7 @@ h5 {
   }
 }
 header {
-  background-color: grey;
+  background-color: #6E6259;
   padding: 0.3rem 2rem 0.3rem 2rem;
   position: relative;
 }
@@ -261,7 +262,7 @@ footer {
   width: 100%;
   height: auto;
   text-align: center;
-  background-color: grey;
+  background-color: #6E6259;
 }
 footer h5 {
   padding-top: 1.3rem;
@@ -291,7 +292,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background-color: #F3F4F1;
+  background-color: #DADADA;
   padding: 2rem;
 }
 form div {
@@ -304,7 +305,6 @@ form div textarea {
 }
 form button {
   text-align: center;
-  border: 0.1rem solid black;
 }
 
 .register_redirection {
@@ -340,7 +340,7 @@ form button {
   margin: auto;
   height: 37rem;
   position: relative;
-  background-color: #F3F4F1;
+  background-color: #DADADA;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -353,20 +353,16 @@ form button {
 .card_section .card p, .card_section .card button {
   padding-left: 1rem;
 }
-.card_section .card p {
-  color: darkgrey;
-}
 .card_section .card button, .card_section .card a {
   text-align: center;
   border: none;
-  background-color: darkgrey;
 }
 .card_section .card p:first-child {
   position: absolute;
   top: 0.5rem;
   right: -0.3rem;
-  background-color: grey;
-  color: #fff;
+  background-color: #6E6259;
+  color: #DADADA;
   padding: 0.2rem 1rem;
   border-bottom-left-radius: 1px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -467,7 +463,7 @@ form button {
   margin: auto;
   text-align: center;
   padding: 0.5rem;
-  background-color: lightgray;
+  background-color: #BCAAA4;
   border-radius: 5px;
   display: block;
 }
@@ -625,7 +621,7 @@ main .dashboard_comments article div:last-child p {
 }
 
 .container aside {
-  background-color: rgb(228, 228, 228);
+  background-color: #DADADA;
   padding: 1rem;
 }
 .container aside div {
@@ -665,8 +661,7 @@ main .dashboard_comments article div:last-child p {
 }
 
 button {
-  border: 1px solid grey;
-  background-color: whitesmoke;
+  background-color: #BCAAA4;
   border-radius: 0.5rem;
   padding: 0.3rem 0.5rem;
 }
@@ -676,7 +671,7 @@ button {
   top: 30%;
   left: 15%;
   border: 1px solid grey;
-  background-color: grey;
+  background-color: white;
   padding: 1rem;
   z-index: 999;
 }
@@ -684,8 +679,6 @@ button {
 #loader {
   width: 50px;
   height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: auto;
@@ -697,7 +690,7 @@ button {
 }
 
 .error-message {
-  color: red;
+  color: rgb(139, 10, 10);
 }
 
 #accordion {
