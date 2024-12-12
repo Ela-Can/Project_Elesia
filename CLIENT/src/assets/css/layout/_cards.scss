@@ -4,12 +4,12 @@
     margin: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 2rem;
 
     .card {
-        width: 19.6rem;
+        width: 23rem;
         margin: auto;
-        height: 33rem;
+        height: 37rem;
         position: relative;
         background-color: #F3F4F1; // mettre dans les variables
         display: flex;
@@ -51,7 +51,7 @@
 
         img{
             width: 100%;
-            height : 20rem;
+            height : 24rem;
             object-fit: cover;
         }
 

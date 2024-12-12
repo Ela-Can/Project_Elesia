@@ -34,7 +34,7 @@ router.delete("/delete/:id", withAuth, removeUser);
 router.get("/:id_user/comments/list", withAuth, getAllComments); 
 
 router.patch("/:id_user/comments/update/:id_comment", withAuth, updateComment); 
-router.patch("/:id_user/comments/delete/:id", withAuth, hideComment);
+router.patch("/:id_user/comments/delete/:id_comment", withAuth, hideComment);
 
 // Diagnostics management from the user
 

@@ -61,10 +61,7 @@ class User {
                 title,
                 content,
                 DATE_FORMAT(publishDate, '%d/%m/%Y') AS publishDate,
-                CASE
-                    WHEN isPublished = 1 THEN 'commentaire visible'
-                    ELSE 'commentaire non visible'
-                END AS isPublished,
+                isPublished,
                 user.pseudo AS pseudo,
                 product.name AS product_name
             FROM comment
@@ -81,7 +78,7 @@ class User {
     }
 
     static async hideComment(id, id_user) {
-        const UPDATE_COMMENT_STATUS = `UPDATE comment SET isPublished = 0 WHERE comment.id = ? AND id_user = ?`;
+        const UPDATE_COMMENT_STATUS = `UPDATE comment SET isPublished = 1 WHERE id = ? AND id_user = ?`;
         return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
     }
 

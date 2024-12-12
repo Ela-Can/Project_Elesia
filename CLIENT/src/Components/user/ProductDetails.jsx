@@ -93,7 +93,7 @@ function ProductDetails() {
           </article>
         )}
       </section>
-      <ProductComments productId={id} />
+      <ProductComments productId={id} className="comment_section" />
 
       {isPopupOpen && (
         <div className={isPopupOpen ? "popup active" : "popup"} role="dialog">

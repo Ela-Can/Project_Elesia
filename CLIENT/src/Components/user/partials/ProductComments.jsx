@@ -17,21 +17,25 @@ function ProductComments({ productId }) {
   return (
     <section className="comment_section" role="region">
       <h3>Vous en parlez le mieux</h3>
-      {comments.length === 0 ? (
-        <p role="status">Soyez le premier à laisser un avis sur le produit !</p>
-      ) : (
-        comments.map((comment) => (
-          <article key={comment.id}>
-            <div>
-              <p>{comment.pseudo ? comment.pseudo : "Utilisateur inconnu"}</p>
-              <p>{comment.publishDate}</p>
-            </div>
-            <p>{comment.title}</p>
-            <p>{comment.content}</p>
-          </article>
-        ))
-      )}
-      <AddComment productId={productId} />
+      <div className="comments_part">
+        <AddComment productId={productId} />
+        {comments.length === 0 ? (
+          <p role="status">
+            Soyez le premier à laisser un avis sur le produit !
+          </p>
+        ) : (
+          comments.map((comment) => (
+            <article key={comment.id}>
+              <div>
+                <p>{comment.pseudo ? comment.pseudo : "Utilisateur inconnu"}</p>
+                <p>{comment.publishDate}</p>
+              </div>
+              <p>{comment.title}</p>
+              <p>{comment.content}</p>
+            </article>
+          ))
+        )}
+      </div>
     </section>
   );
 }

@@ -116,7 +116,8 @@ const updateComment = async (req, res) => {
 
 const hideComment = async (req, res) => {
     try {
-        const [response] = await User.hideComment(req.params.id, req.params.id_user);
+
+        const [response] = await User.hideComment(req.params.id_comment, req.params.id_user);
         if (!response.affectedRows) {
             res.status(404).json({ msg: "Comment not deleted" });
             return;

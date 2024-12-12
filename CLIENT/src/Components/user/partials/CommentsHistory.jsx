@@ -87,6 +87,12 @@ function CommentsHistory() {
   }
 
   async function onClickDeleteComment(commentId, id_user) {
+    if (!user.id) {
+      setErrorMessage("Utilisateur non identifié. Veuillez vous reconnecter.");
+      return;
+    }
+    console.log("commentId:", commentId, "id_user:", id_user);
+
     try {
       const response = await fetch(
         `/api/v1/user/${id_user}/comments/delete/${commentId}`,
@@ -95,17 +101,24 @@ function CommentsHistory() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            isPublished: 1,
-          }),
+          //body: JSON.stringify({
+          //  isPublished: 1,
+          //}),
         }
       );
+
+      const data = await response.json();
+      console.log("API response:", data);
+
+      if (!response.ok) {
+        throw new Error("Failed to update isPublished");
+      }
 
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.id !== commentId)
       );
 
-      setSuccessMessage("SkinConcern supprimé avec succès");
+      setSuccessMessage("Commentaire supprimé avec succès");
       setShowConfirmation(false);
     } catch (error) {
       setErrorMessage(
@@ -163,7 +176,7 @@ function CommentsHistory() {
       {showConfirmation && (
         <div className="popup_confirmation">
           <p>Êtes-vous sûr de vouloir supprimer cette préoccupation?</p>
-          <button onClick={() => onClickDeleteComment(commentId)}>
+          <button onClick={() => onClickDeleteComment(commentId, user.id)}>
             Confirmer
           </button>
           <button onClick={onCloseOrCancel}>Annuler</button>
