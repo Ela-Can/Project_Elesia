@@ -81,7 +81,7 @@ function AddComment({ productId }) {
   }
 
   return (
-    <>
+    <div id="add_comment">
       {!isFormVisible && !successMessage && (
         <button
           onClick={onClickFormHandler}
@@ -150,7 +150,7 @@ function AddComment({ productId }) {
         </form>
       )}
       {successMessage && <p role="status">{successMessage}</p>}
-    </>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 .home_banner_section {
     position : relative;
-    width: 100%;
+    width: 100vw;
     height: 25vh;
 
     img {
@@ -31,8 +31,9 @@
 
 .diagnostic_banner_section {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 20vh;
+    margin-left: calc(-50vw + 50%);
 
     img {
         position: absolute;
@@ -58,4 +59,27 @@
         left: 4%;
     }
 
+}
+
+@media (min-width: 768px) {
+
+    .home_banner_section {
+        height: 30vh;
+    }
+
+    .diagnostic_banner_section {
+        height: 25vw;
+    }
+
+}
+
+@media (min-width: 1024px) {
+
+    .home_banner_section {
+        height: 40vh;
+    }
+    
+    .diagnostic_banner_section {
+        height: 25vw;
+    }
 }

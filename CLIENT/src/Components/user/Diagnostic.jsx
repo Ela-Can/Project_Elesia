@@ -306,7 +306,7 @@ function Diagnostic() {
         ) : (
           <div className="login_redirection">
             <p>Vous devez être connecté pour accéder à cette page.</p>
-            <Link to="/authentification/login" tabindex="0">
+            <Link to="/authentification/login" tabindex="0" className="link">
               Connectez-vous
             </Link>
           </div>

@@ -80,10 +80,12 @@ function DiagnosticHistory() {
       {showConfirmation && (
         <div className="popup_confirmation">
           <p>Êtes-vous sûr de vouloir supprimer ce diagnostic ?</p>
-          <button onClick={() => onClickDeleteDiagnostic(diagnosticId)}>
-            Confirmer
-          </button>
-          <button onClick={onCloseConfirmation}>Annuler</button>
+          <div>
+            <button onClick={() => onClickDeleteDiagnostic(diagnosticId)}>
+              Confirmer
+            </button>
+            <button onClick={onCloseConfirmation}>Annuler</button>
+          </div>
         </div>
       )}
 

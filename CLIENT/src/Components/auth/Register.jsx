@@ -200,11 +200,11 @@ function Register() {
             />
             <label htmlFor="acceptConditions">
               J'ai lu et j'accepte les{" "}
-              <Link to="/terms_of_use" target="_blank">
+              <Link to="/terms_of_use" target="_blank" className="link">
                 conditions générales d'utilisation{" "}
               </Link>
               et la{" "}
-              <Link to="/privacy_policy" target="_blank">
+              <Link to="/privacy_policy" target="_blank" className="link">
                 politique de confidentialité
               </Link>
               .

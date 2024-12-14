@@ -1,5 +1,4 @@
 .card_section {
-    width: 95vw;
     height: auto;
     margin: auto;
     display: flex;
@@ -9,26 +8,23 @@
     .card {
         width: 23rem;
         margin: auto;
-        height: 37rem;
+        height: 38rem;
         position: relative;
-        background-color: $tertiary-color; // mettre dans les variables
+        background-color: $tertiary-color; 
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
 
         h4 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             text-transform: none;
             text-align: start;
+            padding-left: 1.5rem;
         }
 
-        p, button {
-            padding-left: 1rem;
-        }
-
-        button, a {
-            text-align: center;
-            border: none;
+        p {
+            padding-left: 1.5rem;
+            padding-bottom: 1rem;
         }
 
         p:first-child{
@@ -50,9 +46,34 @@
             object-fit: cover;
         }
 
+        a {
+            @include button($button-color);
+        }
+
     }
 
 }
- 
- 
- 
+
+
+@media (min-width: 768px) {
+
+    .home_banner_section {
+        height: 30vh;
+    }
+
+    .diagnostic_banner_section {
+        height: 25vw;
+    }
+
+}
+
+@media (min-width: 1024px) {
+
+    .home_banner_section {
+        height: 40vh;
+    }
+
+    .diagnostic_banner_section {
+        height: 25vw;
+    }
+}

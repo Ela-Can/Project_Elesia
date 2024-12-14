@@ -113,8 +113,8 @@ function Login() {
         </form>
         <div className="register_redirection">
           <p>Pas de compte ?</p>
-          <Link to="/authentification/register" tabIndex="0">
-            Incrivez-vous
+          <Link to="/authentification/register" tabIndex="0" className="link">
+            Inscrivez-vous
           </Link>
         </div>
       </section>

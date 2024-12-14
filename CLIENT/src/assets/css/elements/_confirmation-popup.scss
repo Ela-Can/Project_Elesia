@@ -1,0 +1,19 @@
+.popup_confirmation {
+    position: fixed;
+    top: 30%;
+    left: 13%;
+    background-color: $tertiary-color; // A moidifier
+    padding: 2rem;
+    z-index: 999;
+
+    p {
+        padding-bottom: 1rem;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+}

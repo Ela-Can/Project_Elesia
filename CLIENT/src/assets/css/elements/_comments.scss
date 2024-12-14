@@ -1,13 +1,26 @@
 .comment_section {
+    padding: 2rem;
 
     article {
         display: flex;
         flex-direction: column;
-        border-bottom: 1px solid grey; // A modifier
+        gap: 0.3rem;
+        border-bottom: 1px solid $tertiary-color; 
+        padding: 1rem;
 
         div {
             display: flex;
-            gap: 2rem;
+            justify-content: space-between;
+        }
+    }
+
+    #add_comment{
+        padding: 3rem 0 1rem;
+
+        button {
+            width: 60%;
+            display: block;
+            margin: auto;
         }
 
     }

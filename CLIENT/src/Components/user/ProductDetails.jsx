@@ -52,29 +52,31 @@ function ProductDetails() {
                 <h4>{product.name}</h4>
                 <p>{product.description}</p>
                 <p>{product.precautions}</p>
+
+                <button
+                  onClick={onClickBuyBtn}
+                  aria-label="Afficher les options d'achat"
+                >
+                  Acheter
+                </button>
+                {isToggleVisible && (
+                  <div
+                    className={
+                      isToggleVisible
+                        ? "purchase_options active"
+                        : "purchase_options"
+                    }
+                  >
+                    <button onClick={onClickBuyOnlineBtn}>
+                      Acheter en ligne
+                    </button>
+                    <button onClick={onClickFindStoreBtn}>
+                      Trouver un point de vente
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-            <button
-              onClick={onClickBuyBtn}
-              aria-label="Afficher les options d'achat"
-            >
-              Acheter
-            </button>
-
-            {isToggleVisible && (
-              <div
-                className={
-                  isToggleVisible
-                    ? "purchase_options active"
-                    : "purchase_options"
-                }
-              >
-                <button onClick={onClickBuyOnlineBtn}>Acheter en ligne</button>
-                <button onClick={onClickFindStoreBtn}>
-                  Trouver un point de vente
-                </button>
-              </div>
-            )}
 
             <div className="product_details_bottom">
               <Accordion title="Ingrédients">

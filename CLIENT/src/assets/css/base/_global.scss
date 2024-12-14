@@ -24,6 +24,12 @@ main,
     font-weight: 300;
 }
 
+header, 
+footer, 
+.diagnostic_banner_section {
+    width: 100vw;
+}
+
 h1, 
 h2, 
 h3, 
@@ -57,7 +63,7 @@ h3::after {
 }
 
 section {
-    padding: 1rem 0 2rem 0;
+    padding: 2rem;
     height: auto;
 }
 
@@ -92,6 +98,14 @@ h5 {
     }
 }
 
+button {
+    @include button($button-color);
+}
+
+.link {
+    text-decoration: underline;
+}
+
 // Media Queries 
 
 @media (min-width: 768px) {
@@ -110,6 +124,7 @@ h5 {
 
     main,
     .container {
-        width: 1024px;
+        max-width: 1024px;
+        margin: 0 auto;
     }
 }

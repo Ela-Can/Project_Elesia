@@ -31,3 +31,33 @@ footer {
     }
 
 }
+
+@media (min-width: 768px) {
+
+    footer {
+        padding: 1rem;
+        
+        div {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            div {
+                flex-direction: column;
+            }
+        }
+
+    }
+
+}
+
+@media (min-width: 1024px) {
+
+    .home_banner_section {
+        height: 40vh;
+    }
+
+    .diagnostic_banner_section {
+        height: 25vw;
+    }
+}

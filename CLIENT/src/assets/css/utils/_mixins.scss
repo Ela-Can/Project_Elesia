@@ -1,0 +1,12 @@
+@mixin button($bg-color, $text-color: #fff, $padding: 0.3rem 0.5rem, $radius: 0.5rem) {
+    background-color: $bg-color;
+    color: $text-color;
+    padding: $padding;
+    border-radius: $radius;
+    text-transform: uppercase;
+    text-align: center;
+
+    //&:hover {
+    //    background-color: $hover-bg-color;
+    //}
+}
