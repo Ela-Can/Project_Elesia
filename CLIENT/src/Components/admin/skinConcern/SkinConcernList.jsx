@@ -20,6 +20,8 @@ function SkinConcernList() {
 
   const [activeSection, setActiveSection] = useState("skinConcern/list");
 
+  // Fetch SkinConcerns
+
   useEffect(() => {
     fetchSkinConcerns().then((data) => {
       setSkinConcerns(data);
@@ -113,6 +115,7 @@ function SkinConcernList() {
           Ajouter une préoccupation
         </button>
       </section>
+
       <section className="dashboard_content">
         {showConfirmation && (
           <div className="popup_confirmation">
@@ -190,6 +193,7 @@ function SkinConcernList() {
           </>
         )}
       </section>
+
       <section>
         {activeSection === "skinConcern/addSkinConcern" && (
           <AddSkinConcern

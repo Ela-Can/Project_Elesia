@@ -19,6 +19,8 @@ function SkinTypeList() {
 
   const [activeSection, setActiveSection] = useState("skinType/list");
 
+  // Fetch SkinTypes
+
   useEffect(() => {
     fetchSkinTypes().then((data) => {
       setSkinTypes(data);
@@ -107,6 +109,7 @@ function SkinTypeList() {
           Ajouter un type de peau
         </button>
       </section>
+
       <section className="dashboard_content">
         {showConfirmation && (
           <div className="popup_confirmation">
@@ -184,6 +187,7 @@ function SkinTypeList() {
           </>
         )}
       </section>
+
       <section>
         {activeSection === "skinType/addSkinType" && (
           <AddSkinType

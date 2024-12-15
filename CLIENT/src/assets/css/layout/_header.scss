@@ -6,11 +6,10 @@ header {
     .burger-menu {
 
         button {
+            @include button(transparent, $text-color);
             position: absolute;
             top: 10px;
-            background-color: transparent;
             font-size: 2.2rem;
-            color: black; // Amodifier
         }
         
         button:nth-child(2) {
@@ -63,14 +62,11 @@ header {
             text-decoration: underline;
         }
 
-        button { // remplacer par la mixin
-            border: none;
-            background-color: transparent;
-            text-transform: uppercase;
-            font-size: 1.8rem;
+        button { 
+            @include button(transparent, $text-color);
+            text-align: start;
             padding-left: 1rem;
-            color: black;
-            text-align: left;
+            font-size: 1.7rem;
         }
 
     }
@@ -101,6 +97,11 @@ header {
 
             a {
                 text-transform: uppercase;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    transform: scale(1.1);
+                }
             }
 
             a.active {
@@ -110,12 +111,14 @@ header {
             button {
                 background-color: transparent;
                 color: black;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    background-color: transparent;
+                    transform: scale(1.1);
+                }
             }
         }
-
-        //h1 {
-        //    text-align: start;
-        //}
 
         .burger-menu {
             display: none;

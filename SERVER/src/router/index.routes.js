@@ -13,10 +13,6 @@ import user_routes from "./user.routes.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.json({ msg: "API is working" });
-});
-
 router.use("/product", product_routes);
 router.use("/category", category_routes);
 router.use("/comment", comment_routes);

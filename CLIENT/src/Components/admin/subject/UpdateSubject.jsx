@@ -51,6 +51,7 @@ function UpdateSubject({
           required
         />
       </div>
+
       <button type="submit">Mettre à jour</button>
     </form>
   );

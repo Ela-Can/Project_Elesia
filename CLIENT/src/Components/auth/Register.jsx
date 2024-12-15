@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+
 import { validEmail } from "../../services/validators";
 
 function Register() {
-  const message = useSelector((state) => state.user.message);
-
   const [pseudo, setPseudo] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +16,6 @@ function Register() {
   const [isChecked, setIsChecked] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   function calculateAge(birthdate) {
     const birthDate = new Date(birthdate);
@@ -94,17 +91,20 @@ function Register() {
         } else if (errorData.field === "pseudo") {
           setErrorMessage("Ce pseudo est déjà pris.");
         } else {
-          setErrorMessage(errorData.msg || "Erreur lors de l'inscription.");
+          setErrorMessage(
+            errorData.msg || "Erreur lors de l&apos;inscription."
+          );
         }
       }
     } catch (error) {
-      setErrorMessage("Erreur lors de l'inscription. Veuillez réessayer.");
+      setErrorMessage("Erreur lors de l&apos;inscription. Veuillez réessayer.");
     }
   }
 
   return (
     <main>
       <h2>Créer un compte</h2>
+
       <section>
         {successMessage && (
           <p className="success-message" role="status">
@@ -116,15 +116,17 @@ function Register() {
             {errorMessage}
           </p>
         )}
+
         <form onSubmit={onSubmitBtnHandler}>
           <p>*Champs obligatoires</p>
+
           <div>
             <label htmlFor="pseudo">
               Nom d&apos;utilisateur<span>*</span>
             </label>
             <input
               type="text"
-              //name="pseudo"
+              name="pseudo"
               id="pseudo"
               value={pseudo}
               onChange={(e) => setPseudo(e.target.value)}
@@ -132,13 +134,14 @@ function Register() {
               required
             />
           </div>
+
           <div>
             <label htmlFor="birthdate">
               Votre date de naissance<span>*</span>
             </label>
             <input
               type="date"
-              //name="birthdate"
+              name="birthdate"
               id="birthdate"
               value={birthdate}
               onChange={(e) => setBirthdate(e.target.value)}
@@ -146,13 +149,14 @@ function Register() {
               required
             />
           </div>
+
           <div>
             <label htmlFor="email">
               Entrez votre adresse mail<span>*</span>
             </label>
             <input
               type="email"
-              //name="email"
+              name="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -160,6 +164,7 @@ function Register() {
               required
             />
           </div>
+
           <div>
             <label htmlFor="password">
               Entrez votre mot de passe<span>*</span>
@@ -174,6 +179,7 @@ function Register() {
               required
             />
           </div>
+
           <div>
             <label htmlFor="passwordConfirmation">
               Confirmer votre mot de passe<span>*</span>
@@ -188,6 +194,7 @@ function Register() {
               required
             />
           </div>
+
           <div>
             <input
               type="checkbox"
@@ -199,9 +206,9 @@ function Register() {
               required
             />
             <label htmlFor="acceptConditions">
-              J'ai lu et j'accepte les{" "}
+              J&apos;ai lu et j&apos;accepte les{" "}
               <Link to="/terms_of_use" target="_blank" className="link">
-                conditions générales d'utilisation{" "}
+                conditions générales d&apos;utilisation{" "}
               </Link>
               et la{" "}
               <Link to="/privacy_policy" target="_blank" className="link">
@@ -209,8 +216,8 @@ function Register() {
               </Link>
               .
             </label>
-            {errorMessage && <p>{errorMessage}</p>}
           </div>
+
           <button type="submit">S&apos;inscrire</button>
         </form>
       </section>

@@ -21,7 +21,7 @@ const productSlice = createSlice({
                 break;
                 }
             }
-        state.productList = updatedList;
+            state.productList = updatedList;
         },
     },
 });

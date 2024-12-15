@@ -2,14 +2,14 @@ function CodeOfConduct() {
   return (
     <main>
       <h2>Charte de bonne conduite</h2>
-      <p>
-        Afin de garantir un espace respectueux et constructif, tous les
-        commentaires publiés sur notre site sont soumis à cette charte. Chaque
-        commentaire sera modéré avant publication. En cas de non-respect de ces
-        règles, le commentaire sera refusé. En cas de récidive,
-        l&apos;utilisateur s&apos;expose à la suspension de son compte.
-      </p>
       <section>
+        <p>
+          Afin de garantir un espace respectueux et constructif, tous les
+          commentaires publiés sur notre site sont soumis à cette charte. Chaque
+          commentaire sera modéré avant publication. En cas de non-respect de
+          ces règles, le commentaire sera refusé. En cas de récidive,
+          l&apos;utilisateur s&apos;expose à la suspension de son compte.
+        </p>
         <article>
           <h4>Respect et Courtoisie</h4>
           <p>
@@ -50,11 +50,11 @@ function CodeOfConduct() {
             qui ne respectent pas cette charte.
           </p>
         </article>
+        <p>
+          En soumettant un commentaire, vous acceptez cette charte de bonne
+          conduite.
+        </p>
       </section>
-      <p>
-        En soumettant un commentaire, vous acceptez cette charte de bonne
-        conduite.
-      </p>
     </main>
   );
 }

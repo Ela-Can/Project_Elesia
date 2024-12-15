@@ -8,10 +8,11 @@ function ContactList({ status, setUnreadCount }) {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
+  // Fetch pending contact requests
+
   async function fetchPendingContact() {
     const response = await fetch(`/api/v1/contact/list/pending`);
     const data = await response.json();
-    console.log("Demandes récupérées :", data);
     setPendingRequests(data);
 
     let unreadCount = 0;
@@ -23,25 +24,23 @@ function ContactList({ status, setUnreadCount }) {
     setUnreadCount(unreadCount);
   }
 
-  useEffect(() => {
-    fetchPendingContact();
-  }, [status]);
+  // Mark as unread
 
   async function onClickMarkAsUnread(contactId) {
-    try {
-      const response = await fetch(`/api/v1/contact/update/${contactId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: 0 }),
-      });
-      const data = await response.json();
-      fetchPendingContact();
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
+    const response = await fetch(`/api/v1/contact/update/${contactId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: 0 }),
+    });
+    const data = await response.json();
+    fetchPendingContact();
   }
+
+  useEffect(() => {
+    fetchPendingContact();
+  }, []);
 
   return (
     <>
@@ -53,10 +52,12 @@ function ContactList({ status, setUnreadCount }) {
           Historique
         </button>
       </section>
+
       <section className="dashboard_contacts">
         {activeSection === "contact/pending" && (
           <>
             <h3>Demandes de contact en attente</h3>
+
             {selectedRequest ? (
               <ContactDetails
                 contact={selectedRequest}
@@ -69,13 +70,17 @@ function ContactList({ status, setUnreadCount }) {
                   <p>Aucune demande</p>
                 ) : (
                   pendingRequests.map((contact) => (
-                    <article>
+                    <article
+                      className={
+                        contact.status === "demande non lue" ? "unread" : "read"
+                      }
+                    >
                       <div
                         key={contact.id}
                         onClick={() => setSelectedRequest(contact)}
                         role="button"
                         aria-label={`Demande de ${contact.email}`}
-                        tabindex="0"
+                        tabIndex="0"
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
                             setSelectedRequest(contact);
@@ -101,7 +106,8 @@ function ContactList({ status, setUnreadCount }) {
           </>
         )}
       </section>
-      <section>
+
+      <section className="dashboard_contacts">
         {activeSection === "contact/history" && <ContactHistory />}
       </section>
     </>

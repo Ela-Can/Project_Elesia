@@ -26,11 +26,15 @@ function ProductList() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Fetch products
+
   useEffect(() => {
     fetchProducts().then((data) => {
       dispatch(setProducts(data));
     });
   }, []);
+
+  // Delete a product
 
   async function onClickDeleteProduct(productId) {
     try {
@@ -88,6 +92,7 @@ function ProductList() {
           Ajouter un produit
         </button>
       </section>
+
       <section className="dashboard_content">
         {showConfirmation && (
           <div className="popup_confirmation">
@@ -112,7 +117,7 @@ function ProductList() {
                 {productList.map((product) => (
                   <li key={product.id}>
                     {isEditing === true && productId === product.id ? (
-                      <article>
+                      <article className="update_form">
                         <UpdateProduct
                           product={selectedProduct}
                           productId={product.id}
@@ -164,6 +169,7 @@ function ProductList() {
           </>
         )}
       </section>
+
       <section>
         {activeSection === "product/addProduct" && <AddProduct />}
       </section>

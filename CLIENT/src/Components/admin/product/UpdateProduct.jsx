@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProducts, updateProducts } from "../../../store/slices/product.js";
 
+import {
+  fetchProducts,
+  fetchCategories,
+  fetchSkinTypes,
+  fetchSkinConcerns,
+} from "../../../services/api.js";
+
 function UpdateProduct({
   product,
   productId,
@@ -10,7 +17,6 @@ function UpdateProduct({
   setSuccessMessage,
   onCloseOrCancel,
 }) {
-  //const productList = useSelector((state) => state.product.productList);
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
@@ -63,40 +69,36 @@ function UpdateProduct({
   const [skinTypes, setSkinTypes] = useState([]);
   const [skinConcerns, setSkinConcerns] = useState([]);
 
+  // Fetch products
+
   useEffect(() => {
-    async function fetchProducts() {
-      const response = await fetch("/api/v1/product/list");
-      const data = await response.json();
+    fetchProducts().then((data) => {
       dispatch(setProducts(data));
-    }
-    fetchProducts();
+    });
   }, []);
 
+  // Fetch Categories
+
   useEffect(() => {
-    async function fetchCategories() {
-      const response = await fetch("/api/v1/category/list");
-      const data = await response.json();
+    fetchCategories().then((data) => {
       setCategories(data);
-    }
-    fetchCategories();
+    });
   }, []);
 
+  // Fetch SkinTypes
+
   useEffect(() => {
-    async function fetchSkinTypes() {
-      const response = await fetch("/api/v1/skintype/list");
-      const data = await response.json();
+    fetchSkinTypes().then((data) => {
       setSkinTypes(data);
-    }
-    fetchSkinTypes();
+    });
   }, []);
 
+  // Fetch SkinConcerns
+
   useEffect(() => {
-    async function fetchSkinConcerns() {
-      const response = await fetch("/api/v1/skinconcern/list");
-      const data = await response.json();
+    fetchSkinConcerns().then((data) => {
       setSkinConcerns(data);
-    }
-    fetchSkinConcerns();
+    });
   }, []);
 
   function onChangeProductInfo(e) {
@@ -163,6 +165,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="description">Description du produit : </label>
         <textarea
@@ -172,6 +175,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         ></textarea>
       </div>
+
       <div>
         <label htmlFor="ingredients">Ingrédients du produit : </label>
         <textarea
@@ -181,6 +185,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         ></textarea>
       </div>
+
       <div>
         <label htmlFor="howToUse">Conseils d'utilisation : </label>
         <input
@@ -190,6 +195,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="precautions">Précautions d'emploi : </label>
         <input
@@ -199,6 +205,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="useDuration">Date limite d'utilisation : </label>
         <input
@@ -208,6 +215,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="packaging">Packaging : </label>
         <input
@@ -217,6 +225,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="image">Image du produit</label>
         <input
@@ -227,6 +236,7 @@ function UpdateProduct({
           onChange={onChangeProductImage}
         />
       </div>
+
       <div>
         <label htmlFor="alt">Description de l'image : </label>
         <input
@@ -236,6 +246,7 @@ function UpdateProduct({
           onChange={onChangeProductInfo}
         />
       </div>
+
       <div>
         <label htmlFor="adaptedToSensitiveSkin">
           Produit adapaté aux peaux sensibles ?
@@ -250,6 +261,7 @@ function UpdateProduct({
           <option value={0}>Non</option>
         </select>
       </div>
+
       <div>
         <label htmlFor="protectsFromPollution">
           Produit protegeant de la pollution ?
@@ -264,6 +276,7 @@ function UpdateProduct({
           <option value={0}>Non</option>
         </select>
       </div>
+
       <div>
         <label htmlFor="protectsFromSun">Produit protegeant du soleil ?</label>
         <select
@@ -276,6 +289,7 @@ function UpdateProduct({
           <option value={0}>Non</option>
         </select>
       </div>
+
       <div>
         <label htmlFor="compatibleWithPregOrBreastfeed">
           Compatible avec la grossesse et l'allaitemment ?
@@ -290,6 +304,7 @@ function UpdateProduct({
           <option value={0}>Non</option>
         </select>
       </div>
+
       <div>
         <label htmlFor="id_category">Catégorie :</label>
         <select
@@ -305,6 +320,7 @@ function UpdateProduct({
           ))}
         </select>
       </div>
+
       <div>
         <label htmlFor="id_skinType">Type de peau :</label>
         <select
@@ -320,6 +336,7 @@ function UpdateProduct({
           ))}
         </select>
       </div>
+
       <div>
         <label htmlFor="id_skinConcern">Préoccupation :</label>
         <select
@@ -335,6 +352,7 @@ function UpdateProduct({
           ))}
         </select>
       </div>
+
       <div>
         <label htmlFor="isOnline">Produit visible ?</label>
         <select
@@ -347,6 +365,7 @@ function UpdateProduct({
           <option value={0}>Non</option>
         </select>
       </div>
+
       <button type="submit">Mettre à jour</button>
     </form>
   );

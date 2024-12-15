@@ -27,11 +27,15 @@ function Diagnostic() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Fetch SkinTypes
+
   useEffect(() => {
     fetchSkinTypes().then((data) => {
       setSkinTypes(data);
     });
   }, []);
+
+  // Fetch SkinConcerns
 
   useEffect(() => {
     fetchSkinConcerns().then((data) => {
@@ -66,8 +70,6 @@ function Diagnostic() {
       isPregnantOrBreastfeeding: isPregnantOrBreastfeeding ? 1 : 0,
     };
 
-    console.log("Données envoyées au backend : ", diagnosticData);
-
     try {
       const response = await fetch("/api/v1/diagnostic/create/", {
         method: "POST",
@@ -78,16 +80,10 @@ function Diagnostic() {
         body: JSON.stringify(diagnosticData),
       });
 
-      console.log("json du front", diagnosticData);
-
       const result = await response.json();
-      console.log(
-        "Réponse brute du backend :",
-        JSON.stringify(result, null, 2)
-      );
 
       if (response.status === 404) {
-        setErrorMessage(result.message); // Aucune correspondance trouvée
+        setErrorMessage(result.message);
         setRecommendedProduct(null);
       } else {
         setRecommendedProduct(result.product || null);
@@ -96,7 +92,6 @@ function Diagnostic() {
 
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Erreur lors de la soumission :", error);
       setErrorMessage(error.message);
       setRecommendedProduct(null);
       setIsSubmitted(true);
@@ -106,10 +101,6 @@ function Diagnostic() {
   if (isLoading) {
     return <Loading />;
   }
-
-  //function seeMoreBtnHandler(productId) {
-  //  navigate(`/product/${productId}`);
-  //}
 
   return (
     <main>
@@ -130,7 +121,6 @@ function Diagnostic() {
                         id="skinType"
                         value={skinType.id}
                         onChange={(e) => {
-                          console.log("Selected skin type:", e.target.value);
                           setSelectedSkinType(e.target.value);
                           setErrorMessage("");
                         }}
@@ -304,9 +294,9 @@ function Diagnostic() {
             <button type="submit">Envoyer</button>
           </form>
         ) : (
-          <div className="login_redirection">
+          <div className="redirection">
             <p>Vous devez être connecté pour accéder à cette page.</p>
-            <Link to="/authentification/login" tabindex="0" className="link">
+            <Link to="/authentification/login" tabIndex="0" className="link">
               Connectez-vous
             </Link>
           </div>

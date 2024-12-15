@@ -17,7 +17,6 @@ function ProductDetails() {
     async function fetchProductById() {
       const response = await fetch(`/api/v1/product/${id}`);
       const [data] = await response.json();
-      console.log("Données du produit :", data);
       setProduct(data);
     }
     fetchProductById();

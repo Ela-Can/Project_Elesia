@@ -14,7 +14,7 @@ footer {
         gap: 1rem;
 
         a {
-            font-size: 2rem
+            font-size: 2rem;
         }
     }
     
@@ -51,13 +51,3 @@ footer {
 
 }
 
-@media (min-width: 1024px) {
-
-    .home_banner_section {
-        height: 40vh;
-    }
-
-    .diagnostic_banner_section {
-        height: 25vw;
-    }
-}

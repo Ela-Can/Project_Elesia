@@ -14,6 +14,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 
         h4 {
             font-size: 1.8rem;
@@ -55,25 +56,15 @@
 }
 
 
-@media (min-width: 768px) {
 
-    .home_banner_section {
-        height: 30vh;
-    }
-
-    .diagnostic_banner_section {
-        height: 25vw;
-    }
-
-}
 
 @media (min-width: 1024px) {
 
-    .home_banner_section {
-        height: 40vh;
-    }
-
-    .diagnostic_banner_section {
-        height: 25vw;
+    .card{
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+        }
     }
 }

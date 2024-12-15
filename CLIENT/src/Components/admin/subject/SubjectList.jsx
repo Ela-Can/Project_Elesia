@@ -17,6 +17,8 @@ function SubjectList() {
 
   const [activeSection, setActiveSection] = useState("subject/list");
 
+  // Fetch Subjects
+
   useEffect(() => {
     async function fetchSubjects() {
       const response = await fetch(`api/v1/subject/list/1`);
@@ -110,6 +112,7 @@ function SubjectList() {
           Ajouter un sujet
         </button>
       </section>
+
       <section className="dashboard_content">
         {showConfirmation && (
           <div className="popup_confirmation">
@@ -188,6 +191,7 @@ function SubjectList() {
           </>
         )}
       </section>
+
       <section>
         {activeSection === "subject/addSubject" && (
           <AddSubject addSubject={addSubject} existingSubjects={subjects} />

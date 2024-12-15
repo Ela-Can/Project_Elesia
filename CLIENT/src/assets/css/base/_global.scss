@@ -87,7 +87,7 @@ h5 {
     font-size: 1.8rem;
 }
 
-.our_values {
+#values_section {
 
     p {
         max-width : 80vw;
@@ -104,6 +104,11 @@ button {
 
 .link {
     text-decoration: underline;
+}
+
+.read {
+    background-color: rgb(230, 225, 225);
+    color: grey;
 }
 
 // Media Queries 
@@ -126,5 +131,12 @@ button {
     .container {
         max-width: 1024px;
         margin: 0 auto;
+    }
+
+    button {
+
+        &:hover {
+            background-color: $hover-bg-color;
+        }
     }
 }

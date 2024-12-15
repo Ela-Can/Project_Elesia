@@ -5,36 +5,10 @@ class Diagnostic {
     static async getUserBirthdate(id) {
 
         const SELECT_BIRTHDATE = `SELECT birthdate FROM user WHERE id = ?`;
-
-        console.log("SQL query result:", SELECT_BIRTHDATE);
-
         return await pool.query(SELECT_BIRTHDATE, [id]);
     }
 
-    /*static async findProduct(id_user) {
-        const SELECT_PRODUCT = `
-            SELECT
-                product.id,
-                name,
-                description,
-                product.image,
-                product.alt,
-                product.id_skinType,
-                product.id_skinConcern 
-            FROM product
-            JOIN diagnosticForm ON
-                    diagnosticForm.id_skinType = product.id_skinType
-                AND diagnosticForm.id_skinConcern = product.id_skinConcern
-                AND diagnosticForm.isSkinSensitive = product.adaptedToSensitiveSkin
-                AND diagnosticForm.isExposedToPollution = product.protectsFromPollution
-                AND diagnosticForm.isExposedToSun = product.protectsFromSun
-                AND diagnosticForm.isPregnantOrBreastfeeding = product.compatibleWithPregOrBreastfeed
-            WHERE diagnosticForm.id_user = ?
-            LIMIT 1`;
-        return await pool.execute(SELECT_PRODUCT, [id_user]); 
-    }*/
-
-        static async findProduct(id_user) {
+    static async findProduct(id_user) {
         const SELECT_PRODUCT = `
             SELECT DISTINCT
                 product.id,
@@ -46,7 +20,7 @@ class Diagnostic {
                 product.id_skinConcern 
             FROM product
             JOIN diagnosticForm ON diagnosticForm.id_user = ?
-            WHERE diagnosticForm.id_skinType = product.id_skinType
+            WHERE (diagnosticForm.id_skinType = product.id_skinType OR product.id_skinType = 16)
                 AND diagnosticForm.id_skinConcern = product.id_skinConcern
                 AND diagnosticForm.isSkinSensitive = product.adaptedToSensitiveSkin
                 AND diagnosticForm.isExposedToPollution = product.protectsFromPollution

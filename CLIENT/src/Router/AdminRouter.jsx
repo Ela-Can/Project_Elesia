@@ -22,8 +22,9 @@ import StoreLocator from "../Components/user/StoreLocator.jsx";
 import PrivacyPolicy from "../Components/user/PrivatePolicy.jsx";
 import LegalInformation from "../Components/user/LegalInformation.jsx";
 import TermsOfUse from "../Components/user/TermsOfUse.jsx";
+import CodeOfConduct from "../Components/user/CodeOfConduct.jsx";
 
-// Spécific Routes for Admin
+// Spécific routes for admin
 
 import Dashboard from "../Components/admin/Dashboard.jsx";
 
@@ -32,7 +33,6 @@ import ContactHistory from "../Components/admin/contact/ContactHistory.jsx";
 
 import CommentList from "../Components/admin/comment/CommentList.jsx";
 import CommentHistory from "../Components/admin/comment/CommentHistory.jsx";
-import CodeOfConduct from "../Components/user/CodeOfConduct.jsx";
 
 function AdminRouter() {
   return (

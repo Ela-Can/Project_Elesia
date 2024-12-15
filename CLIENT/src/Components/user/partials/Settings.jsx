@@ -23,27 +23,18 @@ function Settings() {
   async function onSubmitUpdate(e) {
     e.preventDefault();
 
-    try {
-      const response = await fetch(
-        `/api/v1/user/update_information/${user.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ pseudo, email }),
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
+    const response = await fetch(`/api/v1/user/update_information/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pseudo, email }),
+    });
+    if (response.ok) {
+      const data = await response.json();
 
-        dispatch(updatePseudo(data.pseudo));
-        setIsEditing(false);
-      } else {
-        console.error("Erreur lors de la mise à jour du pseudo");
-      }
-    } catch (error) {
-      console.error("Erreur de connexion à l'API", error);
+      dispatch(updatePseudo(data.pseudo));
+      setIsEditing(false);
     }
   }
 

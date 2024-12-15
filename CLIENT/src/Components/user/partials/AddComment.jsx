@@ -47,11 +47,9 @@ function AddComment({ productId }) {
         setNewContent("");
         setIsFormVisible(false);
         setIsChecked(false);
-      } else {
-        console.error("Erreur lors de l'envoi du commentaire.");
       }
     } catch (err) {
-      console.error("Impossible d'envoyer le commentaire :", err);
+      setErrorMessage("Une erreur est survenue.");
     }
   }
 

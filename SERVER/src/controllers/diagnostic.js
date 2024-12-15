@@ -16,6 +16,8 @@ function calculateAge(birthdate) {
 
 const create = async (req, res) => {
     try {
+
+        console.log("Données reçues dans req.body :", req.body);
         const id_user = req.session.user.id;
         
         if (!id_user) {
@@ -23,7 +25,6 @@ const create = async (req, res) => {
         }
 
         const { id_skinType, id_skinConcern, isSkinSensitive, isExposedToPollution, isExposedToSun, isPregnantOrBreastfeeding } = req.body;
-
 
         if (!id_skinType || !id_skinConcern) {
             return res.status(400).json({ msg: "Le type de peau et les préoccupations sont obligatoires." });
@@ -39,34 +40,30 @@ const create = async (req, res) => {
             isPregnantOrBreastfeeding: parseInt(isPregnantOrBreastfeeding),
         };
 
-        const [response] = await Diagnostic.createDiagnostic(datas);
-
-        if (!response || response.affectedRows === 0) { 
-            throw new Error("Impossible de soumettre le diagnostic"); 
-        }
-
-        const diagnosticId = response.insertId;
-
-        if (response.affectedRows === 0) {
-            throw new Error("Impossible de soumettre le diagnotic");
-        }
-
         const [productRecommandation] = await Diagnostic.findProduct(id_user);
+        
+        console.log("Produits trouvés :", productRecommandation);
 
-        /*if (productRecommandation.length === 0) {
-            return res.status(404).json({ msg: "Aucun produit adapté n'a été trouvé pour ce diagnostic." });
+        /*if (!productRecommandation || productRecommandation.length === 0) {
+            return res.status(200).json({ msg: "Aucun produit adapté trouvé." });
         }*/
-
-        const filteredProducts = productRecommandation.filter((product) =>
+        
+        const filtredProducts = productRecommandation.filter((product) =>
             product.id_skinType === datas.id_skinType &&
             product.id_skinConcern === datas.id_skinConcern
         );
 
-        if (filteredProducts.length === 0) {
-            return res.status(200).json({ msg: "Aucun produit adapté trouvé." });
-        }
+        const [response] = await Diagnostic.createDiagnostic(datas);
+        console.log("Réponse de createDiagnostic :", response);
 
-        const product = filteredProducts[0];
+        if (!response || response.affectedRows === 0) { 
+            throw new Error("Impossible de soumettre le diagnostic"); 
+        }
+  
+        const diagnosticId = response.insertId;
+        console.log("diagnosticId :", diagnosticId);
+
+        const product = productRecommandation[0];
 
         const [insertRecommandation] = await Diagnostic.createProductReco(diagnosticId, product.id);
 
@@ -75,7 +72,7 @@ const create = async (req, res) => {
         }
         
          res.status(201).json({
-            msg: "Diagnostic envoyé avec succès et produit recommandé.", product
+            msg: "Diagnostic envoyé avec succès et produit recommandé.", diagnosticId, product
   
         });
     } catch (err) {

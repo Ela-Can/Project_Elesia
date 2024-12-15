@@ -1,8 +1,8 @@
-import useCheckAuth from "./Hook/useCheckAuth";
-
 import AdminRouter from "./Router/AdminRouter";
 import UserRouter from "./Router/UserRouter";
 import Loading from "./Components/Loading";
+
+import useCheckAuth from "./Hook/useCheckAuth";
 
 function App() {
   const [user, isLoading] = useCheckAuth();

@@ -4,11 +4,12 @@ function ContactHistory() {
   const [finishedRequests, setFinishedRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
+  // Fetch finished contact requests
+
   useEffect(() => {
     async function fetchFinishedContact() {
       const response = await fetch(`/api/v1/contact/list/finished`);
       const data = await response.json();
-      console.log("Demandes cloturées :", data);
       setFinishedRequests(data);
     }
     fetchFinishedContact();
@@ -17,17 +18,18 @@ function ContactHistory() {
   return (
     <>
       {selectedRequest ? (
-        <article>
-          <h3>Détails de la demande</h3>
-          <p>Email : {selectedRequest.email}</p>
-          <p>Sujet : {selectedRequest.subject}</p>
-          <p>Contenu : {selectedRequest.content}</p>
-          <p>Date : {selectedRequest.date}</p>
+        <article className="contact_details">
+          <p>{selectedRequest.email}</p>
+          <p>{selectedRequest.date}</p>
+          <p>{selectedRequest.subject}</p>
+          <p>{selectedRequest.content}</p>
+
           <button onClick={() => setSelectedRequest(null)}>Retour</button>
         </article>
       ) : (
         <>
           <h3>Historique</h3>
+
           {finishedRequests.length === 0 ? (
             <p>Aucune demande</p>
           ) : (
@@ -37,7 +39,7 @@ function ContactHistory() {
                   onClick={() => setSelectedRequest(contact)}
                   role="button"
                   aria-label={`Demande de ${contact.email}`}
-                  tabindex="0"
+                  tabIndex="0"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       setSelectedRequest(contact);
@@ -45,9 +47,8 @@ function ContactHistory() {
                   }}
                 >
                   <p>{contact.email}</p>
-                  <p>{contact.subject}</p>
-                  <p>{contact.content}</p>
                   <p>{contact.date}</p>
+                  <p>{contact.subject}</p>
                 </div>
               </article>
             ))

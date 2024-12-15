@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import { login, loginFailed } from "../../store/slices/user";
-import useCloseMenu from "../../Hook/useCloseMenu";
+
 import { validEmail } from "../../services/validators";
-import useCheckAuth from "../../Hook/useCheckAuth.jsx";
+
+import useCloseMenu from "../../Hook/useCloseMenu";
 
 function Login() {
   useCloseMenu();
@@ -66,6 +68,7 @@ function Login() {
   return (
     <main>
       <h2>Connectez-vous</h2>
+
       <section>
         {successMessage && (
           <p className="success-message" role="status">
@@ -77,8 +80,10 @@ function Login() {
             {errorMessage}
           </p>
         )}
+
         <form onSubmit={onSubmitBtnHandler}>
           <p>*Champs obligatoires</p>
+
           <div>
             <label htmlFor="email">
               Entrez votre adresse mail<span>*</span>
@@ -94,6 +99,7 @@ function Login() {
               required
             />
           </div>
+
           <div>
             <label htmlFor="password">
               Entrez votre mot de passe<span>*</span>
@@ -109,9 +115,11 @@ function Login() {
               required
             />
           </div>
+
           <button type="submit">Se connecter</button>
         </form>
-        <div className="register_redirection">
+
+        <div className="redirection">
           <p>Pas de compte ?</p>
           <Link to="/authentification/register" tabIndex="0" className="link">
             Inscrivez-vous

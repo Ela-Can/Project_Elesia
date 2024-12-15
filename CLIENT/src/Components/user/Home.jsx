@@ -15,7 +15,7 @@ function Home() {
 
   return (
     <>
-      <header className="home_banner_section" role="banner">
+      <header id="home_banner" role="banner">
         <img
           src="src/assets/img/banner/banner-small.webp"
           srcSet="
@@ -61,7 +61,7 @@ function Home() {
         </section>
         <section>
           <h3>Découvrez le produit qui vous convient</h3>
-          <div className="diagnostic_banner_section">
+          <div id="diagnostic_banner">
             <img
               src="src/assets/img/diagnostic/diagnostic-small.webp"
               srcSet="
@@ -79,7 +79,7 @@ function Home() {
             </button>
           </div>
         </section>
-        <section className="our_values">
+        <section id="values_section">
           <h3>Nos valeurs</h3>
           <p>
             Nos produits sont soigneusement formulés à partir d'ingrédients

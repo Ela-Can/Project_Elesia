@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 
 import Product from "../model/Product.js";
-//import uploadImg from '../utils/uploadImg.js';
 
 const getAllProducts = async (req, res) => {
     try {
@@ -16,28 +15,15 @@ const getAllProducts = async (req, res) => {
 const getOneProductById = async (req, res) => {
     try {
         const [response] = await Product.findOneProductById(req.params.id);
-        //if (!response.length) {
-        //    res.status(404).json({ msg: "Product not found" });
-        //    return;
-        //}
+        if (!response.length) {
+            res.status(404).json({ msg: "Product not found" });
+            return;
+        }
         res.status(200).json(response);
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
 };
-
-/*const getOneProductByName = async (req, res) => {
-    try {
-        const [response] = await Product.findOneProductByName(req.params.name);
-        if (!response.length) {
-            res.status(404).json({ msg: "Product not found" });
-            return;
-        }
-        res.json(response[0]);
-    } catch (err) {
-        res.status(500).json({ msg: err.message });
-    }
-};*/
 
 const createProduct = async (req, res) => {
 

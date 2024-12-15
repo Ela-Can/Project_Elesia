@@ -59,6 +59,7 @@ function UpdateCategory({
             <option value="articles">Articles</option>
           </select>
         </div>
+
         <div>
           <label htmlFor="label">Nouvelle categorie : </label>
           <input
@@ -69,6 +70,7 @@ function UpdateCategory({
             onChange={(e) => setUpdatedLabel(e.target.value)}
           />
         </div>
+
         <button type="submit">Enregistrer</button>
       </form>
     </>

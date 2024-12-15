@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import CategoryList from "./category/CategoryList";
 import CommentList from "./comment/CommentList";
@@ -7,10 +8,10 @@ import ProductList from "./product/ProductList";
 import SkinConcernList from "./skinConcern/SkinConcernList";
 import SkinTypeList from "./skinType/SkinTypeList";
 import SubjectList from "./subject/SubjectList";
-import { NavLink } from "react-router-dom";
 
 import useCloseMenu from "../../Hook/useCloseMenu";
 import useCheckAuth from "../../Hook/useCheckAuth.jsx";
+
 import Loading from "../Loading.jsx";
 
 function Dashboard() {
@@ -33,15 +34,19 @@ function Dashboard() {
         aria-label="Menu de navigation du tableau de bord"
       >
         <h2>Tableau de bord</h2>
+
         <div>
-          <button onClick={() => setIsContentMenuOpen(!isContentMenuOpen)}>
+          <button
+            onClick={() => setIsContentMenuOpen(!isContentMenuOpen)}
+            id="content_management_btn"
+          >
             Gestion du contenu {isContentMenuOpen ? "▲" : "▼"}
             {isContentMenuOpen && (
               <ul>
                 <li>
                   <NavLink
                     onClick={() => setActiveSection("products")}
-                    tabindex="0"
+                    tabIndex="0"
                   >
                     Gestion des produits
                   </NavLink>
@@ -49,7 +54,7 @@ function Dashboard() {
                 <li>
                   <NavLink
                     onClick={() => setActiveSection("categories")}
-                    tabindex="0"
+                    tabIndex="0"
                   >
                     Gestion des categories
                   </NavLink>
@@ -57,7 +62,7 @@ function Dashboard() {
                 <li>
                   <NavLink
                     onClick={() => setActiveSection("subjects")}
-                    tabindex="0"
+                    tabIndex="0"
                   >
                     Gestion des sujets
                   </NavLink>
@@ -65,7 +70,7 @@ function Dashboard() {
                 <li>
                   <NavLink
                     onClick={() => setActiveSection("skinTypes")}
-                    tabindex="0"
+                    tabIndex="0"
                   >
                     Gestion des types de peau
                   </NavLink>
@@ -73,7 +78,7 @@ function Dashboard() {
                 <li>
                   <NavLink
                     onClick={() => setActiveSection("skinConcerns")}
-                    tabindex="0"
+                    tabIndex="0"
                   >
                     Gestion des préocupations
                   </NavLink>
@@ -82,11 +87,11 @@ function Dashboard() {
             )}
           </button>
 
-          <NavLink onClick={() => setActiveSection("comments")} tabindex="0">
+          <NavLink onClick={() => setActiveSection("comments")} tabIndex="0">
             Modérations des commentaires {unmoderatedCount}
           </NavLink>
 
-          <NavLink onClick={() => setActiveSection("contacts")} tabindex="0">
+          <NavLink onClick={() => setActiveSection("contacts")} tabIndex="0">
             Demandes de contact {unreadCount}
           </NavLink>
         </div>

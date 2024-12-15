@@ -45,18 +45,22 @@ function AddSkinType({ addSkinType, existingSkinTypes }) {
     <>
       <h4>Ajouter un type de peau</h4>
       <form onSubmit={onSubmitAddSkinType}>
-        <label htmlFor="label">Nouveau type : </label>
-        <input
-          type="text"
-          name="label"
-          id="label"
-          value={newSkinType}
-          onChange={(e) => setNewSkinType(e.target.value)}
-          aria-required="true"
-          required
-        />
+        <div>
+          <label htmlFor="label">Nouveau type : </label>
+          <input
+            type="text"
+            name="label"
+            id="label"
+            value={newSkinType}
+            onChange={(e) => setNewSkinType(e.target.value)}
+            aria-required="true"
+            required
+          />
+        </div>
+
         <button type="submit">Ajouter</button>
       </form>
+
       {errorMessage && (
         <p className="error-message" role="alert">
           {errorMessage}

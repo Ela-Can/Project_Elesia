@@ -18,8 +18,6 @@ const getAllByStatus = async (req, res) => {
     }
 }
 
-// ajouter une condition pour éviter de créer un même sujet
-
 const create = async (req, res) => {
     try {
         const label = req.body.label.trim();

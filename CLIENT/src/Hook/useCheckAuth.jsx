@@ -27,7 +27,6 @@ function useCheckAuth() {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Données reçues de l'API :", data);
 
           dispatch(login(data));
         } else {

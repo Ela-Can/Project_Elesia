@@ -42,12 +42,13 @@ function CategoryList() {
         if (updatedList[i].id === id) {
           updatedList[i].label = label;
           updatedList[i].ref = ref;
-          break;
         }
       }
       return updatedList;
     });
   }
+
+  // Delete a category
 
   async function onClickDeleteCategory(categoryId) {
     try {
@@ -71,6 +72,7 @@ function CategoryList() {
       );
     }
   }
+
   function resetMessages() {
     setSuccessMessage("");
     setErrorMessage("");
@@ -105,6 +107,7 @@ function CategoryList() {
           Ajouter une categorie
         </button>
       </section>
+
       <section className="dashboard_content">
         {showConfirmation && (
           <div className="popup_confirmation">
@@ -115,6 +118,7 @@ function CategoryList() {
             <button onClick={onCloseOrCancel}>Annuler</button>
           </div>
         )}
+
         {activeSection === "category/list" && (
           <>
             <h3>Liste des categories</h3>
@@ -178,6 +182,7 @@ function CategoryList() {
           </>
         )}
       </section>
+
       <section>
         {activeSection === "category/addCategory" && (
           <AddCategory

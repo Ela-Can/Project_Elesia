@@ -28,7 +28,6 @@ function CommentsHistory() {
     async function fetchCommentsByUserId() {
       const response = await fetch(`api/v1/user/${user.id}/comments/list`);
       const data = await response.json();
-      console.log("Commentaires récupérés :", data);
       setComments(data);
     }
     fetchCommentsByUserId();
@@ -57,14 +56,6 @@ function CommentsHistory() {
         }
       );
 
-      if (!response.ok) {
-        const errorDetails = await response.text();
-        console.error("Erreur serveur :", response.status, errorDetails);
-        throw new Error(
-          `Erreur serveur : ${response.status} - ${errorDetails}`
-        );
-      }
-
       const updatedComment = await response.json();
 
       setComments((prevComments) =>
@@ -81,7 +72,6 @@ function CommentsHistory() {
       );
       setIsChecked(false);
     } catch (error) {
-      console.error(error);
       setErrorMessage("Une erreur s'est produite. Veuillez réessayer.");
     }
   }
@@ -91,7 +81,6 @@ function CommentsHistory() {
       setErrorMessage("Utilisateur non identifié. Veuillez vous reconnecter.");
       return;
     }
-    console.log("commentId:", commentId, "id_user:", id_user);
 
     try {
       const response = await fetch(
@@ -108,7 +97,6 @@ function CommentsHistory() {
       );
 
       const data = await response.json();
-      console.log("API response:", data);
 
       if (!response.ok) {
         throw new Error("Failed to update isPublished");

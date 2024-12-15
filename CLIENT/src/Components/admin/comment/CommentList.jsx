@@ -6,10 +6,11 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
 
   const [pendingComments, setPendingComments] = useState([]);
 
+  // Fetch pending comments
+
   async function fetchPendingComments() {
     const response = await fetch("/api/v1/comment/list/pending");
     const [data] = await response.json();
-    console.log("Commentaires récupérées :", data);
     setPendingComments(data);
 
     let unmoderatedCount = 0;
@@ -21,57 +22,40 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
     setUnmoderatedCount(unmoderatedCount);
   }
 
+  // Mark a comment as not valid
+
   async function onClickMarkAsNotValid(commentId) {
-    try {
-      const response = await fetch(`/api/v1/comment/update/${commentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isPublished: 2 }),
-      });
+    const response = await fetch(`/api/v1/comment/update/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isPublished: 2 }),
+    });
 
-      if (!response.ok) {
-        console.error("Failed to update comment status");
-        return;
-      }
-      setPendingComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentId)
-      );
-
-      console.log(`Comment ${commentId} marked as not valid.`);
-    } catch (error) {
-      console.error("Error while updating comment status:", error);
-    }
+    setPendingComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
   }
 
+  // Mark a comment as valid
+
   async function onClickMarkAsValid(commentId) {
-    try {
-      const response = await fetch(`/api/v1/comment/update/${commentId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isPublished: 3 }),
-      });
-
-      if (!response.ok) {
-        console.error("Failed to update comment status");
-        return;
-      }
-      setPendingComments((prevComments) =>
-        prevComments.filter((comment) => comment.id !== commentId)
-      );
-
-      console.log(`Comment ${commentId} marked as not valid.`);
-    } catch (error) {
-      console.error("Error while updating comment status:", error);
-    }
+    const response = await fetch(`/api/v1/comment/update/${commentId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isPublished: 3 }),
+    });
+    setPendingComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
   }
 
   useEffect(() => {
     fetchPendingComments();
-  }, [isPublished]);
+  }, []);
 
   return (
     <>
@@ -83,6 +67,7 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
           Historique
         </button>
       </section>
+
       <section className="dashboard_comments">
         {activeSection === "comment/pending" && (
           <>
@@ -112,6 +97,7 @@ function CommentList({ isPublished, setUnmoderatedCount }) {
           </>
         )}
       </section>
+
       <section className="dashboard_comments">
         {activeSection === "comment/moderated" && <CommentHistory />}
       </section>

@@ -5,33 +5,27 @@ import { fileTypeFromBuffer } from "file-type";
 export default async (req, res, next) => {
     try {
 
-        console.log("Fichier reçu :", req.files?.image); // Pour vérifier si un fichier est présent
-        console.log("Chemin enregistré :", req.body.image);
-
         const folder = req.params.folder;
         if (!folder) {
-            throw new Error("No folder specified");
+            return res.status(400).json({ error: "No folder specified" });
         }
 
 
         if (!req.files || !req.files.image) {
-            console.log("Aucun fichier téléchargé. Image existante utilisée.");
-            return next(); 
+            return res.status(400).json({ message: "No file uploaded. Existing image used." });
         }   
 
         const file = req.files.image;
     
         const maxSize = 2 * 1024 * 1024; // 2 Mo
         if (file.size > maxSize) {
-            console.error("File size exceeds the 2MB limit.");
-            throw new Error("The file size exceeds the 2MB limit");
+            return res.status(400).json({ error: "The file size exceeds the 2MB limit" });
         }
         
         if (file && file.name) {
             const fileExtension = path.extname(file.name).toLowerCase();
         } else {
-            console.log("Le fichier ou son nom est indéfini");
-            throw new Error("Fichier non valide");
+            return res.status(400).json({ error: "Invalid file: File name is missing" });
         }
 
         const validExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
@@ -43,8 +37,7 @@ export default async (req, res, next) => {
         const type = await fileTypeFromBuffer(buffer);
 
         if (!type || !validExtensions.includes(`.${type.ext}`)) {
-            console.error("Invalid file type detected during upload.");
-        throw new Error("Invalid file type detected during upload");
+            return res.status(400).json({ error: "Invalid file type detected during upload" });
         }
 
         const fileName = `${uuidv4()}${fileExtension}`;
@@ -57,7 +50,6 @@ export default async (req, res, next) => {
         next();
 
     } catch (err) {
-        console.error('Error in file upload middleware:', err);
-        next(err); 
+        return res.status(500).json({ error: "Error in file upload middleware", details: err.message });
     }
 };

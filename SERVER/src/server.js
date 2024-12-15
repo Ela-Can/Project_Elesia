@@ -56,19 +56,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(async (req, res, next) => {
-	console.log("user session", req.session.user);
 	try {
 		const [[result]] = await pool.query(
 			"SELECT COUNT(session_id) AS session FROM sessions"
 		);
-		console.log("Active sessions:", result.session);
-		console.log(
-			"User session:",
-			req.session.user ? req.session : "No user session"
-		);
 		next();
 	} catch (err) {
-		console.error("Error fetching sessions:", err.message);
+		next(err);
 	}
 });
 

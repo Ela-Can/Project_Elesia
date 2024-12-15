@@ -38,7 +38,7 @@ const create = async (req, res) => {
             return res.status(400).json({ msg: "Email must be 100 characters or less" });
         }
 
-        if (content.length > 500) {
+        if (content.length > 1500) {
             return res.status(400).json({ msg: "Content must be 500 characters or less" });
         }
 

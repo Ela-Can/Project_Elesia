@@ -1,6 +1,6 @@
 import User from "../model/User.js";
 
-// Gestion des utilisateurs
+    // Managing users
 
 const getAllUsers = async (req, res) => {
     const [users] = await User.findAllUsers();
@@ -10,8 +10,8 @@ const getAllUsers = async (req, res) => {
 const getOneUserById = async (req, res) => {
     const [users] = await User.findOneUserById(req.params.id);
     if (!users) {
-    return res.status(404).json({ message: "Utilisateur non trouvé" });
-  }
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
     res.json(users);
 }
 
@@ -34,9 +34,9 @@ const updateUserInfo = async (req, res) => {
         const pseudo = req.body.pseudo;
         const email = req.body.email;
 
-        //if (!email || !pseudo) {
-        //    return res.status(400).json({ msg: "All fields are required" });
-        //}
+        if (!email || !pseudo) {
+            return res.status(400).json({ msg: "All fields are required" });
+        }
 
         if (pseudo.length < 3 || pseudo.length > 50) {
             return res.status(400).json({ msg: "Pseudo must be between 3 and 50 characters" });
@@ -70,7 +70,7 @@ const removeUser = async (req, res) => {
     }
 };
 
-// Gestion des commentaires
+    // Managing comments
 
 const getAllComments = async (req, res) => {
     try {
@@ -128,7 +128,7 @@ const hideComment = async (req, res) => {
     }
 };
 
-// Gestion des diagnostics
+    // Managing diagnostics
 
 const getAllDiagnosticByUserId = async (req, res) => {
     try {

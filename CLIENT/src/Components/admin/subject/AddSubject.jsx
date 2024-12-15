@@ -58,8 +58,10 @@ function AddSubject({ addSubject, existingSubjects }) {
             required
           />
         </div>
+
         <button type="submit">Ajouter</button>
       </form>
+
       {errorMessage && (
         <p className="error-message" role="alert">
           {errorMessage}

@@ -1,12 +1,19 @@
 import express from "express";
-import { create, getAllFinishedRequests, getAllPendingRequests, updateStatus } from "../controllers/contact.js";
+
+import {
+    create,
+    getAllFinishedRequests,
+    getAllPendingRequests,
+    updateStatus
+} from "../controllers/contact.js";
 
 import withAdminAuth from "../middlewares/withAdminAuth.js";
 
 const router = express.Router();
 
-router.get("/list/pending", withAdminAuth, getAllPendingRequests);
+// Routes for managing contact requests
 
+router.get("/list/pending", withAdminAuth, getAllPendingRequests);
 router.get("/list/finished", withAdminAuth, getAllFinishedRequests);
 
 router.post("/create", create);

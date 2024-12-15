@@ -1,4 +1,4 @@
-.home_banner_section {
+#home_banner {
     position : relative;
     width: 100vw;
     height: 25vh;
@@ -29,7 +29,7 @@
 
 }
 
-.diagnostic_banner_section {
+#diagnostic_banner {
     position: relative;
     width: 100vw;
     height: 20vh;
@@ -47,7 +47,7 @@
     
     p {
         position: absolute;
-        width: 35%;
+        width: 30%;
         top: 10%;
         left: 4%;
         text-transform: uppercase;
@@ -55,6 +55,7 @@
 
     button {
         position: absolute;
+        padding: 0.5rem 1rem;
         bottom: 10%;
         left: 4%;
     }
@@ -63,11 +64,11 @@
 
 @media (min-width: 768px) {
 
-    .home_banner_section {
+    #home_banner {
         height: 30vh;
     }
 
-    .diagnostic_banner_section {
+    #diagnostic_banner {
         height: 25vw;
     }
 
@@ -75,11 +76,11 @@
 
 @media (min-width: 1024px) {
 
-    .home_banner_section {
+    #home_banner {
         height: 40vh;
     }
     
-    .diagnostic_banner_section {
+    #diagnostic_banner {
         height: 25vw;
     }
 }

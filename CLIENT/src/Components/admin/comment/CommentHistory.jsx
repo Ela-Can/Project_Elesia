@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 function CommentHistory() {
   const [moderatedComments, setModeratedComments] = useState([]);
 
+  // Fetch moderated comments
+
   useEffect(() => {
     async function fetchModeratedComments() {
       const response = await fetch(`/api/v1/comment/list/moderated`);
       const [data] = await response.json();
-      console.log("Demandes cloturées :", data);
       setModeratedComments(data);
     }
     fetchModeratedComments();

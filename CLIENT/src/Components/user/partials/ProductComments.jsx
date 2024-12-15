@@ -8,7 +8,6 @@ function ProductComments({ productId }) {
     async function fetchCommentsByProduct() {
       const response = await fetch(`/api/v1/comment/from-product/${productId}`);
       const datas = await response.json();
-      console.log(datas);
       setComments(datas);
     }
     fetchCommentsByProduct();

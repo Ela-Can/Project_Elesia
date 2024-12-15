@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 
@@ -19,6 +19,8 @@ function Nav() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   async function onClickLogout() {
     try {
       const response = await fetch("/api/v1/authentification/logout", {
@@ -28,17 +30,14 @@ function Nav() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Logout successful:", data);
         dispatch(logout(data.isLogged));
         dispatch(toggleMenu());
         navigate("/");
-      } else {
-        console.error(
-          `Logout failed. Status: ${response.status} - ${response.statusText}`
-        );
       }
     } catch (error) {
-      console.error("An error occurred during logout:", error.message);
+      setMessageErreur(
+        "Une erreur est survenue lors de la déconnexion. Veuillez réessayer plus tard."
+      );
     }
   }
 
@@ -108,6 +107,7 @@ function Nav() {
           </NavLink>
         )}
       </nav>
+      {errorMessage && <p className="message-erreur">{errorMessage}</p>}
     </>
   );
 }

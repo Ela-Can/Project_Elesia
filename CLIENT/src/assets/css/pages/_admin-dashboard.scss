@@ -1,10 +1,27 @@
+aside {
+    div {
+        button {
+            all: unset;
+
+            ul {
+                text-align: start;
+            }
+
+        }
+    }
+}
+
+
 main {
     padding: 0;
 
     .dashboard_controls {
         display: flex;
         justify-content: space-evenly;
-        padding: 0.3rem;
+        
+        button {
+            @include button($tertiary-color, $text-color, $padding: 0.5rem 2rem)
+        }
     }
 
     .dashboard_content {
@@ -14,24 +31,19 @@ main {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 0.5px solid grey; // A modifier
+            border-bottom: 0.5px solid $separation-color;
             padding: 0.3rem 0.5rem;
 
             div {
                 display: flex;
                 padding : 0.2rem;
                 gap: 1rem;
-
             }
 
             .update_form {
                 display: flex;
                 flex-direction: column;
-                width: 100%; // changer le scss form pour supp ça 
-
-                form {
-                    width: 100%; // changer le scss form pour supp ça 
-                }
+                margin: auto;
             }
         }
 
@@ -43,7 +55,7 @@ main {
         gap: 1rem;
 
         article {
-            background-color: rgb(226, 226, 226); // à modifier
+            background-color: $tertiary-color; // à modifier
             border-radius: 5px;
             padding: 1rem;
             display: flex;
@@ -55,7 +67,7 @@ main {
 
             div:first-child {
                 width: 70%;
-                background-color: whitesmoke;
+                background-color: $background-color;
                 border-radius: 5px;
 
                 p {
@@ -73,22 +85,48 @@ main {
                 flex-direction: column;
                 justify-content: center;
                 gap: 1rem;
-                
-                button {
-                    padding: 0.3rem 0.5rem;
-                    background-color: rgb(190, 189, 189); // à modifier
-                    border-radius: 5px;
-                }
 
                 p {
                     text-transform: uppercase;
+                    text-align: start;
                 }
 
-            }
-
-            
+            }   
         }
 
     }
 
+    .dashboard_contacts{
+
+        article {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid $separation-color;
+        }
+
+        .contact_details{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 1rem;
+        }
+    }
+
+}
+
+
+
+@media (min-width: 1024px) {
+
+    aside {
+        div {
+            button {
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+        }
+    }
 }

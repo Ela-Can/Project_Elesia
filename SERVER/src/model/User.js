@@ -2,7 +2,7 @@ import pool from "../config/db.js";
 
 class User {
 
-    // Gestion des utilisateurs
+    // Managing users
 
     static async findAllUsers() {
         const SELECT_ALL = `
@@ -52,7 +52,7 @@ class User {
         return await pool.execute(DELETE, [id]);
     }
 
-    // Gestion des commentaires
+    // Managing comments
 
     static async findAllValidatedCommentsFromUserId(id) {
         const SELECT_ONE = `
@@ -82,7 +82,7 @@ class User {
         return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
     }
 
-    // Gestion des diagnostics de peau
+    // Managing diagnostics
 
     static async findAllDiagnostics(id_user) {
         const SELECT_ALL = `
