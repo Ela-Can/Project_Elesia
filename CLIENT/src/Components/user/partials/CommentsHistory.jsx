@@ -8,9 +8,6 @@ function CommentsHistory() {
   const [isEditing, setIsEditing] = useState(false);
   const [commentId, setCommentId] = useState([]);
 
-  //const [commentTitle, setCommentTitle] = useState("");
-  //const [commentContent, setCommentContent] = useState("");
-
   const [updatedTitle, setUpdatedTitle] = useState("");
   const [updatedContent, setUpdatedContent] = useState("");
 
@@ -90,9 +87,6 @@ function CommentsHistory() {
           headers: {
             "Content-Type": "application/json",
           },
-          //body: JSON.stringify({
-          //  isPublished: 1,
-          //}),
         }
       );
 
@@ -257,23 +251,24 @@ function CommentsHistory() {
                   </form>
                 </article>
               ) : (
-                <>
-                  <h4>{comment.title}</h4>
+                <div id="comment_history">
+                  <p>{comment.title}</p>
                   <p>{comment.content}</p>
-                  <p>{comment.isPublished}</p>
-                  <p>Produit : {comment.product_name}</p>
-                  <button onClick={() => onClickEditComment(comment)}>
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => {
-                      onClickOpenConfirmation(comment.id, user.id),
-                        resetMessages();
-                    }}
-                  >
-                    Supprimer
-                  </button>
-                </>
+                  <p>Produit concerné : {comment.product_name}</p>
+                  <div>
+                    <button onClick={() => onClickEditComment(comment)}>
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => {
+                        onClickOpenConfirmation(comment.id, user.id),
+                          resetMessages();
+                      }}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
               )}
             </li>
           ))}
