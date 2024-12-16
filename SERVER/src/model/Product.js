@@ -119,7 +119,6 @@ class Product {
             parseInt(datas.id_category, 10),   
         ];
         return await pool.execute(INSERT, values);
-        //return await pool.execute(INSERT, [...Object.values(datas)]);
     }
 
     static async updateProduct(datas) {

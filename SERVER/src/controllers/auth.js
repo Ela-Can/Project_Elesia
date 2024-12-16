@@ -3,15 +3,12 @@ import bcrypt from "bcrypt";
 
 const SALT = 10;
 
-// Vérification du format de l'email
-
 const validEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 };
         
-// Vérification du format du mot de passe
-// Caractères spéciaux pouvant être utilisés @$!%*?&
+// @$!%*?&
 
 const validPassword = (password) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[^\s]{8,}$/;
@@ -23,7 +20,7 @@ const validPseudo = (pseudo) => {
     return pseudoRegex.test(pseudo);
 };
 
-// [a-zA-Z0-9_-]+$ : Permet uniquement les lettres, les chiffres, les tirets (-) et les underscores (_). Les espaces ou autres caractères sont interdits.
+// [a-zA-Z0-9_-]+$
 
 const register = async (req, res) => {
     try {
@@ -103,8 +100,8 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const email = req.body.email //.trim();
-        const password = req.body.password //.trim();
+        const email = req.body.email;
+        const password = req.body.password;
 
         if (!email || !password) {
             return res.status(400).json({ msg: "All fields are required" });
