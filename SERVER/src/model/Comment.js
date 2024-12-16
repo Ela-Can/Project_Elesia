@@ -68,14 +68,6 @@ class Comment {
         return await pool.execute(SELECT_ONE, [id]);
     }
 
-    /*static async findCommentById(id) {
-        const FIND_COMMENT = `
-            SELECT * FROM comment
-            WHERE id = ?
-        `;
-        return await pool.execute(FIND_COMMENT, [id]);
-    }*/
-
     static async hideCommentAsUser(id, id_user) {
         const UPDATE_COMMENT_STATUS = `UPDATE comment SET isPublished = 1 WHERE comment.id = ? AND id_user = ?`;
         return await pool.execute(UPDATE_COMMENT_STATUS, [id, id_user]);
