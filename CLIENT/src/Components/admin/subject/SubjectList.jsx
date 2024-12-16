@@ -128,9 +128,15 @@ function SubjectList() {
           <>
             <h3>Liste des sujets</h3>
 
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
             {successMessage && (
-              <p className="success-message">{successMessage}</p>
+              <p className="success-message" role="status">
+                {successMessage}
+              </p>
             )}
 
             {subjects && subjects.length > 0 ? (

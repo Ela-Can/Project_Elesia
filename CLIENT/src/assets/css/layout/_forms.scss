@@ -20,6 +20,12 @@ form {
     button {
         text-align: center;
     }
+
+    .accept_conditions {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+    }
 }
 
 .redirection {

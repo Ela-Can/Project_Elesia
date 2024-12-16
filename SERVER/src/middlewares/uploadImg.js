@@ -12,8 +12,9 @@ export default async (req, res, next) => {
 
 
         if (!req.files || !req.files.image) {
-            return res.status(400).json({ message: "No file uploaded. Existing image used." });
-        }   
+            req.body.image = null;
+            return next();
+        }  
 
         const file = req.files.image;
     

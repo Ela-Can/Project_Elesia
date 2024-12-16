@@ -129,6 +129,13 @@ function AddProduct() {
         body: data,
       });
 
+      if (!response.ok) {
+        setErrorMessage(
+          error.error || "Une erreur s'est produite. Veuillez réessayer."
+        );
+        return;
+      }
+
       const result = await response.json();
 
       const newProduct = { id: result.id, ...createForm, image: result.image };

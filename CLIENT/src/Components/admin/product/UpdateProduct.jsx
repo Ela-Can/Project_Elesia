@@ -17,6 +17,7 @@ function UpdateProduct({
   setSuccessMessage,
   onCloseOrCancel,
 }) {
+  const products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
   const [file, setFile] = useState(null);
@@ -122,9 +123,7 @@ function UpdateProduct({
       Object.keys(updateForm).forEach((key) => {
         if (key === "image" && file) {
           data.append("image", file);
-        } else if (key === "image") {
-          data.append("image", updateForm.image);
-        } else {
+        } else if (key !== "image") {
           data.append(key, updateForm[key]);
         }
       });
@@ -138,6 +137,10 @@ function UpdateProduct({
       );
 
       const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Une erreur est survenue.");
+      }
 
       const updatedProduct = {
         id: productId,

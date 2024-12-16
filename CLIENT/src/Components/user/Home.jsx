@@ -37,7 +37,7 @@ function Home() {
                 <article
                   key={product.id}
                   className="card"
-                  role="region"
+                  tabIndex="0"
                   aria-label={product.name}
                   onClick={() => navigate(`/product/${product.id}`)}
                 >

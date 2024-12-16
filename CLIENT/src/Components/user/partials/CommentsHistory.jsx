@@ -171,8 +171,16 @@ function CommentsHistory() {
         </div>
       )}
 
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+      {errorMessage && (
+        <p className="error-message" role="alert">
+          {errorMessage}
+        </p>
+      )}
+      {successMessage && (
+        <p className="success-message" role="status">
+          {successMessage}
+        </p>
+      )}
 
       {comments.length > 0 ? (
         <ul role="status">

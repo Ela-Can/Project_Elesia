@@ -302,7 +302,7 @@ function Diagnostic() {
           </div>
         )}
       </section>
-      <section aria-live="polite" className="product_details_section">
+      <section className="product_details_section">
         {isSubmitted && (
           <>
             {recommendedProduct ? (
@@ -316,15 +316,16 @@ function Diagnostic() {
                   <div>
                     <h4>{recommendedProduct.name}</h4>
                     <p>{recommendedProduct.description}</p>
+
+                    <button
+                      onClick={() =>
+                        navigate(`/product/${recommendedProduct.id}`)
+                      }
+                      aria-label={`Voir plus de détails sur le produit ${recommendedProduct.name}`}
+                    >
+                      Voir plus
+                    </button>
                   </div>
-                  <button
-                    onClick={() =>
-                      navigate(`/product/${recommendedProduct.id}`)
-                    }
-                    aria-label={`Voir plus de détails sur le produit ${recommendedProduct.name}`}
-                  >
-                    Voir plus
-                  </button>
                 </div>
               </>
             ) : (

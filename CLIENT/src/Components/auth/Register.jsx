@@ -112,7 +112,7 @@ function Register() {
           </p>
         )}
         {errorMessage && (
-          <p className="error-message" role="status">
+          <p className="error-message" role="alert">
             {errorMessage}
           </p>
         )}
@@ -195,10 +195,11 @@ function Register() {
             />
           </div>
 
-          <div>
+          <div className="accept_conditions">
             <input
               type="checkbox"
               name="acceptConditions"
+              id="acceptConditions"
               checked={isChecked}
               onChange={(e) => {
                 setIsChecked(e.target.checked), setErrorMessage("");

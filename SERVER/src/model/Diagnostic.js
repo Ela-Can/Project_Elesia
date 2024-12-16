@@ -2,12 +2,6 @@ import pool from "../config/db.js";
 
 class Diagnostic {
 
-    static async getUserBirthdate(id) {
-
-        const SELECT_BIRTHDATE = `SELECT birthdate FROM user WHERE id = ?`;
-        return await pool.query(SELECT_BIRTHDATE, [id]);
-    }
-
     static async findProduct(id_user) {
         const SELECT_PRODUCT = `
             SELECT DISTINCT
@@ -20,13 +14,13 @@ class Diagnostic {
                 product.id_skinConcern 
             FROM product
             JOIN diagnosticForm ON diagnosticForm.id_user = ?
-            WHERE (diagnosticForm.id_skinType = product.id_skinType OR product.id_skinType = 16)
+            WHERE diagnosticForm.id_skinType = product.id_skinType
                 AND diagnosticForm.id_skinConcern = product.id_skinConcern
                 AND diagnosticForm.isSkinSensitive = product.adaptedToSensitiveSkin
                 AND diagnosticForm.isExposedToPollution = product.protectsFromPollution
                 AND diagnosticForm.isExposedToSun = product.protectsFromSun
                 AND diagnosticForm.isPregnantOrBreastfeeding = product.compatibleWithPregOrBreastfeed
-            LIMIT 1`;
+            `;
         return await pool.execute(SELECT_PRODUCT, [id_user]); 
     }
 

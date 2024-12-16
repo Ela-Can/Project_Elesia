@@ -125,9 +125,15 @@ function SkinTypeList() {
           <>
             <h3>Liste des types de peau</h3>
 
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
             {successMessage && (
-              <p className="success-message">{successMessage}</p>
+              <p className="success-message" role="status">
+                {successMessage}
+              </p>
             )}
 
             {skinTypes && skinTypes.length > 0 ? (

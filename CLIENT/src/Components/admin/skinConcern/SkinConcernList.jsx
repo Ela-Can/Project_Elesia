@@ -131,9 +131,15 @@ function SkinConcernList() {
           <>
             <h3>Liste des préoccupations</h3>
 
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
             {successMessage && (
-              <p className="success-message">{successMessage}</p>
+              <p className="success-message" role="status">
+                {successMessage}
+              </p>
             )}
 
             {skinConcerns && skinConcerns.length > 0 ? (

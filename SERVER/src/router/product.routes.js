@@ -21,10 +21,10 @@ const router = express.Router();
 router.get("/list", getAllProducts);
 router.get("/:id", getOneProductById);
 
-router.post("/create/:folder", uploadImg, withAdminAuth, createProduct); // Ajouter le middelware
+router.post("/create/:folder", uploadImg, withAdminAuth, createProduct); 
 
-router.patch("/update/:folder/:id", uploadImg, updateProduct);// Ajouter le middelware
-router.delete("/delete/:id", withAdminAuth, removeProduct);
+router.patch("/update/:folder/:id", uploadImg, withAdminAuth,  updateProduct);
+router.delete("/delete/:id", withAdminAuth, withAdminAuth, removeProduct);
 
 
 // Add a comment to a product

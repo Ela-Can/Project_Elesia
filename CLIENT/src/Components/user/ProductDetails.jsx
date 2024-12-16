@@ -3,8 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import Accordion from "../partials/Accordion";
 import ProductComments from "./partials/ProductComments.jsx";
 
-//import productImage from "../../../../SERVER/public/img/productImg/pexels-vie-studio-7005936.jpg";
-
 function ProductDetails() {
   const [product, setProduct] = useState([]);
   const [isToggleVisible, setIsToggleVisible] = useState(false);

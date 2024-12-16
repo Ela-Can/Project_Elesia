@@ -157,6 +157,8 @@ function Product() {
               key={product.id}
               onClick={() => navigate(`/product/${product.id}`)}
               className="card"
+              role="button"
+              tabIndex="0"
             >
               <p>{product.skinConcern_label}</p>
               <img src={product.image} alt={product.alt} />

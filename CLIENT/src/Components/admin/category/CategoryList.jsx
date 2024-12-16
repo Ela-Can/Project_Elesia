@@ -122,9 +122,15 @@ function CategoryList() {
         {activeSection === "category/list" && (
           <>
             <h3>Liste des categories</h3>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
             {successMessage && (
-              <p className="success-message">{successMessage}</p>
+              <p className="success-message" role="status">
+                {successMessage}
+              </p>
             )}
 
             {categories && categories.length > 0 ? (

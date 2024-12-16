@@ -22,7 +22,7 @@ function StoreLocator() {
       <section>
         <div
           id="map"
-          style={{ height: "400px", width: "100%", margin: "auto" }}
+          //style={{ height: "400px", width: "100%", margin: "auto" }}
           aria-label="Carte interactive pour trouver le point de vente le plus proche"
         ></div>
       </section>

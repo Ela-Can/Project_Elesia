@@ -77,50 +77,6 @@ class Product {
         return await pool.query(SELECT_ONE, [id]);
     }
 
-    /*static async findOneProductByName(name) {
-        const SELECT_ONE = `
-            SELECT
-                product.id,
-                name,
-                description,
-                ingredients,
-                howToUse,
-                precautions,
-                useDuration,
-                packaging,
-                image,
-                alt,
-                id_skinType AS skinType,
-                id_skinConcern AS skinConcern,
-                CASE
-                    WHEN adaptedToSensitiveSkin = 1 THEN 'Produit adapté aux peaux sensibles'
-                    ELSE 'Produit non adapté aux peaux sensibles'
-                END AS adaptedToSensitiveSkin,
-                CASE
-                    WHEN protectsFromPollution = 1 THEN 'Produit protégeant de la pollution'
-                    ELSE 'Produit ne protégeant pas de la pollution'
-                END AS protectsFromPollution,
-                CASE
-                    WHEN protectsFromSun = 1 THEN 'Produit protégeant du soleil'
-                    ELSE 'Produit ne protégeant pas du soleil'
-                END AS protectsFromSun,
-                CASE
-                    WHEN compatibleWithPregOrBreastfeed = 1 THEN "Produit compatible avec la grossesse et l'allaitement"
-                    ELSE "Produit pas compatible avec la grossesse et l'allaitement"
-                END AS compatibleWithPregOrBreastfeed,
-                CASE
-                    WHEN isOnline = 1 THEN 'Produit visible sur le site'
-                    ELSE 'Produit invisible sur le site'
-                END AS isOnline,
-                id_category AS category
-            FROM product
-            JOIN category ON product.id_category = category.id
-            LEFT JOIN skinType ON product.id_skinType = skinType.id
-            LEFT JOIN skinConcern ON product.id_skinConcern = skinConcern.id
-            WHERE name = ?`;
-        return await pool.query(SELECT_ONE, [name]);
-    }*/
-
     static async createProduct(datas) {
         const INSERT = `
             INSERT INTO product

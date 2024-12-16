@@ -125,10 +125,11 @@ function AddComment({ productId }) {
               {maxCharactersContent - newContent.length} caractères restants
             </p>
           </div>
-          <div>
+          <div className="accept_conditions">
             <input
               type="checkbox"
               name="acceptCharte"
+              id="acceptCharte"
               checked={isChecked}
               onChange={(e) => {
                 setIsChecked(e.target.checked), setErrorMessage("");
@@ -142,12 +143,20 @@ function AddComment({ productId }) {
               </Link>
               .
             </label>
-            {errorMessage && <p>{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
           </div>
           <button type="submit">Envoyer</button>
         </form>
       )}
-      {successMessage && <p role="status">{successMessage}</p>}
+      {successMessage && (
+        <p className="success-message" role="status">
+          {successMessage}
+        </p>
+      )}
     </div>
   );
 }

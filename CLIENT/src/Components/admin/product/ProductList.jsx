@@ -107,9 +107,15 @@ function ProductList() {
         {activeSection === "product/list" && (
           <>
             <h3>Liste des produits</h3>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="error-message" role="alert">
+                {errorMessage}
+              </p>
+            )}
             {successMessage && (
-              <p className="success-message">{successMessage}</p>
+              <p className="success-message" role="status">
+                {successMessage}
+              </p>
             )}
 
             {productList.length > 0 ? (

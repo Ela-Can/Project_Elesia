@@ -84,7 +84,7 @@ function Contact() {
           </p>
         )}
         {errorMessage && (
-          <p className="error-message" role="status">
+          <p className="error-message" role="alert">
             {errorMessage}
           </p>
         )}

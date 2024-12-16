@@ -107,7 +107,11 @@ function Nav() {
           </NavLink>
         )}
       </nav>
-      {errorMessage && <p className="message-erreur">{errorMessage}</p>}
+      {errorMessage && (
+        <p className="message-erreur" role="alert">
+          {errorMessage}
+        </p>
+      )}
     </>
   );
 }

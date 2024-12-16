@@ -49,9 +49,9 @@ const createProduct = async (req, res) => {
 
         const image = req.body.image || null;
 
-        /*if (
+        if (
             !name || !description || !ingredients || !howToUse || 
-            !precautions || !useDuration || !alt || !imageUrl
+            !precautions || !useDuration || !alt || !image
         ) {
             return res.status(400).json({ msg: "Tous les champs requis doivent être remplis." });
         }
@@ -79,9 +79,7 @@ const createProduct = async (req, res) => {
         }
         if (alt.length > 255) {
             return res.status(400).json({ msg: "Le texte alternatif de l'image ne peut pas dépasser 150 caractères." });
-        }*/
-
-        // faire le reste ...
+        }
 
         const datas = {
             name,
@@ -113,7 +111,6 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-
         const {
             name,
             description,
@@ -134,20 +131,7 @@ const updateProduct = async (req, res) => {
             image,
         } = req.body;
 
-        /*const [existingProduct] = await Product.findAllProducts();
-
-        for (let product of existingProduct) {
-            if (req.body.name === product.name) {
-                return res.status(400).json({ msg: "Un produit avec ce même nom existe déjà." });
-            }
-        }*/
-
         const [product] = await Product.findOneProductById(req.params.id);
-
-        /*
-        if (!datas) {
-            return res.status(400).json({ msg: "Les champs obligatoires sont manquants." });
-        }*/
         
         if (!product || product.length === 0) {
             return res.status(404).json({ msg: "Produit introuvable." });
@@ -158,19 +142,6 @@ const updateProduct = async (req, res) => {
         if (req.body.image) {
             newImagePath = req.body.image;
         }
-
-        /*if (req.files.image) {
-            const imageFile = req.files.image;
-            const uploadPath = path.join(process.cwd(), 'public', 'img', 'productImg', imageFile.name);
-
-            try {
-                await imageFile.mv(uploadPath); 
-                newImagePath = `/img/productImg/${imageFile.name}`;
-            } catch (err) {
-                console.error("Erreur lors de l'upload de la nouvelle image :", err);
-                return res.status(500).json({ msg: "Erreur lors de l'upload de la nouvelle image." });
-            }
-        }*/
 
          const datas = [
             name,
@@ -212,6 +183,7 @@ const updateProduct = async (req, res) => {
         }
         res.status(200).json({ msg: "Produit mis à jour avec succès.", id: req.params.id });
     } catch (err) {
+        console.error("Erreur dans updateProduct :", err.message);
         res.status(500).json({ msg: err.message });
     }
 };
@@ -243,7 +215,7 @@ const removeProduct = async (req, res) => {
     }
 };
 
-// Ajout d'un commentaire 
+// Add a comment
 
 const addCommentToProduct = async (req, res) => {
     try {
